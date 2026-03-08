@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Maven Challenge</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>Challenge Active</div>
+        <h1 class="page-title">Maven 1-Step Challenge</h1>
+        <p class="page-subtitle">Account 10212887 · $5,000 starting balance · 80/20 payout split</p>
+      </div>
+      <a href="calculator.html" class="btn btn-gold">🧮 Size Calculator</a>
+    </div>
+
+    <!-- BIG PROGRESS -->
+    <div class="card mb-24" style="border-color:var(--gold-dim);background:linear-gradient(135deg,var(--bg-card),#1a1800);">
+      <div class="card-body" style="padding:32px;">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;">CHALLENGE PROGRESS</div>
+          <div style="font-family:var(--font-display);font-size:5rem;font-weight:800;color:var(--gold);line-height:1;" id="bigPct">43.5%</div>
+          <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-secondary);margin-top:8px;">of $400 target reached</div>
+        </div>
+        <div style="max-width:600px;margin:0 auto;">
+          <div class="progress-track" style="height:12px;border-radius:6px;">
+            <div class="progress-fill gold" style="width:43.5%" id="bigBar"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">
+            <span>$0</span><span>$100</span><span>$200</span><span>$300</span><span>$400 🎯</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="grid-4 mb-24" id="mavenStats"></div>
+
+    <!-- RULES + WEEKLY PLAN -->
+    <div class="grid-2 mb-24">
+
+      <!-- Maven Rules -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📋 Maven Rules</span>
+          <span class="badge badge-red">STRICT</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          ${[
+            { rule: "Profit Target",    detail: "+8% = +$400 on $5,000 starting balance",    icon: "🎯", color: "green" },
+            { rule: "Max Drawdown",     detail: "5% trailing from peak equity — INTRADAY",   icon: "📉", color: "red" },
+            { rule: "Daily Drawdown",   detail: "3% of highest EOD equity (~$155)",           icon: "📅", color: "yellow" },
+            { rule: "No-Trade Window",  detail: "±2 min around Red Folder events = profits voided", icon: "📰", color: "red" },
+            { rule: "No EAs / Bots",   detail: "Automated trading = account termination",   icon: "🤖", color: "red" },
+            { rule: "No SL-less Trades", detail: "Every trade must have a stop loss",        icon: "🛡️", color: "yellow" },
+            { rule: "No Scalping",     detail: "50%+ trades closed under 60s = flagged",     icon: "⚡", color: "yellow" },
+            { rule: "30-Day Inactivity", detail: "No trades for 30 days = account closed",  icon: "📆", color: "yellow" },
+            { rule: "Payout Frequency", detail: "Every 10 business days after funding",      icon: "💰", color: "green" },
+            { rule: "Profit Split",    detail: "80% trader / 20% Maven on funded account",   icon: "🤝", color: "green" }
+          ].map(r => `
+            <div class="list-item" style="padding:10px 20px;">
+              <div>
+                <div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);display:flex;align-items:center;gap:6px;">
+                  ${r.icon} ${r.rule}
+                </div>
+                <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${r.detail}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Weekly Milestone Plan + Drawdown Warning -->
+      <div>
+        <div class="card mb-16">
+          <div class="card-header">
+            <span class="card-title">📅 Weekly Milestone Plan</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            ${[
+              { week: "Week 1 (End Mar 15)", target: "$60",  cumulative: "$60",  status: "done" },
+              { week: "Week 2 (End Mar 22)", target: "$80",  cumulative: "$140", status: "done" },
+              { week: "Week 3 (End Mar 29)", target: "$90",  cumulative: "$230", status: "current" },
+              { week: "Week 4 (End Apr 5)",  target: "$90",  cumulative: "$320", status: "future" },
+              { week: "Week 5 (End Apr 12)", target: "$80",  cumulative: "$400 🎯", status: "future" }
+            ].map(w => `
+              <div class="list-item" style="padding:10px 20px;">
+                <div>
+                  <div style="font-size:0.82rem;font-weight:500;color:${w.status === 'done' ? 'var(--text-muted)' : w.status === 'current' ? 'var(--gold)' : 'var(--text-secondary)'};">${w.week}</div>
+                  <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">Cumulative: ${w.cumulative}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:${w.status === 'done' ? 'var(--green)' : w.status === 'current' ? 'var(--gold)' : 'var(--text-muted)'};">${w.target}</span>
+                  <span>${w.status === 'done' ? '✅' : w.status === 'current' ? '🔥' : '⏳'}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Trailing DD Warning -->
+        <div class="alert alert-danger">
+          <span class="alert-icon">🚨</span>
+          <div class="alert-text">
+            <span class="alert-title">Trailing Drawdown — Read This</span>
+            The floor rises with your floating profits INTRADAY. If a trade shows +$200 unrealized, your floor immediately rises. If price reverses, the floor does NOT come back down. Rule: Move SL to breakeven once trade hits +2R.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DAILY LOG TABLE -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📓 Weekly Profit Log</span>
+        <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">Update manually each week</span>
+      </div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr>
+            <th>Week</th><th>Trades</th><th>Wins</th><th>Losses</th><th>WR</th><th>P&L</th><th>Cumulative</th><th>Maven %</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="primary">Feb 9–28</td>
+              <td class="mono">60</td>
+              <td class="mono" style="color:var(--green);">32</td>
+              <td class="mono" style="color:var(--red);">28</td>
+              <td class="mono">53.3%</td>
+              <td class="mono" style="color:var(--green);">+$173.87</td>
+              <td class="mono" style="color:var(--gold);">+$173.87</td>
+              <td class="mono" style="color:var(--gold);">43.5%</td>
+            </tr>
+            <tr style="color:var(--text-muted);">
+              <td>Mar 9–15</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+            <tr style="color:var(--text-muted);">
+              <td>Mar 16–22</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+            <tr style="color:var(--text-muted);">
+              <td>Mar 23–29</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const r = OCHUGI_DATA.raymond;
+  document.getElementById('bigPct').textContent = r.mavenPct.toFixed(1) + '%';
+  document.getElementById('bigBar').style.width = r.mavenPct + '%';
+
+  document.getElementById('mavenStats').innerHTML = [
+    { label: "Current Profit",   value: `+$${r.mavenCurrent.toFixed(2)}`, sub: "earned so far",              cls: "green", accent: "green" },
+    { label: "Still Needed",     value: `$${r.mavenRemaining.toFixed(2)}`, sub: "to reach $400 target",      cls: "gold",  accent: "gold" },
+    { label: "Account Balance",  value: `$${r.currentBalance.toFixed(2)}`, sub: `started at $${r.mavenStartBalance}`, cls: "neutral", accent: "blue" },
+    { label: "Trailing DD Floor", value: `$${(r.mavenStartBalance*0.95).toFixed(2)}`, sub: "never go below this", cls: "negative", accent: "red" }
+  ].map(s => `
+    <div class="stat-card ${s.accent}">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value ${s.cls}" style="font-size:1.5rem;">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+    </div>
+  `).join('');
+});
+</script>
+</body>
+</html>

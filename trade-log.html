@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Trade Log</title>
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>60 Trades Logged</div>
+        <h1 class="page-title">Raymond's Trade Log</h1>
+        <p class="page-subtitle">Feb 9 – Mar 7, 2026 · Full trade history from MavenTrade</p>
+      </div>
+    </div>
+    <div class="alert alert-info mb-24">
+      <span class="alert-icon">📋</span>
+      <div class="alert-text"><span class="alert-title">Full trade data lives in Notion</span>Your complete 60-trade log with all fields (entry/exit price, SL, TP, lots, emotion, setup type) is in the Notion Trade Log database. This page shows the instrument summary. To update after new trades: export from MavenTrade → import to Notion → update js/data.js stats.</div>
+    </div>
+    <div class="grid-4 mb-24">
+      <div class="stat-card green"><div class="stat-label">Total Trades</div><div class="stat-value neutral">60</div><div class="stat-sub">Feb 9 – Mar 7, 2026</div></div>
+      <div class="stat-card green"><div class="stat-label">Total P&L</div><div class="stat-value positive">+$173.87</div><div class="stat-sub">$349.75 gross profit</div></div>
+      <div class="stat-card blue"><div class="stat-label">Win/Loss</div><div class="stat-value neutral">32W / 28L</div><div class="stat-sub">53.33% win rate</div></div>
+      <div class="stat-card gold"><div class="stat-label">Best Trade</div><div class="stat-value gold">+$52.64</div><div class="stat-sub">GBPNZD</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">📊 Instrument Summary — All 60 Trades</span></div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr><th>Instrument</th><th>Trades</th><th>Wins</th><th>Losses</th><th>Win Rate</th><th>Net P&L</th><th>Status</th></tr></thead>
+          <tbody id="tradeLogTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="js/data.js"></script><script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const instr = OCHUGI_DATA.raymond.instruments;
+  document.getElementById('tradeLogTable').innerHTML = instr.map(i => {
+    const losses = i.trades - Math.round(i.trades * i.wr / 100);
+    const wins = i.trades - losses;
+    return `<tr>
+      <td class="primary mono">${i.symbol}</td>
+      <td class="mono">${i.trades}</td>
+      <td class="mono" style="color:var(--green);">${wins}</td>
+      <td class="mono" style="color:var(--red);">${losses}</td>
+      <td class="mono">${i.wr}%</td>
+      <td class="mono" style="color:${i.pnl>=0?'var(--green)':'var(--red)'};">${i.pnl>=0?'+':''}$${i.pnl.toFixed(2)}</td>
+      <td><span class="badge ${i.status==='green'?'badge-green':i.status==='kill'?'badge-red':'badge-gold'}">${i.status==='green'?'ACTIVE':i.status==='kill'?'BANNED':'WATCH'}</span></td>
+    </tr>`;
+  }).join('');
+});
+</script>
+</body></html>

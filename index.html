@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Command Center</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="page-content">
+
+    <!-- News Alert (auto-populated by nav.js) -->
+    <div id="newsAlertBar"></div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge">
+          <span class="dot"></span>
+          Live Dashboard
+        </div>
+        <h1 class="page-title">Command Center</h1>
+        <p class="page-subtitle">Ochugi Holdings Ltd · MavenTrade Account 10212887</p>
+      </div>
+      <div class="flex gap-8">
+        <a href="maven.html" class="btn btn-gold">🎯 Maven Tracker</a>
+        <a href="calculator.html" class="btn btn-outline">🧮 Calculator</a>
+      </div>
+    </div>
+
+    <!-- TOP STATS ROW -->
+    <div class="grid-4 mb-24" id="topStats"></div>
+
+    <!-- MAVEN CHALLENGE CARD + SESSIONS -->
+    <div class="grid-2 mb-24">
+
+      <!-- Maven Progress -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🎯 Maven Challenge Progress</span>
+          <span class="badge badge-gold">ACTIVE</span>
+        </div>
+        <div class="card-body" id="mavenCard"></div>
+        <div class="card-footer">
+          No time limit · 5% trailing drawdown · 80/20 payout split
+        </div>
+      </div>
+
+      <!-- Session Breakdown -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⏱️ Session Performance</span>
+        </div>
+        <div class="card-body" id="sessionCard"></div>
+      </div>
+
+    </div>
+
+    <!-- INSTRUMENT TABLE + ASSET CLASS -->
+    <div class="grid-2 mb-24">
+
+      <!-- Instruments -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔍 Instrument Breakdown</span>
+          <a href="trade-log.html" class="btn btn-ghost btn-sm">View all →</a>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0;" id="instrTable"></div>
+      </div>
+
+      <!-- Asset Class + Kill List -->
+      <div>
+        <div class="card mb-16">
+          <div class="card-header">
+            <span class="card-title">📦 Asset Class</span>
+          </div>
+          <div class="card-body" id="assetCard"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">❌ Kill List</span>
+            <span class="badge badge-red">4 BANNED</span>
+          </div>
+          <div class="card-body" id="killCard"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RECENT MISTAKES + UPCOMING NEWS -->
+    <div class="grid-2">
+
+      <!-- Mistakes -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚠️ Recent Mistakes</span>
+          <span class="badge badge-red">5 LOGGED</span>
+        </div>
+        <div class="card-body" id="mistakesCard"></div>
+      </div>
+
+      <!-- Upcoming News -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📅 Upcoming High-Impact Events</span>
+          <a href="news-calendar.html" class="btn btn-ghost btn-sm">Full calendar →</a>
+        </div>
+        <div class="card-body" id="newsCard"></div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const r = OCHUGI_DATA.raymond;
+
+  /* Top Stats */
+  document.getElementById('topStats').innerHTML = [
+    { label: "Net P&L",      value: `+$${r.netPnL.toFixed(2)}`,     sub: `${r.totalTrades} trades · Feb–Mar 2026`, cls: "green", accent: "green", icon: "💰" },
+    { label: "Win Rate",     value: `${r.winRate}%`,                  sub: `${r.wins}W / ${r.losses}L`,              cls: "neutral", accent: "blue", icon: "🎯" },
+    { label: "Profit Factor",value: `${r.profitFactor}`,              sub: `Avg win $${r.avgWin} · Avg loss $${r.avgLoss}`, cls: "gold", accent: "gold", icon: "📈" },
+    { label: "Maven Target", value: `${r.mavenPct.toFixed(1)}%`,      sub: `$${r.mavenRemaining.toFixed(2)} remaining`,   cls: "gold", accent: "gold", icon: "🏆" }
+  ].map(s => `
+    <div class="stat-card ${s.accent}">
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value ${s.cls}">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+      <span class="stat-icon">${s.icon}</span>
+    </div>
+  `).join('');
+
+  /* Maven Card */
+  document.getElementById('mavenCard').innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div class="progress-header">
+        <span class="progress-label">Progress to +8% target ($400)</span>
+        <span class="progress-value" style="color:var(--gold);">${r.mavenPct.toFixed(1)}%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill gold" style="width:${r.mavenPct}%"></div></div>
+    </div>
+    <div class="grid-2" style="gap:12px;margin-bottom:16px;">
+      <div style="background:var(--bg-surface);border-radius:8px;padding:12px;">
+        <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;">EARNED</div>
+        <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--green);">+$${r.mavenCurrent.toFixed(2)}</div>
+      </div>
+      <div style="background:var(--bg-surface);border-radius:8px;padding:12px;">
+        <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;">STILL NEEDED</div>
+        <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--yellow);">$${r.mavenRemaining.toFixed(2)}</div>
+      </div>
+    </div>
+    <div class="alert alert-gold" style="font-size:0.78rem;">
+      <span class="alert-icon">⚡</span>
+      <div class="alert-text">At +$2.90/trade expectancy, ~78 more clean trades to funded. Focus: XAUUSD Asian session.</div>
+    </div>
+  `;
+
+  /* Sessions */
+  document.getElementById('sessionCard').innerHTML = r.sessions.map(s => `
+    <div class="list-item">
+      <div class="list-item-label">
+        <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;"></span>
+        ${s.name} Session
+        <span class="badge ${s.pnl > 0 ? 'badge-green' : 'badge-red'}" style="font-size:0.55rem;">${s.wr}% WR</span>
+      </div>
+      <div class="list-item-value" style="color:${s.pnl > 0 ? 'var(--green)' : 'var(--red)'};">
+        ${s.pnl > 0 ? '+' : ''}$${s.pnl.toFixed(2)}
+      </div>
+    </div>
+  `).join('');
+
+  /* Instrument Table */
+  document.getElementById('instrTable').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Symbol</th><th>P&L</th><th>WR</th><th>Trades</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+        ${r.instruments.map(i => `
+          <tr>
+            <td class="primary mono">${i.symbol}</td>
+            <td class="mono" style="color:${i.pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${i.pnl >= 0 ? '+' : ''}$${i.pnl.toFixed(2)}</td>
+            <td class="mono">${i.wr}%</td>
+            <td class="mono">${i.trades}</td>
+            <td><span class="badge ${i.status === 'green' ? 'badge-green' : i.status === 'kill' ? 'badge-red' : 'badge-gold'}">${i.status === 'green' ? 'ACTIVE' : i.status === 'kill' ? 'BANNED' : 'WATCH'}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  /* Asset Class */
+  document.getElementById('assetCard').innerHTML = r.assets.map(a => `
+    <div class="list-item">
+      <div class="list-item-label">
+        <span style="width:8px;height:8px;border-radius:50%;background:${a.color};display:inline-block;"></span>
+        ${a.name}
+        <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${a.trades} trades</span>
+      </div>
+      <div class="list-item-value" style="color:${a.pnl >= 0 ? 'var(--green)' : 'var(--red)'};">
+        ${a.pnl >= 0 ? '+' : ''}$${a.pnl.toFixed(2)}
+      </div>
+    </div>
+  `).join('');
+
+  /* Kill List */
+  document.getElementById('killCard').innerHTML = OCHUGI_DATA.killList.map(k => `
+    <div class="kill-item" style="margin-bottom:6px;">
+      <span style="font-weight:700;">${k.symbol}</span>
+      <span style="flex:1;color:var(--red-dim);font-size:0.68rem;">${k.reason}</span>
+      <span style="color:var(--red);">-$${Math.abs(k.totalLoss).toFixed(2)}</span>
+    </div>
+  `).join('');
+
+  /* Mistakes */
+  document.getElementById('mistakesCard').innerHTML = OCHUGI_DATA.mistakes.map(m => `
+    <div class="list-item">
+      <div>
+        <div style="font-size:0.82rem;color:var(--text-primary);font-weight:500;margin-bottom:2px;">${m.type}</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);">${m.date} · ${m.detail}</div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:0.8rem;font-weight:600;color:var(--red);">-$${Math.abs(m.impact).toFixed(2)}</div>
+    </div>
+  `).join('');
+
+  /* Upcoming News */
+  const upcoming = getUpcomingEvents(30).slice(0, 6);
+  document.getElementById('newsCard').innerHTML = upcoming.length
+    ? upcoming.map(e => `
+        <div class="list-item">
+          <div>
+            <div style="font-size:0.82rem;color:var(--text-primary);font-weight:500;">${e.event} <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">${e.country}</span></div>
+            <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">${e.date} · ${e.time} EAT</div>
+          </div>
+          <span class="badge ${e.impact === 'extreme' ? 'badge-red' : 'badge-gold'}">${e.impact.toUpperCase()}</span>
+        </div>
+      `).join('')
+    : '<div style="color:var(--text-muted);font-size:0.82rem;padding:8px 0;">No upcoming events in next 30 days</div>';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Raymond's Desk</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>Raymond Ochieng</div>
+        <h1 class="page-title">Raymond's Trading Desk</h1>
+        <p class="page-subtitle">Account 10212887 · Feb 9 – Mar 7, 2026</p>
+      </div>
+      <div class="flex gap-8">
+        <a href="trade-log.html" class="btn btn-outline">📋 Trade Log</a>
+        <a href="analytics.html" class="btn btn-gold">📊 Analytics</a>
+      </div>
+    </div>
+    <div class="grid-4 mb-24" id="rayStats"></div>
+    <div class="grid-2 mb-24">
+      <div class="card">
+        <div class="card-header"><span class="card-title">⏱️ Session Breakdown</span></div>
+        <div class="card-body" id="raySessions"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">📦 Asset Class</span></div>
+        <div class="card-body" id="rayAssets"></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🏆 Top Trades</span></div>
+        <div class="card-body" id="rayTop"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">🔑 Key Insights</span></div>
+        <div class="card-body" id="rayInsights"></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const r = OCHUGI_DATA.raymond;
+  document.getElementById('rayStats').innerHTML = [
+    { label:"Net P&L",       value:`+$${r.netPnL.toFixed(2)}`,   sub:`${r.totalTrades} trades`,          cls:"positive", accent:"green" },
+    { label:"Win Rate",      value:`${r.winRate}%`,               sub:`${r.wins}W / ${r.losses}L`,        cls:"neutral",  accent:"blue"  },
+    { label:"Profit Factor", value:r.profitFactor,                sub:`Expectancy +$${r.expectancy}/trade`,cls:"gold",     accent:"gold"  },
+    { label:"Max Drawdown",  value:`${r.maxDrawdownPct}%`,        sub:`$${r.maxDrawdown} peak-to-trough`, cls:"neutral",  accent:"red"   }
+  ].map(s=>`<div class="stat-card ${s.accent}"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
+
+  document.getElementById('raySessions').innerHTML = r.sessions.map(s=>`
+    <div class="list-item">
+      <div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;"></span>${s.name} <span class="badge ${s.pnl>0?'badge-green':'badge-red'}">${s.wr}% WR</span></div>
+      <div class="list-item-value" style="color:${s.pnl>0?'var(--green)':'var(--red)'};">${s.pnl>0?'+':''}$${s.pnl.toFixed(2)}</div>
+    </div>`).join('');
+
+  document.getElementById('rayAssets').innerHTML = r.assets.map(a=>`
+    <div class="list-item">
+      <div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:${a.color};display:inline-block;"></span>${a.name} <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${a.trades}t</span></div>
+      <div class="list-item-value" style="color:${a.pnl>=0?'var(--green)':'var(--red)'};">${a.pnl>=0?'+':''}$${a.pnl.toFixed(2)}</div>
+    </div>`).join('');
+
+  document.getElementById('rayTop').innerHTML = r.instruments.filter(i=>i.pnl>0).slice(0,5).map(i=>`
+    <div class="list-item">
+      <div class="list-item-label"><span class="chip chip-win">WIN</span>${i.symbol}</div>
+      <div style="text-align:right;"><div class="list-item-value" style="color:var(--green);">+$${i.pnl.toFixed(2)}</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${i.wr}% WR · ${i.trades} trades</div></div>
+    </div>`).join('');
+
+  document.getElementById('rayInsights').innerHTML = [
+    { icon:'✅', text:'Asian session is your edge — 57% WR, +$92.97', color:'var(--green)' },
+    { icon:'❌', text:'New York session costing you — 33% WR, -$17.82', color:'var(--red)' },
+    { icon:'🔥', text:'Removing kill list = +30% profit improvement', color:'var(--gold)' },
+    { icon:'📊', text:'XAUUSD + GBPNZD + GER30 = 76.5% of all profit', color:'var(--blue)' },
+    { icon:'⚠️', text:'Long bias (58.3% WR) >>> Short (45.8% WR)', color:'var(--yellow)' },
+    { icon:'📈', text:'Calmar Ratio 61.7 — exceptional risk management', color:'var(--green)' }
+  ].map(i=>`
+    <div class="list-item">
+      <div style="font-size:0.82rem;color:${i.color};display:flex;align-items:center;gap:8px;">${i.icon} ${i.text}</div>
+    </div>`).join('');
+});
+</script>
+</body>
+</html>

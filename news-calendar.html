@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — News Calendar</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>17 Events Loaded</div>
+        <h1 class="page-title">News Events Calendar</h1>
+        <p class="page-subtitle">High-impact events · All times in EAT (East Africa Time) · Maven ±2 min rule applies to all red events</p>
+      </div>
+    </div>
+    <div class="alert alert-danger mb-24">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-text">
+        <span class="alert-title">Maven News Rule — CRITICAL</span>
+        Any profit made within ±2 minutes of a Red Folder event is VOIDED by Maven. Check this page before every session. If an event is within 60 minutes, wait or skip.
+      </div>
+    </div>
+    <div id="eventsGrouped"></div>
+  </main>
+</div>
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const events = OCHUGI_DATA.newsEvents;
+  // Group by month
+  const groups = {};
+  events.forEach(e => {
+    const month = e.date.substring(0, 7);
+    if (!groups[month]) groups[month] = [];
+    groups[month].push(e);
+  });
+  const impactColors = { extreme: 'var(--red)', high: 'var(--yellow)', medium: 'var(--blue)' };
+  const countryFlags = { USD: '🇺🇸', GBP: '🇬🇧', EUR: '🇪🇺', JPY: '🇯🇵', CAD: '🇨🇦', AUD: '🇦🇺' };
+  const monthNames = { '2026-03': 'March 2026', '2026-04': 'April 2026', '2026-05': 'May 2026', '2026-06': 'June 2026' };
+  let html = '';
+  Object.entries(groups).forEach(([month, evts]) => {
+    html += `<div class="section-title" style="margin-top:24px;">${monthNames[month] || month}</div>`;
+    html += `<div class="table-wrap mb-16"><table><thead><tr><th>Date</th><th>Event</th><th>Currency</th><th>Time (EAT)</th><th>No-Trade Window</th><th>Impact</th></tr></thead><tbody>`;
+    evts.forEach(e => {
+      const d = new Date(e.date);
+      const dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const isToday = e.date === new Date().toISOString().split('T')[0];
+      html += `<tr ${isToday ? 'style="background:rgba(255,75,92,0.08);"' : ''}>
+        <td class="primary mono">${dateStr} ${isToday ? '<span class="badge badge-red" style="margin-left:4px;">TODAY</span>' : ''}</td>
+        <td class="primary">${e.event}</td>
+        <td class="mono">${countryFlags[e.country] || ''} ${e.country}</td>
+        <td class="mono" style="color:var(--yellow);">${e.time}</td>
+        <td class="mono" style="color:var(--red);font-size:0.7rem;">${e.block}</td>
+        <td><span class="badge" style="background:rgba(255,75,92,0.1);color:${impactColors[e.impact]};border-color:${impactColors[e.impact]}33;">${e.impact.toUpperCase()}</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  document.getElementById('eventsGrouped').innerHTML = html;
+});
+</script>
+</body>
+</html>

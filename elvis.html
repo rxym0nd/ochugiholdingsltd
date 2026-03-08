@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Elvis's Desk</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span style="width:6px;height:6px;border-radius:50%;background:var(--yellow);display:inline-block;"></span>Awaiting Data</div>
+        <h1 class="page-title">Elvis's Trading Desk</h1>
+        <p class="page-subtitle">Elvis Ngugi · Upload MavenTrade history to activate</p>
+      </div>
+    </div>
+    <div class="alert alert-warning mb-24">
+      <span class="alert-icon">📤</span>
+      <div class="alert-text">
+        <span class="alert-title">Action Required — Upload Elvis's Trade Data</span>
+        Export your trade history from MavenTrade as Excel (.xlsx) and share it with Claude. Your stats, session breakdown, instrument analysis and Maven progress will auto-populate here — same as Raymond's page.
+      </div>
+    </div>
+    <div class="grid-4 mb-24">
+      ${['Net P&L','Win Rate','Profit Factor','Maven Progress'].map(l=>`
+        <div class="stat-card"><div class="stat-label">${l}</div><div style="font-family:var(--font-display);font-size:1.8rem;color:var(--text-muted);margin:8px 0;">—</div><div class="stat-sub">Awaiting data</div></div>
+      `).join('')}
+    </div>
+    <div class="card" style="text-align:center;padding:60px 20px;">
+      <div style="font-size:4rem;margin-bottom:16px;">📊</div>
+      <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:8px;">Elvis — Your Dashboard Is Ready</div>
+      <div style="color:var(--text-secondary);max-width:400px;margin:0 auto 24px;">Everything is built and waiting. Upload your MavenTrade Excel export and all your stats, session analysis, instrument breakdown and Maven challenge progress will appear here automatically.</div>
+      <div class="alert alert-info" style="max-width:500px;margin:0 auto;text-align:left;">
+        <span class="alert-icon">📋</span>
+        <div class="alert-text"><span class="alert-title">How to export from MavenTrade</span>Login → History → Export → Excel (.xlsx) → Share the file with Claude in this chat</div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+</body>
+</html>

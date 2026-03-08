@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Backtesting</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>4 Strategies</div>
+        <h1 class="page-title">Backtesting Log</h1>
+        <p class="page-subtitle">Test every strategy before risking real money. Only approved strategies go live.</p>
+      </div>
+    </div>
+    <div class="grid-3 mb-16">
+      <div class="stat-card green"><div class="stat-label">Approved Strategies</div><div class="stat-value positive" style="font-size:1.8rem;">3</div><div class="stat-sub">Ready for live trading</div></div>
+      <div class="stat-card red"><div class="stat-label">Failed Strategies</div><div class="stat-value negative" style="font-size:1.8rem;">1</div><div class="stat-sub">Do not trade</div></div>
+      <div class="stat-card blue"><div class="stat-label">In Progress</div><div class="stat-value neutral" style="font-size:1.8rem;">0</div><div class="stat-sub">Add new backtests</div></div>
+    </div>
+    <div id="backtestCards"></div>
+  </main>
+</div>
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const verdictColor = { approved: 'var(--green)', failed: 'var(--red)', needs_refinement: 'var(--yellow)', in_progress: 'var(--blue)' };
+  const verdictLabel = { approved: '✅ Approved', failed: '❌ Failed', needs_refinement: '⚠️ Needs Work', in_progress: '🔄 In Progress' };
+  document.getElementById('backtestCards').innerHTML = OCHUGI_DATA.backtests.map(b => `
+    <div class="card mb-16" style="border-left:3px solid ${verdictColor[b.verdict]};">
+      <div class="card-header">
+        <div>
+          <div class="card-title">${b.name}</div>
+          <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-top:2px;">${b.instrument} · ${b.timeframe} · ${b.session} session</div>
+        </div>
+        <span class="badge" style="color:${verdictColor[b.verdict]};border-color:${verdictColor[b.verdict]}33;background:${verdictColor[b.verdict]}11;">${verdictLabel[b.verdict]}</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-4" style="gap:12px;margin-bottom:16px;">
+          ${[
+            {label:'Win Rate',value:`${b.winRate}%`,color:b.winRate>=50?'var(--green)':'var(--red)'},
+            {label:'Profit Factor',value:b.profitFactor,color:b.profitFactor>=1?'var(--green)':'var(--red)'},
+            {label:'Expectancy',value:`${b.expectancy>=0?'+':''}$${b.expectancy}`,color:b.expectancy>=0?'var(--green)':'var(--red)'},
+            {label:'Confidence',value:`${b.confidence}/10`,color:b.confidence>=7?'var(--green)':b.confidence>=5?'var(--yellow)':'var(--red)'}
+          ].map(s=>`<div style="background:var(--bg-surface);border-radius:8px;padding:12px;border:1px solid var(--border);"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-bottom:4px;">${s.label}</div><div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:${s.color};">${s.value}</div></div>`).join('')}
+        </div>
+        <div class="grid-3" style="gap:10px;font-family:var(--font-mono);font-size:0.7rem;">
+          <div><span style="color:var(--text-muted);">SAMPLE SIZE:</span> <span>${b.trades} trades (${b.wins}W/${b.losses}L)</span></div>
+          <div><span style="color:var(--text-muted);">AVG WIN:</span> <span style="color:var(--green);">$${b.avgWin}</span></div>
+          <div><span style="color:var(--text-muted);">AVG LOSS:</span> <span style="color:var(--red);">$${b.avgLoss}</span></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+});
+</script>
+</body>
+</html>

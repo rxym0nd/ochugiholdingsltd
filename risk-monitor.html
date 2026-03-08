@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Risk Monitor</title>
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>Risk Monitor</div>
+        <h1 class="page-title">Drawdown &amp; Risk Monitor</h1>
+        <p class="page-subtitle">Live risk limits · Maven drawdown floors · Daily/weekly/monthly caps</p>
+      </div>
+      <a href="calculator.html" class="btn btn-gold">🧮 Size Calculator</a>
+    </div>
+    <div class="alert alert-danger mb-24">
+      <span class="alert-icon">🚨</span>
+      <div class="alert-text"><span class="alert-title">Maven Trailing Drawdown — Real-time risk</span>The 5% trailing floor moves UP with your floating profits intraday. It does NOT move back down. Once you're up $100 on an open trade, your floor is $100 higher. Move SL to BE at +2R always.</div>
+    </div>
+    <div class="grid-4 mb-24" id="riskStats"></div>
+    <div class="grid-2 mb-24">
+      <div class="card">
+        <div class="card-header"><span class="card-title">📊 Risk Limits — Raymond</span></div>
+        <div class="card-body" style="padding:0;" id="riskLimits"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">📋 Ochugi Risk Rules (The Code)</span></div>
+        <div class="card-body" style="padding:0;">
+          ${[
+            ['Rule 1','0.25% max per trade ($12.94 on current balance)'],
+            ['Rule 2','1% max daily loss ($51.74) — stop trading if hit'],
+            ['Rule 3','5% max weekly loss — review setup if hit'],
+            ['Rule 4','8% max monthly loss — firm review required'],
+            ['Rule 5','Move SL to breakeven at +2R. Always.'],
+            ['Rule 6','Never trade kill list instruments (US30, USDJPY, AUDCAD, Crypto)'],
+            ['Rule 7','No NY session trading — 33% WR, net negative'],
+            ['Rule 8','Check news calendar before every session'],
+            ['Rule 9','Pre-Trade Scorecard ≥6 required to enter'],
+            ['Rule 10','After 2 consecutive losses — stop for the day']
+          ].map(([r, d]) => `
+            <div class="list-item" style="padding:10px 20px;">
+              <span class="badge badge-gold" style="flex-shrink:0;">${r}</span>
+              <span style="font-size:0.78rem;color:var(--text-secondary);">${d}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">📈 Account Health — Feb–Mar 2026</span></div>
+      <div class="card-body">
+        <div class="grid-3">
+          ${[
+            {label:'Starting Balance',value:'$5,000.00',color:'var(--text-primary)'},
+            {label:'Current Balance',value:'$5,173.87',color:'var(--green)'},
+            {label:'Net Gain',value:'+$173.87 (+3.48%)',color:'var(--green)'},
+            {label:'Max Drawdown',value:'$38.08 (0.74%)',color:'var(--yellow)'},
+            {label:'Recovery Factor',value:'4.57',color:'var(--green)'},
+            {label:'Calmar Ratio',value:'61.7',color:'var(--green)'}
+          ].map(i=>`<div style="background:var(--bg-surface);border-radius:8px;padding:14px;border:1px solid var(--border);"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-bottom:6px;">${i.label}</div><div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:${i.color};">${i.value}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="js/data.js"></script><script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const bal = OCHUGI_DATA.raymond.currentBalance;
+  const startBal = OCHUGI_DATA.raymond.mavenStartBalance;
+  document.getElementById('riskStats').innerHTML = [
+    {label:'Max Per Trade',value:`$${(bal*0.0025).toFixed(2)}`,sub:'0.25% of balance',accent:'red'},
+    {label:'Max Daily Loss',value:`$${(bal*0.01).toFixed(2)}`,sub:'1% — stop if hit',accent:'yellow'},
+    {label:'Maven DD Floor',value:`$${(startBal*0.95).toFixed(2)}`,sub:'5% trailing from peak',accent:'red'},
+    {label:'Buffer to Floor',value:`$${(bal-startBal*0.95).toFixed(2)}`,sub:'Current headroom',accent:'green'}
+  ].map(s=>`<div class="stat-card ${s.accent}"><div class="stat-label">${s.label}</div><div class="stat-value ${s.accent==='green'?'positive':s.accent==='red'?'negative':'gold'}" style="font-size:1.4rem;">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
+
+  document.getElementById('riskLimits').innerHTML = [
+    {label:`Per Trade (0.25%)`,value:`$${(bal*0.0025).toFixed(2)}`,bar:0.0025,color:'var(--red)'},
+    {label:`Daily Max (1%)`,value:`$${(bal*0.01).toFixed(2)}`,bar:0.01,color:'var(--yellow)'},
+    {label:`Weekly Max (5%)`,value:`$${(bal*0.05).toFixed(2)}`,bar:0.05,color:'var(--orange)'},
+    {label:`Monthly Max (8%)`,value:`$${(bal*0.08).toFixed(2)}`,bar:0.08,color:'var(--purple)'},
+    {label:'Maven Daily DD (3%)',value:`~$${(bal*0.03).toFixed(2)}`,bar:0.03,color:'var(--red)'},
+    {label:'Maven Max DD (5%)',value:`$${(bal*0.05).toFixed(2)}`,bar:0.05,color:'var(--red)'}
+  ].map(i=>`
+    <div style="padding:12px 20px;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <span style="font-size:0.8rem;color:var(--text-secondary);">${i.label}</span>
+        <span style="font-family:var(--font-mono);font-weight:700;color:${i.color};">${i.value}</span>
+      </div>
+      <div class="progress-track" style="height:3px;"><div class="progress-fill" style="width:${i.bar*100/0.1}%;background:${i.color};"></div></div>
+    </div>`).join('');
+});
+</script>
+</body></html>

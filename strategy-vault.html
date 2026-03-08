@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Strategy Vault</title>
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>3 Active Strategies</div>
+        <h1 class="page-title">Strategy Vault</h1>
+        <p class="page-subtitle">Only proven strategies. Backtested and approved before live use.</p>
+      </div>
+    </div>
+    ${[
+      {
+        name:'XAUUSD Asian Session Pullback',emoji:'🥇',
+        wr:'57.1%',pf:'2.08',expectancy:'+$3.47',confidence:8,
+        session:'Asian (02:00–06:00 EAT)',tf:'M15',instrument:'XAUUSD',
+        color:'var(--gold)',
+        entry:['D1 must be in uptrend (higher highs, higher lows)','Price pulls back to H4 demand zone','M15 bullish engulfing or pin bar signal at zone','Min 1:2 R:R confirmed before entry'],
+        sl:'Below M15 signal candle low or order block. Max 15 points.',
+        tp:'Next H4 resistance level. Min 1:2 R:R.',
+        filters:['Asian session only','No red news in next 60 min','Pre-Trade Scorecard ≥6','D1 uptrend intact']
+      },
+      {
+        name:'GBP Pairs London Open Momentum',emoji:'💷',
+        wr:'75%',pf:'4.57',expectancy:'+$12.36',confidence:7,
+        session:'London (11:00–13:00 EAT)',tf:'M15',instrument:'GBPUSD / GBPNZD / GBPJPY',
+        color:'var(--blue)',
+        entry:['London open: GBP pair breaks Asian range high or low','Strong momentum candle on break','Enter on first M15 pullback after the break','H4 structure must confirm direction'],
+        sl:'Below/above Asian range high or low. Max 20 pips.',
+        tp:'Previous day high/low. Min 1:3 R:R.',
+        filters:['London open only','No BOE event within 24 hours','H4 structure break confirmed','Score ≥6 required']
+      },
+      {
+        name:'GER30 Overlap Breakout',emoji:'📊',
+        wr:'66.7%',pf:'5.16',expectancy:'+$15.69',confidence:6,
+        session:'Overlap (15:00–18:00 EAT)',tf:'H1',instrument:'GER30 only (not US30)',
+        color:'var(--purple)',
+        entry:['GER30 H4 consolidation identified','H4 breakout with strong momentum candle','H1 candle close above/below key level','Strong volume/range on breakout candle'],
+        sl:'Below H1 breakout candle. Max 25 points.',
+        tp:'Previous H4 swing high/low. Min 1:2.5 R:R.',
+        filters:['GER30 only (US30 = kill list)','No US data within 90 min','Score ≥7 required','Overlap session only']
+      }
+    ].map(s=>`
+      <div class="card mb-24" style="border-left:3px solid ${s.color};">
+        <div class="card-header">
+          <div><div class="card-title">${s.emoji} ${s.name}</div><div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-top:2px;">${s.instrument} · ${s.tf} · ${s.session}</div></div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="text-align:center;"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">WIN RATE</div><div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--green);">${s.wr}</div></div>
+            <div style="text-align:center;"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:${s.color};">${s.pf}</div></div>
+            <div style="text-align:center;"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">EXPECT.</div><div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--green);">${s.expectancy}</div></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="grid-2" style="gap:20px;">
+            <div>
+              <div class="section-title">Entry Rules</div>
+              ${s.entry.map((r,i)=>`<div style="display:flex;gap:8px;margin-bottom:6px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:${s.color};font-weight:700;flex-shrink:0;">${i+1}.</span>${r}</div>`).join('')}
+              <div style="margin-top:12px;"><div class="section-title">Stop Loss</div><div style="font-size:0.8rem;color:var(--text-secondary);">${s.sl}</div></div>
+              <div style="margin-top:12px;"><div class="section-title">Take Profit</div><div style="font-size:0.8rem;color:var(--text-secondary);">${s.tp}</div></div>
+            </div>
+            <div>
+              <div class="section-title">Filters Required</div>
+              ${s.filters.map(f=>`<div style="display:flex;gap:8px;margin-bottom:6px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:var(--green);">✓</span>${f}</div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  </main>
+</div>
+<script src="js/data.js"></script><script src="js/nav.js"></script>
+</body></html>

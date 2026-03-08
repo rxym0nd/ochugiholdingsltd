@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Screenshot Archive</title>
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="main-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="page-content">
+    <div id="newsAlertBar"></div>
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-badge"><span class="dot"></span>Visual Review</div>
+        <h1 class="page-title">Trade Screenshot Archive</h1>
+        <p class="page-subtitle">Charts and visual reviews linked to your trade log entries</p>
+      </div>
+    </div>
+    <div class="alert alert-info mb-24">
+      <span class="alert-icon">📸</span>
+      <div class="alert-text"><span class="alert-title">How to use this archive</span>After every notable trade, take a screenshot on TradingView (share → image) and paste the URL into this table. The full database with all fields (What I Did Well, What I Did Wrong, Would I Take Again?) is in Notion's Trade Screenshot Archive.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">📋 Screenshot Log — Add entries below</span></div>
+      <div class="table-wrap" style="border:none;border-radius:0;">
+        <table>
+          <thead><tr><th>Trade Ref</th><th>Date</th><th>Symbol</th><th>Outcome</th><th>Entry Chart</th><th>Exit Chart</th><th>Would Take Again?</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="primary mono">RO-GBPNZD-001</td>
+              <td class="mono">Feb 2026</td>
+              <td class="mono">GBPNZD</td>
+              <td><span class="badge badge-green">WIN +$52.64</span></td>
+              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
+              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
+              <td><span class="badge badge-green">Yes — A+ setup</span></td>
+            </tr>
+            <tr>
+              <td class="primary mono">RO-GER30-001</td>
+              <td class="mono">Feb 2026</td>
+              <td class="mono">GER30</td>
+              <td><span class="badge badge-green">WIN +$43.51</span></td>
+              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
+              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
+              <td><span class="badge badge-green">Yes — A+ setup</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">Add new entries by editing the table in trade-log.html or by pasting TradingView links into the Notion database.</div>
+    </div>
+  </main>
+</div>
+<script src="js/data.js"></script><script src="js/nav.js"></script>
+</body></html>
