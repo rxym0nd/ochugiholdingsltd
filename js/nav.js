@@ -1,175 +1,333 @@
 /* ============================================================
-   OCHUGI HOLDINGS LTD — NAVIGATION
-   Builds the sidebar and handles active states.
-   To add a new page: add an entry to NAV_ITEMS below.
+   OCHUGI HOLDINGS LTD — NAVIGATION & INTERACTIONS v2
+   Custom cursor · Top nav · Scroll reveal · Loading screen
    ============================================================ */
 
-const NAV_ITEMS = [
+var NAV_STRUCTURE = [
   {
-    section: "Daily Use",
+    label: 'Daily',
     items: [
-      { icon: "⚡", label: "Command Center",    href: "index.html",              badge: null },
-      { icon: "🎯", label: "Maven Tracker",     href: "maven.html",              badge: { text: "LIVE", color: "gold" } },
-      { icon: "📅", label: "News Calendar",     href: "news-calendar.html",      badge: null },
-      { icon: "🧮", label: "Calculator",        href: "calculator.html",         badge: null },
-      { icon: "⏰", label: "Daily Routine",     href: "routine.html",            badge: null }
+      { icon: '⚡', label: 'Command Center', href: 'index.html' },
+      { icon: '🎯', label: 'Maven Tracker',  href: 'maven.html', badge: { text: 'LIVE', cls: 'nav-badge-gold' } },
+      { icon: '📅', label: 'News Calendar',  href: 'news-calendar.html' },
+      { icon: '⏰', label: 'Daily Routine',  href: 'routine.html' }
     ]
   },
   {
-    section: "Traders",
+    label: 'Traders',
     items: [
-      { icon: "📈", label: "Raymond",           href: "raymond.html",            badge: null },
-      { icon: "📈", label: "Elvis",             href: "elvis.html",              badge: { text: "SETUP", color: "blue" } },
-      { icon: "📋", label: "Trade Log",         href: "trade-log.html",          badge: { text: "60", color: "green" } }
+      { icon: '📈', label: 'Raymond', href: 'raymond.html' },
+      { icon: '📈', label: 'Elvis',   href: 'elvis.html', badge: { text: 'SETUP', cls: 'nav-badge-blue' } },
+      { icon: '📋', label: 'Trade Log', href: 'trade-log.html', badge: { text: '60', cls: 'nav-badge-green' } }
     ]
   },
   {
-    section: "Analysis",
+    label: 'Analysis',
     items: [
-      { icon: "📊", label: "Analytics",         href: "analytics.html",          badge: null },
-      { icon: "🔬", label: "Backtesting",       href: "backtesting.html",        badge: { text: "4", color: "green" } },
-      { icon: "🏆", label: "Strategy Vault",    href: "strategy-vault.html",     badge: null },
-      { icon: "📸", label: "Screenshots",       href: "screenshot-archive.html", badge: null }
+      { icon: '📊', label: 'Analytics',     href: 'analytics.html' },
+      { icon: '🔬', label: 'Backtesting',   href: 'backtesting.html' },
+      { icon: '🏆', label: 'Strategies',    href: 'strategy-vault.html' },
+      { icon: '📸', label: 'Screenshots',   href: 'screenshot-archive.html' }
     ]
   },
   {
-    section: "Risk",
+    label: 'Risk',
     items: [
-      { icon: "⚠️", label: "Risk Monitor",     href: "risk-monitor.html",       badge: null }
+      { icon: '⚠️', label: 'Risk Monitor', href: 'risk-monitor.html' },
+      { icon: '🧮', label: 'Calculator',    href: 'calculator.html' }
     ]
   }
 ];
 
-/* ─── BUILD SIDEBAR ────────────────────────────────────────────── */
-function buildSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  if (!sidebar) return;
-
-  const data = OCHUGI_DATA;
-  const r = data.raymond;
-
-  // Calculate if Maven floor is close
-  const mavenFloor = r.mavenStartBalance * 0.95;
-  const bufferPct = ((r.currentBalance - mavenFloor) / r.currentBalance * 100);
-  const floorWarning = bufferPct < 3;
-
-  sidebar.innerHTML = `
-    <!-- Logo -->
-    <div class="sidebar-logo">
-      <img src="assets/logo.png" alt="Ochugi Logo"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-      <div class="sidebar-logo-fallback" style="display:none">OH</div>
-      <div class="sidebar-brand">
-        <div class="sidebar-brand-name">Ochugi Holdings</div>
-        <div class="sidebar-brand-sub">Trading Firm</div>
-      </div>
-    </div>
-
-    <!-- Live Stats -->
-    <div class="sidebar-stats">
-      <div class="sidebar-stat-row">
-        <span class="sidebar-stat-label">BALANCE</span>
-        <span class="sidebar-stat-value positive">$${r.currentBalance.toLocaleString('en-US', {minimumFractionDigits:2})}</span>
-      </div>
-      <div class="sidebar-stat-row">
-        <span class="sidebar-stat-label">NET P&L</span>
-        <span class="sidebar-stat-value positive">+$${r.netPnL.toFixed(2)}</span>
-      </div>
-      <div class="sidebar-stat-row">
-        <span class="sidebar-stat-label">WIN RATE</span>
-        <span class="sidebar-stat-value neutral">${r.winRate}%</span>
-      </div>
-    </div>
-
-    <!-- Maven Progress -->
-    <div class="sidebar-maven">
-      <div class="sidebar-maven-header">
-        <span class="sidebar-maven-label">MAVEN CHALLENGE</span>
-        <span class="sidebar-maven-pct">${r.mavenPct.toFixed(1)}%</span>
-      </div>
-      <div class="sidebar-progress-track">
-        <div class="sidebar-progress-fill" style="width: ${r.mavenPct}%"></div>
-      </div>
-    </div>
-
-    <!-- Nav -->
-    <nav class="sidebar-nav">
-      ${NAV_ITEMS.map(section => `
-        <div class="nav-section">
-          <div class="nav-section-label">${section.section}</div>
-          ${section.items.map(item => `
-            <a href="${item.href}" class="nav-item ${isActivePage(item.href) ? 'active' : ''}">
-              <span class="nav-icon">${item.icon}</span>
-              <span class="nav-label">${item.label}</span>
-              ${item.badge ? `<span class="nav-badge ${item.badge.color}">${item.badge.text}</span>` : ''}
-            </a>
-          `).join('')}
-        </div>
-      `).join('')}
-    </nav>
-
-    <!-- Footer -->
-    <div class="sidebar-footer">
-      <div class="sidebar-footer-text">
-        Updated ${data.firm.lastUpdated}
-      </div>
-    </div>
-  `;
+/* ─── ACTIVE PAGE ────────────────────────────────────────────── */
+function getActivePage() {
+  return window.location.pathname.split('/').pop() || 'index.html';
 }
 
-/* ─── DETECT ACTIVE PAGE ───────────────────────────────────────── */
-function isActivePage(href) {
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  return currentPage === href;
+/* ─── BUILD TOP NAV ─────────────────────────────────────────── */
+function buildNav() {
+  var nav = document.getElementById('topnav');
+  if (!nav) return;
+
+  var r = OCHUGI_DATA.raymond;
+  var activePage = getActivePage();
+
+  var groupsHtml = '';
+  for (var g = 0; g < NAV_STRUCTURE.length; g++) {
+    var group = NAV_STRUCTURE[g];
+    var hasActive = group.items.some(function(i) { return i.href === activePage; });
+
+    groupsHtml += '<div class="nav-group">';
+    groupsHtml += '<span class="nav-link nav-group-trigger' + (hasActive ? ' active' : '') + '">' + group.label + '</span>';
+    groupsHtml += '<div class="nav-dropdown">';
+    for (var i = 0; i < group.items.length; i++) {
+      var item = group.items[i];
+      var isActive = item.href === activePage;
+      var badgeHtml = item.badge
+        ? '<span class="nav-badge ' + item.badge.cls + '">' + item.badge.text + '</span>'
+        : '';
+      groupsHtml += '<a href="' + item.href + '" class="nav-dropdown-item' + (isActive ? ' active' : '') + '">';
+      groupsHtml += '<span class="nav-dropdown-icon">' + item.icon + '</span>';
+      groupsHtml += item.label + badgeHtml;
+      groupsHtml += '</a>';
+    }
+    groupsHtml += '</div></div>';
+  }
+
+  nav.innerHTML =
+    // Logo
+    '<a href="index.html" class="nav-logo">'
+    + '<img class="nav-logo-img" src="assets/logo.png" alt="Ochugi" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+    + '<div class="nav-logo-fallback">OH</div>'
+    + '<div class="nav-brand">'
+    + '<div class="nav-brand-name">Ochugi</div>'
+    + '<div class="nav-brand-sub">Holdings · Trading Firm</div>'
+    + '</div>'
+    + '</a>'
+
+    // Nav links
+    + '<div class="nav-links">' + groupsHtml + '</div>'
+
+    // Right: Maven pill
+    + '<div class="nav-right">'
+    + '<a href="maven.html" class="nav-maven-pill">'
+    + '<span class="nav-maven-label">Maven</span>'
+    + '<div class="nav-maven-bar"><div class="nav-maven-fill" style="width:' + r.mavenPct + '%"></div></div>'
+    + '<span class="nav-maven-pct">' + r.mavenPct.toFixed(1) + '%</span>'
+    + '</a>'
+    + '<button class="nav-hamburger" id="navHamburger" aria-label="Menu">'
+    + '<span></span><span></span><span></span>'
+    + '</button>'
+    + '</div>';
 }
 
-/* ─── MOBILE TOGGLE ────────────────────────────────────────────── */
-function initMobileNav() {
-  const toggle = document.getElementById('mobileNavToggle');
-  const overlay = document.getElementById('sidebarOverlay');
-  const sidebar = document.getElementById('sidebar');
+/* ─── MOBILE MENU ────────────────────────────────────────────── */
+function buildMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  if (!menu) return;
 
-  if (!toggle || !overlay || !sidebar) return;
+  var r = OCHUGI_DATA.raymond;
+  var activePage = getActivePage();
+  var allItems = [];
+  NAV_STRUCTURE.forEach(function(g) { allItems = allItems.concat(g.items); });
 
-  toggle.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('visible');
+  var linksHtml = '';
+  for (var i = 0; i < allItems.length; i++) {
+    var item = allItems[i];
+    var isActive = item.href === activePage;
+    linksHtml += '<a href="' + item.href + '" class="mobile-menu-link' + (isActive ? ' active' : '') + '">';
+    linksHtml += '<span class="mobile-icon">' + item.icon + '</span>' + item.label;
+    linksHtml += '</a>';
+  }
+
+  menu.innerHTML = linksHtml
+    + '<div class="mobile-menu-stats">'
+    + '<div class="mobile-stat">'
+    + '<div class="mobile-stat-label">Balance</div>'
+    + '<div class="mobile-stat-value text-gold">$' + r.currentBalance.toLocaleString('en-US', {minimumFractionDigits:2}) + '</div>'
+    + '</div>'
+    + '<div class="mobile-stat">'
+    + '<div class="mobile-stat-label">Win Rate</div>'
+    + '<div class="mobile-stat-value text-gold">' + r.winRate + '%</div>'
+    + '</div>'
+    + '</div>';
+}
+
+/* ─── NAV SCROLL BEHAVIOR ────────────────────────────────────── */
+function initNavScroll() {
+  var nav = document.getElementById('topnav');
+  if (!nav) return;
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 20) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  }, { passive: true });
+}
+
+/* ─── HAMBURGER TOGGLE ───────────────────────────────────────── */
+function initHamburger() {
+  var btn = document.getElementById('navHamburger');
+  var menu = document.getElementById('mobileMenu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', function() {
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
   });
 
-  overlay.addEventListener('click', () => {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('visible');
+  // Close on link click
+  menu.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      btn.classList.remove('open');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
+    });
   });
 }
 
-/* ─── NEWS ALERT BAR ────────────────────────────────────────────── */
+/* ─── CUSTOM CURSOR ──────────────────────────────────────────── */
+function initCursor() {
+  var dot = document.getElementById('cursorDot');
+  var ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+
+  var dotX = 0, dotY = 0, ringX = 0, ringY = 0;
+  var rafId;
+
+  document.addEventListener('mousemove', function(e) {
+    dotX = e.clientX;
+    dotY = e.clientY;
+  });
+
+  function animate() {
+    ringX += (dotX - ringX) * 0.12;
+    ringY += (dotY - ringY) * 0.12;
+
+    dot.style.left = dotX + 'px';
+    dot.style.top  = dotY + 'px';
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+
+    rafId = requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Hover effect on interactive elements
+  var hoverEls = document.querySelectorAll('a, button, [onclick], .nav-group-trigger, input, select');
+  hoverEls.forEach(function(el) {
+    el.addEventListener('mouseenter', function() {
+      dot.classList.add('hover');
+      ring.classList.add('hover');
+    });
+    el.addEventListener('mouseleave', function() {
+      dot.classList.remove('hover');
+      ring.classList.remove('hover');
+    });
+  });
+
+  // Hide when leaving window
+  document.addEventListener('mouseleave', function() {
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', function() {
+    dot.style.opacity = '1';
+    ring.style.opacity = '1';
+  });
+}
+
+/* ─── SCROLL REVEAL ──────────────────────────────────────────── */
+function initScrollReveal() {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  els.forEach(function(el) { observer.observe(el); });
+}
+
+/* ─── STAT TICKER ────────────────────────────────────────────── */
+function buildTicker() {
+  var wrap = document.getElementById('statTicker');
+  if (!wrap) return;
+
+  var r = OCHUGI_DATA.raymond;
+  var items = [
+    { label: 'Balance', val: '$' + r.currentBalance.toFixed(2) },
+    { label: 'Net P&L', val: '+$' + r.netPnL.toFixed(2) },
+    { label: 'Win Rate', val: r.winRate + '%' },
+    { label: 'Maven', val: r.mavenPct.toFixed(1) + '% Complete' },
+    { label: 'Profit Factor', val: r.profitFactor },
+    { label: 'Expectancy', val: '+$' + r.expectancy + '/trade' },
+    { label: 'Best Trade', val: '+$' + r.bestTrade.amount + ' · ' + r.bestTrade.instrument },
+    { label: 'Trades', val: r.totalTrades + ' total' },
+    { label: 'Session', val: r.bestSession + ' is the edge' },
+    { label: 'Target', val: '$' + r.mavenRemaining.toFixed(2) + ' remaining' }
+  ];
+
+  // Build one set
+  var oneSet = '';
+  for (var i = 0; i < items.length; i++) {
+    oneSet += '<div class="ticker-item">';
+    oneSet += '<span>' + items[i].label + '</span>';
+    oneSet += '<span class="ticker-sep">◆</span>';
+    oneSet += '<span class="ticker-val">' + items[i].val + '</span>';
+    if (i < items.length - 1) {
+      oneSet += '<span class="ticker-sep">—</span>';
+    }
+    oneSet += '</div>';
+  }
+
+  // Duplicate for seamless loop
+  var track = wrap.querySelector('.ticker-track');
+  if (track) {
+    track.innerHTML = oneSet + oneSet;
+  }
+}
+
+/* ─── NEWS ALERT ─────────────────────────────────────────────── */
 function buildNewsAlert() {
-  const container = document.getElementById('newsAlertBar');
+  var container = document.getElementById('newsAlertBar');
   if (!container) return;
 
-  const upcoming = getUpcomingEvents(2);
-  if (upcoming.length === 0) {
+  var upcoming = getUpcomingEvents(2);
+  if (!upcoming.length) {
     container.style.display = 'none';
     return;
   }
 
-  const next = upcoming[0];
-  const isToday = next.date === new Date().toISOString().split('T')[0];
+  var next = upcoming[0];
+  var isToday = next.date === new Date().toISOString().split('T')[0];
 
-  container.innerHTML = `
-    <div class="alert ${next.impact === 'extreme' ? 'alert-danger' : 'alert-warning'}" style="margin-bottom: 20px;">
-      <span class="alert-icon">⚠️</span>
-      <div class="alert-text">
-        <span class="alert-title">${isToday ? 'TODAY' : 'UPCOMING'}: ${next.event} — ${next.country}</span>
-        ${next.date} at ${next.time} EAT · No-trade window: ${next.block} · Maven rule applies
-      </div>
-    </div>
-  `;
+  container.innerHTML = '<div class="alert ' + (next.impact === 'extreme' ? 'alert-danger' : 'alert-warning') + '" style="margin-bottom:24px;">'
+    + '<span class="alert-icon">⚠️</span>'
+    + '<div class="alert-text">'
+    + '<span class="alert-title">' + (isToday ? 'TODAY' : 'UPCOMING') + ': ' + next.event + ' — ' + next.country + '</span>'
+    + next.date + ' at ' + next.time + ' EAT · No-trade window: ' + next.block + ' · Maven rule applies'
+    + '</div>'
+    + '</div>';
 }
 
-/* ─── INIT ──────────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
-  buildSidebar();
-  initMobileNav();
+/* ─── LOADING SCREEN ─────────────────────────────────────────── */
+function initLoadingScreen() {
+  var screen = document.getElementById('loadingScreen');
+  var bar = document.getElementById('loadingBar');
+  if (!screen) return;
+
+  // Animate bar
+  var pct = 0;
+  var interval = setInterval(function() {
+    pct += Math.random() * 25 + 10;
+    if (pct > 100) pct = 100;
+    if (bar) bar.style.width = pct + '%';
+    if (pct >= 100) {
+      clearInterval(interval);
+      setTimeout(function() {
+        screen.classList.add('hidden');
+      }, 300);
+    }
+  }, 120);
+}
+
+/* ─── INIT ALL ───────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  buildNav();
+  buildMobileMenu();
+  initNavScroll();
+  initHamburger();
+  initCursor();
+  initScrollReveal();
+  buildTicker();
   buildNewsAlert();
+  initLoadingScreen();
 });

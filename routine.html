@@ -9,50 +9,48 @@
   <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="main-layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="page-content">
-    <div id="newsAlertBar"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="loadingScreen">
+  <div class="loading-logo">ROUTINE<span>.</span></div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+  <div class="loading-label">Loading Daily Protocol</div>
+</div>
+<nav class="topnav" id="topnav"></nav>
+<div class="mobile-menu" id="mobileMenu"></div>
+<div class="page-wrap"><div class="page-content">
 
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-badge"><span class="dot"></span>Daily Protocol</div>
-        <h1 class="page-title">Daily Trading Routine</h1>
-        <p class="page-subtitle">Pre-market · During trade · End of day · Sunday review</p>
-      </div>
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-hero-label">Daily Protocol · Every Session</div>
+      <h1 class="page-hero-title">DAILY<br><em>ROUTINE</em></h1>
+      <p class="page-hero-sub">Pre-market · During trade · End of day · Sunday review</p>
     </div>
+  </div>
 
-    <div class="grid-2 mb-24">
-      <!-- Pre-Market -->
-      <div class="card">
-        <div class="card-header" style="border-left:3px solid var(--yellow);">
-          <span class="card-title">🌅 Pre-Market Routine — 10 min</span>
-        </div>
-        <div class="card-body" style="padding:0;" id="preMarketList"></div>
+  <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
+
+  <div class="container">
+    <div id="newsAlertBar" style="padding-top:40px;"></div>
+
+    <div class="grid-2 mb-32" style="margin-top:8px;">
+      <div class="card reveal">
+        <div class="card-header" style="border-left:3px solid var(--yellow);"><span class="card-title">🌅 Pre-Market Routine — 10 min</span></div>
+        <div style="padding:0;" id="preMarketList"></div>
       </div>
-
-      <!-- During + End of Day -->
       <div>
-        <div class="card mb-16">
-          <div class="card-header" style="border-left:3px solid var(--blue);">
-            <span class="card-title">📈 During The Trade</span>
-          </div>
-          <div class="card-body" style="padding:0;" id="duringTradeList"></div>
+        <div class="card mb-16 reveal reveal-delay-1">
+          <div class="card-header" style="border-left:3px solid var(--blue);"><span class="card-title">📈 During The Trade</span></div>
+          <div style="padding:0;" id="duringTradeList"></div>
         </div>
-
-        <div class="card">
-          <div class="card-header" style="border-left:3px solid var(--purple);">
-            <span class="card-title">🌙 End of Day — 5 min</span>
-          </div>
-          <div class="card-body" style="padding:0;" id="eodList"></div>
+        <div class="card reveal reveal-delay-2">
+          <div class="card-header" style="border-left:3px solid var(--purple);"><span class="card-title">🌙 End of Day — 5 min</span></div>
+          <div style="padding:0;" id="eodList"></div>
         </div>
       </div>
     </div>
 
-    <!-- Sunday Routine -->
-    <div class="card mb-24">
+    <div class="card mb-32 reveal">
       <div class="card-header" style="border-left:3px solid var(--green);">
         <span class="card-title">☀️ Sunday Routine — 30 min</span>
         <span class="badge badge-green">EVERY WEEK</span>
@@ -62,15 +60,17 @@
       </div>
     </div>
 
-    <!-- Quick Limits -->
-    <div class="card" style="border-color:var(--red-dim);">
+    <div class="card mb-32 reveal">
       <div class="card-header"><span class="card-title">⚡ Quick Reference — Daily Limits</span></div>
-      <div class="card-body">
-        <div class="grid-4" id="quickLimits"></div>
-      </div>
+      <div class="card-body"><div class="grid-4" id="quickLimits"></div></div>
     </div>
-  </main>
-</div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
+    <div class="container"><div class="split-title" style="opacity:0.08;">PROCESS<br>WINS</div></div>
+  </div>
+
+</div></div>
 
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
@@ -78,104 +78,78 @@
 document.addEventListener('DOMContentLoaded', function() {
   var bal = OCHUGI_DATA.raymond.currentBalance;
 
-  // --- Pre-Market Steps ---
   var steps = [
-    { step:'1', title:'Check News Calendar', time:'2 min', detail:'Open News Calendar — any red events today? Set phone alarm for block window.', link:'news-calendar.html', linkText:'Open Calendar' },
-    { step:'2', title:'Check Account Health', time:'2 min', detail:"Login MavenTrade — balance × 99% = today's floor. Balance × 1% = max daily loss." },
-    { step:'3', title:'Weekly Bias Check', time:'1 min', detail:'What is your D1 direction on XAUUSD this week? Review Sunday bias entry.' },
-    { step:'4', title:'Top-Down Analysis', time:'3 min', detail:'D1 → H4 → H1 → M15. All 4 must agree before entry. If not aligned — wait.' },
-    { step:'5', title:'Psychology Check-In', time:'2 min', detail:'Am I calm? Am I trading to recover or to execute? Reduce size 50% if unsettled.' }
+    {step:'1',title:'Check News Calendar',time:'2 min',detail:'Any red events today? Set phone alarm for block window.',link:'news-calendar.html',linkText:'Open Calendar'},
+    {step:'2',title:'Check Account Health',time:'2 min',detail:"Login MavenTrade — balance × 99% = today's floor. Balance × 1% = max daily loss."},
+    {step:'3',title:'Weekly Bias Check',time:'1 min',detail:'What is your D1 direction on XAUUSD this week? Review Sunday bias entry.'},
+    {step:'4',title:'Top-Down Analysis',time:'3 min',detail:'D1 → H4 → H1 → M15. All 4 must agree before entry. If not aligned — wait.'},
+    {step:'5',title:'Psychology Check-In',time:'2 min',detail:"Am I calm? Am I trading to recover or to execute? Reduce size 50% if unsettled."}
   ];
-  var preHtml = '';
-  for (var i = 0; i < steps.length; i++) {
-    var s = steps[i];
-    preHtml += '<div class="list-item" style="padding:14px 20px;align-items:flex-start;">';
-    preHtml += '<div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.8rem;color:var(--gold);flex-shrink:0;">' + s.step + '</div>';
-    preHtml += '<div style="flex:1;padding-left:12px;">';
-    preHtml += '<div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">' + s.title + ' <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">' + s.time + '</span></div>';
-    preHtml += '<div style="font-size:0.78rem;color:var(--text-secondary);">' + s.detail + '</div>';
-    if (s.link) {
-      preHtml += '<a href="' + s.link + '" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">' + s.linkText + ' &rarr;</a>';
-    }
-    preHtml += '</div></div>';
+  var ph='';
+  for(var i=0;i<steps.length;i++){
+    var s=steps[i];
+    ph+='<div class="list-item" style="padding:14px 20px;align-items:flex-start;">'
+      +'<div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.8rem;color:var(--gold);flex-shrink:0;">'+s.step+'</div>'
+      +'<div style="flex:1;padding-left:12px;"><div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">'+s.title+' <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+s.time+'</span></div>'
+      +'<div style="font-size:0.78rem;color:var(--text-secondary);">'+s.detail+'</div>'
+      +(s.link?'<a href="'+s.link+'" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">'+s.linkText+' →</a>':'')
+      +'</div></div>';
   }
-  document.getElementById('preMarketList').innerHTML = preHtml;
+  document.getElementById('preMarketList').innerHTML=ph;
 
-  // --- During Trade Rules ---
-  var duringRules = [
-    ['At entry',       'Set SL and TP immediately. No exceptions.'],
-    ['SL placed',      'Walk away. Do not watch it tick by tick.'],
-    ['Trade at +1R',   'News in 30 min? Close early to protect profit.'],
-    ['Trade at +2R',   'Move SL to breakeven. Non-negotiable. Maven floor protection.'],
-    ['Trade at +3R',   'Optional: partial close 50%. Lock profit, let rest run.'],
-    ['After close',    'Log in Trade Log before opening another chart.'],
-    ['After 1 loss',   '15-minute break minimum. No revenge trades.'],
-    ['After 2 losses', 'Trading day is OVER. Close the platform.']
+  var during=[
+    ['At entry','Set SL and TP immediately. No exceptions.'],
+    ['SL placed','Walk away. Do not watch it tick by tick.'],
+    ['Trade at +1R','News in 30 min? Close early to protect profit.'],
+    ['Trade at +2R','Move SL to breakeven. Non-negotiable. Maven floor protection.'],
+    ['Trade at +3R','Optional: partial close 50%. Lock profit, let rest run.'],
+    ['After close','Log in Trade Log before opening another chart.'],
+    ['After 1 loss','15-minute break minimum. No revenge trades.'],
+    ['After 2 losses','Trading day is OVER. Close the platform.']
   ];
-  var duringHtml = '';
-  for (var i = 0; i < duringRules.length; i++) {
-    duringHtml += '<div class="list-item" style="padding:8px 16px;">';
-    duringHtml += '<span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gold);min-width:110px;flex-shrink:0;">' + duringRules[i][0] + '</span>';
-    duringHtml += '<span style="font-size:0.78rem;color:var(--text-secondary);">' + duringRules[i][1] + '</span>';
-    duringHtml += '</div>';
+  var dh='';
+  for(var i=0;i<during.length;i++){
+    dh+='<div class="list-item" style="padding:10px 16px;">'
+      +'<span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--gold);min-width:110px;flex-shrink:0;">'+during[i][0]+'</span>'
+      +'<span style="font-size:0.78rem;color:var(--text-secondary);">'+during[i][1]+'</span></div>';
   }
-  document.getElementById('duringTradeList').innerHTML = duringHtml;
+  document.getElementById('duringTradeList').innerHTML=dh;
 
-  // --- End of Day Checklist ---
-  var eodItems = [
-    'All trades logged in Trade Log?',
-    'Screenshots captured for notable setups?',
-    'Any rule violations? Log in Mistake Tracker tonight.',
-    "Today's net P&L written down?",
-    'One sentence: what did today teach me?'
-  ];
-  var eodHtml = '';
-  for (var i = 0; i < eodItems.length; i++) {
-    eodHtml += '<div class="list-item" style="padding:8px 16px;gap:10px;">';
-    eodHtml += '<span style="color:var(--text-muted);font-size:1rem;">☐</span>';
-    eodHtml += '<span style="font-size:0.78rem;color:var(--text-secondary);">' + eodItems[i] + '</span>';
-    eodHtml += '</div>';
-  }
-  document.getElementById('eodList').innerHTML = eodHtml;
+  var eod=['All trades logged in Trade Log?','Screenshots captured for notable setups?','Any rule violations? Log in Mistake Tracker tonight.','Today\'s net P&L written down?','One sentence: what did today teach me?'];
+  var eh='';
+  for(var i=0;i<eod.length;i++){eh+='<div class="list-item" style="padding:10px 16px;gap:10px;"><span style="color:var(--text-muted);">☐</span><span style="font-size:0.78rem;color:var(--text-secondary);">'+eod[i]+'</span></div>';}
+  document.getElementById('eodList').innerHTML=eh;
 
-  // --- Sunday Grid ---
-  var sundayTasks = [
-    { time:'10 min', task:"Review last week's trades",         icon:'📋', link:'trade-log.html' },
-    { time:'5 min',  task:'Write Weekly Market Bias',          icon:'🗺️', link:'#' },
-    { time:'5 min',  task:"Mark next week's news events",      icon:'📅', link:'news-calendar.html' },
-    { time:'5 min',  task:'Fill in Weekly Review',             icon:'📝', link:'#' },
-    { time:'3 min',  task:'Update Maven Challenge progress',   icon:'🎯', link:'maven.html' },
-    { time:'2 min',  task:'Message partner for accountability', icon:'🤝', link:'analytics.html' }
+  var sun=[
+    {time:'10 min',task:"Review last week's trades",icon:'📋',link:'trade-log.html'},
+    {time:'5 min',task:'Write Weekly Market Bias',icon:'🗺️',link:'#'},
+    {time:'5 min',task:"Mark next week's news events",icon:'📅',link:'news-calendar.html'},
+    {time:'5 min',task:'Fill in Weekly Review',icon:'📝',link:'#'},
+    {time:'3 min',task:'Update Maven Challenge progress',icon:'🎯',link:'maven.html'},
+    {time:'2 min',task:'Message partner for accountability',icon:'🤝',link:'analytics.html'}
   ];
-  var sundayHtml = '';
-  for (var i = 0; i < sundayTasks.length; i++) {
-    var t = sundayTasks[i];
-    sundayHtml += '<div style="background:var(--bg-surface);border-radius:var(--radius-md);padding:14px;border:1px solid var(--border);">';
-    sundayHtml += '<div style="font-size:1.3rem;margin-bottom:6px;">' + t.icon + '</div>';
-    sundayHtml += '<div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">' + t.task + '</div>';
-    sundayHtml += '<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">' + t.time + '</div>';
-    sundayHtml += '</div>';
+  var suh='';
+  for(var i=0;i<sun.length;i++){
+    var t=sun[i];
+    suh+='<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);">'
+      +'<div style="font-size:1.3rem;margin-bottom:6px;">'+t.icon+'</div>'
+      +'<div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">'+t.task+'</div>'
+      +'<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+t.time+'</div></div>';
   }
-  document.getElementById('sundayGrid').innerHTML = sundayHtml;
+  document.getElementById('sundayGrid').innerHTML=suh;
 
-  // --- Quick Limits ---
-  var limitsData = [
-    { label:'Max Per Trade', value:'$' + (bal * 0.0025).toFixed(2), sub:'0.25% of balance',      accent:'red' },
-    { label:'Max Daily Loss', value:'$' + (bal * 0.01).toFixed(2),  sub:'1% — stop trading',     accent:'yellow' },
-    { label:'Maven DD Floor', value:'$' + (5000 * 0.95).toFixed(2), sub:'Never go below this',   accent:'red' },
-    { label:'Best Session',   value:'Asian',                          sub:'02:00–06:00 EAT · 57% WR', accent:'green' }
+  var lims=[
+    {label:'Max Per Trade',value:'$'+(bal*0.0025).toFixed(2),sub:'0.25% of balance',accent:'red'},
+    {label:'Max Daily Loss',value:'$'+(bal*0.01).toFixed(2),sub:'1% — stop trading',accent:'yellow'},
+    {label:'Maven DD Floor',value:'$'+(5000*0.95).toFixed(2),sub:'Never go below',accent:'red'},
+    {label:'Best Session',value:'Asian',sub:'02:00–06:00 EAT · 57% WR',accent:'green'}
   ];
-  var limitsHtml = '';
-  for (var i = 0; i < limitsData.length; i++) {
-    var l = limitsData[i];
-    var valClass = l.accent === 'green' ? 'positive' : l.accent === 'red' ? 'negative' : 'gold';
-    limitsHtml += '<div class="stat-card ' + l.accent + '">';
-    limitsHtml += '<div class="stat-label">' + l.label + '</div>';
-    limitsHtml += '<div class="stat-value ' + valClass + '" style="font-size:1.3rem;">' + l.value + '</div>';
-    limitsHtml += '<div class="stat-sub">' + l.sub + '</div>';
-    limitsHtml += '</div>';
+  var lh='';
+  for(var i=0;i<lims.length;i++){
+    var l=lims[i];var vc=l.accent==='green'?'positive':l.accent==='red'?'negative':'gold';
+    lh+='<div class="stat-card '+l.accent+'"><div class="stat-label">'+l.label+'</div><div class="stat-value '+vc+'" style="font-size:1.3rem;">'+l.value+'</div><div class="stat-sub">'+l.sub+'</div></div>';
   }
-  document.getElementById('quickLimits').innerHTML = limitsHtml;
+  document.getElementById('quickLimits').innerHTML=lh;
 });
 </script>
 </body>

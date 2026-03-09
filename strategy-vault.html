@@ -9,195 +9,82 @@
   <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="main-layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="page-content">
-    <div id="newsAlertBar"></div>
-
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-badge"><span class="dot"></span>3 Active Strategies</div>
-        <h1 class="page-title">Strategy Vault</h1>
-        <p class="page-subtitle">Only proven strategies. Backtested and approved before live use.</p>
-      </div>
-    </div>
-
-    <div id="strategyCards"></div>
-
-  </main>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="loadingScreen">
+  <div class="loading-logo">VAULT<span>.</span></div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+  <div class="loading-label">Loading Strategy Data</div>
 </div>
+<nav class="topnav" id="topnav"></nav>
+<div class="mobile-menu" id="mobileMenu"></div>
+<div class="page-wrap"><div class="page-content">
+
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-hero-label">3 Active Strategies · Backtested & Approved</div>
+      <h1 class="page-hero-title">STRATEGY<br><em>VAULT</em></h1>
+      <p class="page-hero-sub">Only proven strategies. Backtested and approved before live use.</p>
+    </div>
+  </div>
+
+  <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
+
+  <div class="container">
+    <div id="newsAlertBar" style="padding-top:40px;"></div>
+    <div id="strategyCards" style="margin-top:8px;"></div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:40px;">
+    <div class="container"><div class="split-title" style="opacity:0.08;">EDGE<br>ONLY</div></div>
+  </div>
+
+</div></div>
 
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-
   var strategies = [
-    {
-      name: 'XAUUSD Asian Session Pullback',
-      emoji: '🥇',
-      wr: '57.1%',
-      pf: '2.08',
-      expectancy: '+$3.47',
-      confidence: 8,
-      session: 'Asian (02:00–06:00 EAT)',
-      tf: 'M15',
-      instrument: 'XAUUSD',
-      color: 'var(--gold)',
-      entry: [
-        'D1 must be in uptrend (higher highs, higher lows)',
-        'Price pulls back to H4 demand zone',
-        'M15 bullish engulfing or pin bar signal at zone',
-        'Min 1:2 R:R confirmed before entry'
-      ],
-      sl: 'Below M15 signal candle low or order block. Max 15 points.',
-      tp: 'Next H4 resistance level. Min 1:2 R:R.',
-      filters: [
-        'Asian session only (02:00–06:00 EAT)',
-        'No red news events in next 60 min',
-        'Pre-Trade Scorecard score 6 or above',
-        'D1 uptrend structure intact'
-      ]
-    },
-    {
-      name: 'GBP Pairs London Open Momentum',
-      emoji: '💷',
-      wr: '75%',
-      pf: '4.57',
-      expectancy: '+$12.36',
-      confidence: 7,
-      session: 'London (11:00–13:00 EAT)',
-      tf: 'M15',
-      instrument: 'GBPUSD / GBPNZD / GBPJPY',
-      color: 'var(--blue)',
-      entry: [
-        'London open: GBP pair breaks the Asian session range high or low',
-        'Strong momentum candle confirms the breakout',
-        'Enter on first M15 pullback after the break',
-        'H4 structure must confirm the direction'
-      ],
-      sl: 'Below or above Asian range boundary. Max 20 pips.',
-      tp: 'Previous day high or low. Min 1:3 R:R.',
-      filters: [
-        'London open only (11:00–13:00 EAT)',
-        'No BOE event within 24 hours',
-        'H4 structure break confirmed',
-        'Scorecard score 6 or above required'
-      ]
-    },
-    {
-      name: 'GER30 Overlap Breakout',
-      emoji: '📊',
-      wr: '66.7%',
-      pf: '5.16',
-      expectancy: '+$15.69',
-      confidence: 6,
-      session: 'Overlap (15:00–18:00 EAT)',
-      tf: 'H1',
-      instrument: 'GER30 only — NOT US30',
-      color: 'var(--purple)',
-      entry: [
-        'GER30 H4 consolidation zone identified',
-        'H4 breakout candle with strong momentum closes',
-        'H1 candle closes above or below the key level',
-        'Strong range expansion on the breakout candle'
-      ],
-      sl: 'Below H1 breakout candle body. Max 25 points.',
-      tp: 'Previous H4 swing high or low. Min 1:2.5 R:R.',
-      filters: [
-        'GER30 only — US30 is on the kill list',
-        'No major US data release within 90 min',
-        'Scorecard score 7 or above required',
-        'London/NY overlap session only'
-      ]
-    }
+    {name:'XAUUSD Asian Session Pullback',emoji:'🥇',wr:'57.1%',pf:'2.08',expectancy:'+$3.47',confidence:8,session:'Asian (02:00–06:00 EAT)',tf:'M15',instrument:'XAUUSD',color:'var(--gold)',
+     entry:['D1 must be in uptrend (higher highs, higher lows)','Price pulls back to H4 demand zone','M15 bullish engulfing or pin bar signal at zone','Min 1:2 R:R confirmed before entry'],
+     sl:'Below M15 signal candle low or order block. Max 15 points.',tp:'Next H4 resistance level. Min 1:2 R:R.',
+     filters:['Asian session only (02:00–06:00 EAT)','No red news events in next 60 min','Pre-Trade Scorecard score 6 or above','D1 uptrend structure intact']},
+    {name:'GBP Pairs London Open Momentum',emoji:'💷',wr:'75%',pf:'4.57',expectancy:'+$12.36',confidence:7,session:'London (11:00–13:00 EAT)',tf:'M15',instrument:'GBPUSD / GBPNZD / GBPJPY',color:'var(--blue)',
+     entry:['London open: GBP pair breaks Asian session range high or low','Strong momentum candle confirms the breakout','Enter on first M15 pullback after the break','H4 structure must confirm the direction'],
+     sl:'Below or above Asian range boundary. Max 20 pips.',tp:'Previous day high or low. Min 1:3 R:R.',
+     filters:['London open only (11:00–13:00 EAT)','No BOE event within 24 hours','H4 structure break confirmed','Scorecard score 6 or above required']},
+    {name:'GER30 Overlap Breakout',emoji:'📊',wr:'66.7%',pf:'5.16',expectancy:'+$15.69',confidence:6,session:'Overlap (15:00–18:00 EAT)',tf:'H1',instrument:'GER30 only — NOT US30',color:'var(--purple)',
+     entry:['GER30 H4 consolidation zone identified','H4 breakout candle with strong momentum closes','H1 candle closes above or below key level','Strong range expansion on breakout candle'],
+     sl:'Below H1 breakout candle body. Max 25 points.',tp:'Previous H4 swing high or low. Min 1:2.5 R:R.',
+     filters:['GER30 only — US30 is kill list','No major US data release within 90 min','Scorecard score 7 or above required','London/NY overlap session only']}
   ];
 
-  var html = '';
-  for (var i = 0; i < strategies.length; i++) {
-    var s = strategies[i];
+  var html='';
+  for(var i=0;i<strategies.length;i++){
+    var s=strategies[i];
+    var entHtml='';for(var j=0;j<s.entry.length;j++){entHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:'+s.color+';font-weight:700;flex-shrink:0;">'+(j+1)+'.</span>'+s.entry[j]+'</div>';}
+    var filHtml='';for(var j=0;j<s.filters.length;j++){filHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:var(--green);flex-shrink:0;">✓</span>'+s.filters[j]+'</div>';}
 
-    // Entry rules
-    var entryHtml = '';
-    for (var j = 0; j < s.entry.length; j++) {
-      entryHtml += '<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);">';
-      entryHtml += '<span style="color:' + s.color + ';font-weight:700;flex-shrink:0;">' + (j + 1) + '.</span>';
-      entryHtml += s.entry[j];
-      entryHtml += '</div>';
-    }
-
-    // Filters
-    var filtersHtml = '';
-    for (var j = 0; j < s.filters.length; j++) {
-      filtersHtml += '<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);">';
-      filtersHtml += '<span style="color:var(--green);flex-shrink:0;">&#10003;</span>';
-      filtersHtml += s.filters[j];
-      filtersHtml += '</div>';
-    }
-
-    html += '<div class="card mb-24" style="border-left:3px solid ' + s.color + ';">';
-
-    // Card header
-    html += '<div class="card-header">';
-    html += '<div>';
-    html += '<div class="card-title">' + s.emoji + ' ' + s.name + '</div>';
-    html += '<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-top:2px;">' + s.instrument + ' &middot; ' + s.tf + ' &middot; ' + s.session + '</div>';
-    html += '</div>';
-    html += '<div style="display:flex;gap:16px;align-items:center;">';
-    html += '<div style="text-align:center;"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">WIN RATE</div><div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--green);">' + s.wr + '</div></div>';
-    html += '<div style="text-align:center;"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:' + s.color + ';">' + s.pf + '</div></div>';
-    html += '<div style="text-align:center;"><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">EXPECT.</div><div style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--green);">' + s.expectancy + '</div></div>';
-    html += '</div>';
-    html += '</div>';
-
-    // Card body
-    html += '<div class="card-body">';
-    html += '<div class="grid-2" style="gap:24px;">';
-
-    // Left column
-    html += '<div>';
-    html += '<div class="section-title">Entry Rules</div>';
-    html += entryHtml;
-    html += '<div style="margin-top:16px;"><div class="section-title">Stop Loss</div>';
-    html += '<div style="font-size:0.8rem;color:var(--text-secondary);">' + s.sl + '</div></div>';
-    html += '<div style="margin-top:16px;"><div class="section-title">Take Profit</div>';
-    html += '<div style="font-size:0.8rem;color:var(--text-secondary);">' + s.tp + '</div></div>';
-    html += '</div>';
-
-    // Right column
-    html += '<div>';
-    html += '<div class="section-title">Filters Required</div>';
-    html += filtersHtml;
-
-    // Confidence bar
-    html += '<div style="margin-top:16px;">';
-    html += '<div class="section-title">Confidence Level</div>';
-    html += '<div style="display:flex;align-items:center;gap:10px;">';
-    html += '<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">';
-    html += '<div style="width:' + (s.confidence * 10) + '%;height:100%;background:' + s.color + ';border-radius:3px;"></div>';
-    html += '</div>';
-    html += '<span style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;color:' + s.color + ';">' + s.confidence + '/10</span>';
-    html += '</div>';
-    html += '<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-top:4px;">';
-    if (s.confidence >= 8) {
-      html += 'High confidence — sufficient sample size';
-    } else if (s.confidence >= 6) {
-      html += 'Good confidence — continue building sample size';
-    } else {
-      html += 'Early data — needs more trade samples';
-    }
-    html += '</div>';
-    html += '</div>';
-
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
+    html+='<div class="card mb-24 reveal" style="border-left:3px solid '+s.color+';">'
+      +'<div class="card-header"><div><div class="card-title">'+s.emoji+' '+s.name+'</div><div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'+s.instrument+' · '+s.tf+' · '+s.session+'</div></div>'
+      +'<div style="display:flex;gap:16px;align-items:center;">'
+      +'<div style="text-align:center;"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+s.wr+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1.1rem;color:'+s.color+';">'+s.pf+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">EXPECT.</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+s.expectancy+'</div></div>'
+      +'</div></div>'
+      +'<div class="card-body"><div class="grid-2" style="gap:24px;">'
+      +'<div><div class="section-label">Entry Rules</div>'+entHtml
+      +'<div style="margin-top:16px;"><div class="section-label">Stop Loss</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+s.sl+'</div></div>'
+      +'<div style="margin-top:16px;"><div class="section-label">Take Profit</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+s.tp+'</div></div></div>'
+      +'<div><div class="section-label">Filters Required</div>'+filHtml
+      +'<div style="margin-top:16px;"><div class="section-label">Confidence</div>'
+      +'<div style="display:flex;align-items:center;gap:10px;">'
+      +'<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="width:'+(s.confidence*10)+'%;height:100%;background:'+s.color+';border-radius:3px;"></div></div>'
+      +'<span style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;color:'+s.color+';">'+s.confidence+'/10</span>'
+      +'</div></div></div></div></div></div>';
   }
-
-  document.getElementById('strategyCards').innerHTML = html;
+  document.getElementById('strategyCards').innerHTML=html;
 });
 </script>
 </body>

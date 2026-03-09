@@ -3,28 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ochugi Holdings — Position Calculator</title>
+  <title>Ochugi Holdings — Position Size Calculator</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="main-layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="page-content">
-    <div id="newsAlertBar"></div>
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-badge"><span class="dot"></span>Live Tool</div>
-        <h1 class="page-title">Position Size Calculator</h1>
-        <p class="page-subtitle">Enter your SL in pips/points → get exact lot size instantly</p>
-      </div>
-    </div>
-    <div id="calculatorApp"></div>
-  </main>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="loadingScreen">
+  <div class="loading-logo">CALC<span>.</span></div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+  <div class="loading-label">Loading Calculator</div>
 </div>
+<nav class="topnav" id="topnav"></nav>
+<div class="mobile-menu" id="mobileMenu"></div>
+<div class="page-wrap"><div class="page-content">
+
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-hero-label">Risk Management Tool</div>
+      <h1 class="page-hero-title">POSITION<br><em>CALCULATOR</em></h1>
+      <p class="page-hero-sub">0.25% max risk per trade · Kill list enforcement · Maven floor protection</p>
+    </div>
+  </div>
+
+  <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
+
+  <div class="container">
+    <div id="newsAlertBar" style="padding-top:40px;"></div>
+    <div id="calculatorApp" style="padding-top:8px;"></div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:60px;">
+    <div class="container">
+      <div class="split-title" style="opacity:0.08;">SIZE<br>RIGHT</div>
+    </div>
+  </div>
+
+</div></div>
+
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/calculator.js"></script>

@@ -2,57 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ochugi Holdings — Screenshot Archive</title>
+  <title>Ochugi Holdings — Screenshots</title>
   <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="main-layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="page-content">
-    <div id="newsAlertBar"></div>
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-badge"><span class="dot"></span>Visual Review</div>
-        <h1 class="page-title">Trade Screenshot Archive</h1>
-        <p class="page-subtitle">Charts and visual reviews linked to your trade log entries</p>
-      </div>
-    </div>
-    <div class="alert alert-info mb-24">
+<div class="cursor-dot" id="cursorDot"></div><div class="cursor-ring" id="cursorRing"></div>
+<div id="loadingScreen"><div class="loading-logo">ARCHIVE<span>.</span></div><div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div><div class="loading-label">Loading Screenshot Archive</div></div>
+<nav class="topnav" id="topnav"></nav><div class="mobile-menu" id="mobileMenu"></div>
+<div class="page-wrap"><div class="page-content">
+  <div class="page-hero"><div class="container">
+    <div class="page-hero-label">Visual Trade Archive</div>
+    <h1 class="page-hero-title">SCREENSHOT<br><em>ARCHIVE</em></h1>
+    <p class="page-hero-sub">Best setups · Mistake captures · Weekly review screenshots</p>
+  </div></div>
+  <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
+  <div class="container">
+    <div id="newsAlertBar" style="padding-top:40px;"></div>
+    <div class="alert alert-info reveal" style="margin-top:8px;margin-bottom:32px;">
       <span class="alert-icon">📸</span>
-      <div class="alert-text"><span class="alert-title">How to use this archive</span>After every notable trade, take a screenshot on TradingView (share → image) and paste the URL into this table. The full database with all fields (What I Did Well, What I Did Wrong, Would I Take Again?) is in Notion's Trade Screenshot Archive.</div>
+      <div class="alert-text"><span class="alert-title">Screenshot archive is visual-only</span>Upload trade screenshots to your Google Drive and paste share links below. Add them to js/data.js screenshots array.</div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="card-title">📋 Screenshot Log — Add entries below</span></div>
-      <div class="table-wrap" style="border:none;border-radius:0;">
-        <table>
-          <thead><tr><th>Trade Ref</th><th>Date</th><th>Symbol</th><th>Outcome</th><th>Entry Chart</th><th>Exit Chart</th><th>Would Take Again?</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="primary mono">RO-GBPNZD-001</td>
-              <td class="mono">Feb 2026</td>
-              <td class="mono">GBPNZD</td>
-              <td><span class="badge badge-green">WIN +$52.64</span></td>
-              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
-              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
-              <td><span class="badge badge-green">Yes — A+ setup</span></td>
-            </tr>
-            <tr>
-              <td class="primary mono">RO-GER30-001</td>
-              <td class="mono">Feb 2026</td>
-              <td class="mono">GER30</td>
-              <td><span class="badge badge-green">WIN +$43.51</span></td>
-              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
-              <td style="color:var(--text-muted);font-size:0.75rem;">Add TradingView URL</td>
-              <td><span class="badge badge-green">Yes — A+ setup</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer">Add new entries by editing the table in trade-log.html or by pasting TradingView links into the Notion database.</div>
-    </div>
-  </main>
-</div>
+    <div class="grid-3 reveal" id="screenshotGrid"></div>
+  </div>
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:40px;">
+    <div class="container"><div class="split-title" style="opacity:0.08;">CAPTURE<br>LEARN</div></div>
+  </div>
+</div></div>
 <script src="js/data.js"></script><script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var shots=OCHUGI_DATA.screenshots||[];
+  var html='';
+  if(!shots.length){
+    html='<div class="card" style="grid-column:1/-1;"><div class="card-body" style="text-align:center;padding:48px;color:var(--text-muted);">No screenshots yet. Add image URLs to OCHUGI_DATA.screenshots in js/data.js</div></div>';
+  } else {
+    for(var i=0;i<shots.length;i++){var s=shots[i];html+='<div class="card"><img src="'+s.url+'" alt="'+s.label+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;"><div class="card-body"><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+s.label+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-top:4px;">'+s.date+'</div></div></div>';}
+  }
+  document.getElementById('screenshotGrid').innerHTML=html;
+});
+</script>
 </body></html>

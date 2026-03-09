@@ -1,96 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ochugi Holdings — Raymond's Desk</title>
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/nav.css">
-  <link rel="stylesheet" href="css/components.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Raymond</title>
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="main-layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="page-content">
-    <div id="newsAlertBar"></div>
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-badge"><span class="dot"></span>Raymond Ochieng</div>
-        <h1 class="page-title">Raymond's Trading Desk</h1>
-        <p class="page-subtitle">Account 10212887 · Feb 9 – Mar 7, 2026</p>
+<div class="cursor-dot" id="cursorDot"></div><div class="cursor-ring" id="cursorRing"></div>
+<div id="loadingScreen"><div class="loading-logo">RAYMOND<span>.</span></div><div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div><div class="loading-label">Loading Trader Profile</div></div>
+<nav class="topnav" id="topnav"></nav><div class="mobile-menu" id="mobileMenu"></div>
+<div class="page-wrap"><div class="page-content">
+  <div class="page-hero"><div class="container">
+    <div class="page-hero-label">Trader Profile · Raymond Ochieng</div>
+    <h1 class="page-hero-title">RAYMOND<br><em>OCHIENG</em></h1>
+    <p class="page-hero-sub">Co-founder · MavenTrade 10212887 · Feb 9 – Mar 7, 2026 · 60 trades</p>
+  </div></div>
+  <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
+  <div class="container">
+    <div id="newsAlertBar" style="padding-top:40px;"></div>
+    <div class="grid-4 mb-32 reveal" id="rayStats"></div>
+    <div class="grid-2 mb-32">
+      <div class="card reveal">
+        <div class="card-header"><span class="card-title">📊 Performance Summary</span></div>
+        <div class="card-body" id="raySummary"></div>
       </div>
-      <div class="flex gap-8">
-        <a href="trade-log.html" class="btn btn-outline">📋 Trade Log</a>
-        <a href="analytics.html" class="btn btn-gold">📊 Analytics</a>
-      </div>
-    </div>
-    <div class="grid-4 mb-24" id="rayStats"></div>
-    <div class="grid-2 mb-24">
-      <div class="card">
+      <div class="card reveal reveal-delay-1">
         <div class="card-header"><span class="card-title">⏱️ Session Breakdown</span></div>
-        <div class="card-body" id="raySessions"></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">📦 Asset Class</span></div>
-        <div class="card-body" id="rayAssets"></div>
+        <div style="padding:0;" id="raySessions"></div>
       </div>
     </div>
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header"><span class="card-title">🏆 Top Trades</span></div>
-        <div class="card-body" id="rayTop"></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">🔑 Key Insights</span></div>
-        <div class="card-body" id="rayInsights"></div>
-      </div>
+    <div class="card mb-32 reveal">
+      <div class="card-header"><span class="card-title">🔍 Instrument Performance</span><a href="trade-log.html" class="btn btn-ghost btn-sm">All trades →</a></div>
+      <div id="rayInstr"></div>
     </div>
-  </main>
-</div>
-<script src="js/data.js"></script>
-<script src="js/nav.js"></script>
+  </div>
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
+    <div class="container"><div class="split-title" style="opacity:0.08;">STAY<br>SHARP</div></div>
+  </div>
+</div></div>
+<script src="js/data.js"></script><script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const r = OCHUGI_DATA.raymond;
-  document.getElementById('rayStats').innerHTML = [
-    { label:"Net P&L",       value:`+$${r.netPnL.toFixed(2)}`,   sub:`${r.totalTrades} trades`,          cls:"positive", accent:"green" },
-    { label:"Win Rate",      value:`${r.winRate}%`,               sub:`${r.wins}W / ${r.losses}L`,        cls:"neutral",  accent:"blue"  },
-    { label:"Profit Factor", value:r.profitFactor,                sub:`Expectancy +$${r.expectancy}/trade`,cls:"gold",     accent:"gold"  },
-    { label:"Max Drawdown",  value:`${r.maxDrawdownPct}%`,        sub:`$${r.maxDrawdown} peak-to-trough`, cls:"neutral",  accent:"red"   }
-  ].map(s=>`<div class="stat-card ${s.accent}"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
-
-  document.getElementById('raySessions').innerHTML = r.sessions.map(s=>`
-    <div class="list-item">
-      <div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;"></span>${s.name} <span class="badge ${s.pnl>0?'badge-green':'badge-red'}">${s.wr}% WR</span></div>
-      <div class="list-item-value" style="color:${s.pnl>0?'var(--green)':'var(--red)'};">${s.pnl>0?'+':''}$${s.pnl.toFixed(2)}</div>
-    </div>`).join('');
-
-  document.getElementById('rayAssets').innerHTML = r.assets.map(a=>`
-    <div class="list-item">
-      <div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:${a.color};display:inline-block;"></span>${a.name} <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${a.trades}t</span></div>
-      <div class="list-item-value" style="color:${a.pnl>=0?'var(--green)':'var(--red)'};">${a.pnl>=0?'+':''}$${a.pnl.toFixed(2)}</div>
-    </div>`).join('');
-
-  document.getElementById('rayTop').innerHTML = r.instruments.filter(i=>i.pnl>0).slice(0,5).map(i=>`
-    <div class="list-item">
-      <div class="list-item-label"><span class="chip chip-win">WIN</span>${i.symbol}</div>
-      <div style="text-align:right;"><div class="list-item-value" style="color:var(--green);">+$${i.pnl.toFixed(2)}</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${i.wr}% WR · ${i.trades} trades</div></div>
-    </div>`).join('');
-
-  document.getElementById('rayInsights').innerHTML = [
-    { icon:'✅', text:'Asian session is your edge — 57% WR, +$92.97', color:'var(--green)' },
-    { icon:'❌', text:'New York session costing you — 33% WR, -$17.82', color:'var(--red)' },
-    { icon:'🔥', text:'Removing kill list = +30% profit improvement', color:'var(--gold)' },
-    { icon:'📊', text:'XAUUSD + GBPNZD + GER30 = 76.5% of all profit', color:'var(--blue)' },
-    { icon:'⚠️', text:'Long bias (58.3% WR) >>> Short (45.8% WR)', color:'var(--yellow)' },
-    { icon:'📈', text:'Calmar Ratio 61.7 — exceptional risk management', color:'var(--green)' }
-  ].map(i=>`
-    <div class="list-item">
-      <div style="font-size:0.82rem;color:${i.color};display:flex;align-items:center;gap:8px;">${i.icon} ${i.text}</div>
-    </div>`).join('');
+document.addEventListener('DOMContentLoaded', function() {
+  var r=OCHUGI_DATA.raymond;
+  var sd=[
+    {label:'Net P&L',value:'+$'+r.netPnL.toFixed(2),sub:r.totalTrades+' total trades',cls:'positive',accent:'green'},
+    {label:'Win Rate',value:r.winRate+'%',sub:r.wins+'W / '+r.losses+'L',cls:'neutral',accent:'blue'},
+    {label:'Expectancy',value:'+$'+r.expectancy,sub:'per trade average',cls:'gold',accent:'gold'},
+    {label:'Maven Progress',value:r.mavenPct.toFixed(1)+'%',sub:'$'+r.mavenRemaining.toFixed(2)+' to funded',cls:'gold',accent:'gold'}
+  ];
+  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+s.accent+'"><div class="stat-label">'+s.label+'</div><div class="stat-value '+s.cls+'">'+s.value+'</div><div class="stat-sub">'+s.sub+'</div></div>';}
+  document.getElementById('rayStats').innerHTML=sh;
+  document.getElementById('raySummary').innerHTML=
+    '<div class="list-item"><div class="list-item-label">Profit Factor</div><div class="list-item-value text-gold">'+r.profitFactor+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Sharpe Ratio</div><div class="list-item-value">'+r.sharpe+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Max Drawdown</div><div class="list-item-value text-gold">$'+r.maxDrawdown.toFixed(2)+' ('+r.maxDrawdownPct+'%)</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Best Trade</div><div class="list-item-value" style="color:var(--green);">+$'+r.bestTrade.amount+' · '+r.bestTrade.instrument+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Worst Trade</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.worstTrade.amount)+' · '+r.worstTrade.instrument+'</div></div>';
+  var sesh='';for(var i=0;i<r.sessions.length;i++){var s=r.sessions[i];sesh+='<div class="list-item" style="padding:12px 20px;"><div class="list-item-label"><span style="width:7px;height:7px;border-radius:50%;background:'+s.color+';display:inline-block;"></span>'+s.name+' <span class="badge '+(s.pnl>0?'badge-green':'badge-red')+'">'+s.wr+'% WR</span></div><div class="list-item-value" style="color:'+(s.pnl>0?'var(--green)':'var(--red)')+';">'+(s.pnl>0?'+':'')+'$'+s.pnl.toFixed(2)+'</div></div>';}
+  document.getElementById('raySessions').innerHTML=sesh;
+  var ih='<table><thead><tr><th>Symbol</th><th>P&L</th><th>WR</th><th>Trades</th><th>Avg Win</th><th>Status</th></tr></thead><tbody>';
+  for(var i=0;i<r.instruments.length;i++){var ins=r.instruments[i];ih+='<tr><td class="primary mono">'+ins.symbol+'</td><td class="mono" style="color:'+(ins.pnl>=0?'var(--green)':'var(--red)')+';">'+(ins.pnl>=0?'+':'')+'$'+ins.pnl.toFixed(2)+'</td><td class="mono">'+ins.wr+'%</td><td class="mono">'+ins.trades+'</td><td class="mono" style="color:var(--green);">$'+ins.avgWin+'</td><td><span class="badge '+(ins.status==='green'?'badge-green':ins.status==='kill'?'badge-red':'badge-gold')+'">'+(ins.status==='green'?'ACTIVE':ins.status==='kill'?'BANNED':'WATCH')+'</span></td></tr>';}
+  document.getElementById('rayInstr').innerHTML=ih+'</tbody></table>';
 });
 </script>
-</body>
-</html>
+</body></html>

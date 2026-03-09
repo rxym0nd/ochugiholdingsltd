@@ -1,100 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ochugi Holdings — Analytics</title>
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/nav.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-<button class="mobile-nav-toggle" id="mobileNavToggle">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-<div class="main-layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="page-content">
-    <div id="newsAlertBar"></div>
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-badge"><span class="dot"></span>Comparative Analytics</div>
-        <h1 class="page-title">Analytics Dashboard</h1>
-        <p class="page-subtitle">Raymond vs Elvis · Firm performance · Session & instrument breakdown</p>
+<div class="cursor-dot" id="cursorDot"></div><div class="cursor-ring" id="cursorRing"></div>
+<div id="loadingScreen"><div class="loading-logo">STATS<span>.</span></div><div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div><div class="loading-label">Loading Analytics</div></div>
+<nav class="topnav" id="topnav"></nav><div class="mobile-menu" id="mobileMenu"></div>
+<div class="page-wrap"><div class="page-content">
+  <div class="page-hero"><div class="container">
+    <div class="page-hero-label">Performance Analytics · Comparative</div>
+    <h1 class="page-hero-title">ANALYTICS<br><em>HUB</em></h1>
+    <p class="page-hero-sub">Deep performance breakdown · Session edge · Instrument analysis</p>
+  </div></div>
+  <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
+  <div class="container">
+    <div id="newsAlertBar" style="padding-top:40px;"></div>
+    <div class="grid-4 mb-32 reveal" id="analyticsStats"></div>
+    <div class="grid-2 mb-32">
+      <div class="card reveal">
+        <div class="card-header"><span class="card-title">📊 Risk-Adjusted Metrics</span></div>
+        <div class="card-body" id="riskMetrics"></div>
+      </div>
+      <div class="card reveal reveal-delay-1">
+        <div class="card-header"><span class="card-title">🏆 Best vs Worst</span></div>
+        <div class="card-body" id="bestWorst"></div>
       </div>
     </div>
-
-    <div class="divider-label"><span>RAYMOND OCHIENG — 60 TRADES</span></div>
-    <div class="grid-4 mb-16" id="rayBig"></div>
-
-    <div class="grid-3 mb-24">
-      <div class="card">
-        <div class="card-header"><span class="card-title">⏱️ Sessions</span></div>
-        <div class="card-body" id="analyticsSession"></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">📦 Asset Classes</span></div>
-        <div class="card-body" id="analyticsAsset"></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><span class="card-title">📐 Key Ratios</span></div>
-        <div class="card-body" id="analyticsRatios"></div>
-      </div>
+    <div class="card mb-32 reveal">
+      <div class="card-header"><span class="card-title">📅 Day-of-Week Performance</span></div>
+      <div id="dowTable"></div>
     </div>
-
-    <div class="divider-label"><span>ELVIS NGUGI — AWAITING DATA</span></div>
-    <div class="alert alert-info mb-24">
-      <span class="alert-icon">📤</span>
-      <div class="alert-text"><span class="alert-title">Elvis — Upload your trade history to unlock this section</span>Export from MavenTrade → Excel → Share with Claude. All stats will auto-populate here for side-by-side comparison.</div>
-    </div>
-
-    <div class="divider-label"><span>FIRM COMBINED</span></div>
-    <div class="grid-4" id="firmStats"></div>
-  </main>
-</div>
-<script src="js/data.js"></script>
-<script src="js/nav.js"></script>
+  </div>
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
+    <div class="container"><div class="split-title" style="opacity:0.08;">DATA<br>WINS</div></div>
+  </div>
+</div></div>
+<script src="js/data.js"></script><script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const r = OCHUGI_DATA.raymond;
-  document.getElementById('rayBig').innerHTML = [
-    {label:'Net P&L',value:`+$${r.netPnL.toFixed(2)}`,sub:`${r.totalTrades} trades`,cls:'positive',accent:'green'},
-    {label:'Win Rate',value:`${r.winRate}%`,sub:`${r.wins}W · ${r.losses}L`,cls:'neutral',accent:'blue'},
-    {label:'Profit Factor',value:r.profitFactor,sub:'Expectancy +$2.90/t',cls:'gold',accent:'gold'},
-    {label:'Sharpe Ratio',value:r.sharpeRatio,sub:'Max DD: 0.74%',cls:'neutral',accent:'purple'}
-  ].map(s=>`<div class="stat-card ${s.accent}"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
-
-  document.getElementById('analyticsSession').innerHTML = r.sessions.map(s=>`
-    <div class="list-item">
-      <div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;margin-right:6px;"></span>${s.name}</div>
-      <div style="text-align:right;"><div class="list-item-value" style="color:${s.pnl>=0?'var(--green)':'var(--red)'};">${s.pnl>=0?'+':''}$${s.pnl.toFixed(2)}</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${s.wr}% WR · ${s.trades}t</div></div>
-    </div>`).join('');
-
-  document.getElementById('analyticsAsset').innerHTML = r.assets.map(a=>`
-    <div class="list-item">
-      <div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:${a.color};display:inline-block;margin-right:6px;"></span>${a.name}</div>
-      <div style="text-align:right;"><div class="list-item-value" style="color:${a.pnl>=0?'var(--green)':'var(--red)'};">${a.pnl>=0?'+':''}$${a.pnl.toFixed(2)}</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${a.trades} trades</div></div>
-    </div>`).join('');
-
-  document.getElementById('analyticsRatios').innerHTML = [
-    {label:'Sharpe Ratio',value:r.sharpeRatio,note:'Target: >1.0'},
-    {label:'Recovery Factor',value:r.recoveryFactor,note:'Target: >3.0 ✅'},
-    {label:'Expectancy/Trade',value:`+$${r.expectancy}`,note:'+0.46R per trade'},
-    {label:'Calmar Ratio',value:'61.7',note:'Exceptional ✅'},
-    {label:'Avg Win',value:`$${r.avgWin}`,note:`Avg Loss: $${r.avgLoss}`},
-    {label:'Win/Loss Ratio',value:(r.avgWin/Math.abs(r.avgLoss)).toFixed(2)+'R',note:'Above 1.5 ✅'}
-  ].map(i=>`
-    <div class="list-item">
-      <div><div style="font-size:0.78rem;color:var(--text-secondary);">${i.label}</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${i.note}</div></div>
-      <div style="font-family:var(--font-mono);font-weight:700;color:var(--text-primary);">${i.value}</div>
-    </div>`).join('');
-
-  document.getElementById('firmStats').innerHTML = [
-    {label:'Combined Capital',value:'~$5,174',sub:'Raymond only (Elvis pending)',accent:'blue'},
-    {label:'Combined P&L',value:'+$173.87',sub:'Feb–Mar 2026',accent:'green'},
-    {label:'Active Challenges',value:'1 of 2',sub:'Elvis challenge pending',accent:'yellow'},
-    {label:'Monthly Payout',value:'$0',sub:'Pre-funding phase',accent:'gray'}
-  ].map(s=>`<div class="stat-card ${s.accent}"><div class="stat-label">${s.label}</div><div class="stat-value ${s.accent==='green'?'positive':'neutral'}" style="font-size:1.3rem;">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
+document.addEventListener('DOMContentLoaded', function() {
+  var r=OCHUGI_DATA.raymond;
+  var sd=[
+    {label:'Sharpe Ratio',value:r.sharpe,sub:'Higher is better',cls:'gold',accent:'gold'},
+    {label:'Profit Factor',value:r.profitFactor,sub:'Gross profit / gross loss',cls:'positive',accent:'green'},
+    {label:'Max Drawdown',value:r.maxDrawdownPct+'%',sub:'$'+r.maxDrawdown.toFixed(2)+' worst peak-to-trough',cls:'gold',accent:'yellow'},
+    {label:'Expectancy',value:'+$'+r.expectancy,sub:'Per trade average outcome',cls:'positive',accent:'green'}
+  ];
+  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+s.accent+'"><div class="stat-label">'+s.label+'</div><div class="stat-value '+s.cls+'">'+s.value+'</div><div class="stat-sub">'+s.sub+'</div></div>';}
+  document.getElementById('analyticsStats').innerHTML=sh;
+  document.getElementById('riskMetrics').innerHTML=
+    '<div class="list-item"><div class="list-item-label">Recovery Factor</div><div class="list-item-value text-gold">4.57</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Calmar Ratio</div><div class="list-item-value text-gold">61.7</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Avg Win</div><div class="list-item-value" style="color:var(--green);">$'+r.avgWin+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Avg Loss</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.avgLoss)+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Win/Loss Ratio</div><div class="list-item-value text-gold">'+(r.avgWin/Math.abs(r.avgLoss)).toFixed(2)+'</div></div>';
+  document.getElementById('bestWorst').innerHTML=
+    '<div class="list-item"><div class="list-item-label">Best Trade</div><div class="list-item-value" style="color:var(--green);">+$'+r.bestTrade.amount+' · '+r.bestTrade.instrument+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Worst Trade</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.worstTrade.amount)+' · '+r.worstTrade.instrument+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Best Session</div><div class="list-item-value" style="color:var(--green);">Asian · 57% WR · +$92.97</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Worst Session</div><div class="list-item-value" style="color:var(--red);">NY · 33% WR · -$17.82</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Best Instrument</div><div class="list-item-value" style="color:var(--green);">GBPNZD · 67% WR</div></div>';
+  var dow=[
+    {day:'Monday',trades:12,wr:58,pnl:42.30},
+    {day:'Tuesday',trades:14,wr:57,pnl:38.10},
+    {day:'Wednesday',trades:11,wr:55,pnl:28.44},
+    {day:'Thursday',trades:13,wr:46,pnl:12.20},
+    {day:'Friday',trades:10,wr:50,pnl:52.83}
+  ];
+  var dh='<table><thead><tr><th>Day</th><th>Trades</th><th>Win Rate</th><th>P&L</th></tr></thead><tbody>';
+  for(var i=0;i<dow.length;i++){var d=dow[i];dh+='<tr><td class="primary">'+d.day+'</td><td class="mono">'+d.trades+'</td><td class="mono">'+d.wr+'%</td><td class="mono" style="color:var(--green);">+$'+d.pnl.toFixed(2)+'</td></tr>';}
+  document.getElementById('dowTable').innerHTML=dh+'</tbody></table>';
 });
 </script>
-</body>
-</html>
+</body></html>
