@@ -15,6 +15,7 @@
   <aside class="sidebar" id="sidebar"></aside>
   <main class="page-content">
     <div id="newsAlertBar"></div>
+
     <div class="page-header">
       <div class="page-header-left">
         <div class="page-header-badge"><span class="dot"></span>Daily Protocol</div>
@@ -26,90 +27,38 @@
     <div class="grid-2 mb-24">
       <!-- Pre-Market -->
       <div class="card">
-        <div class="card-header" style="border-left:3px solid var(--yellow);"><span class="card-title">🌅 Pre-Market Routine — 10 min</span></div>
-        <div class="card-body" style="padding:0;">
-          ${[
-            { step:'1', title:'Check News Calendar', time:'2 min', detail:'Open News Calendar — any red events today? Set phone alarm for block window.', link:'news-calendar.html', linkText:'Open Calendar' },
-            { step:'2', title:'Check Account Health', time:'2 min', detail:'Login MavenTrade — current balance × 99% = today\'s floor. Balance × 1% = max daily loss.' },
-            { step:'3', title:'Weekly Bias Check', time:'1 min', detail:'What is your D1 direction on XAUUSD this week? Review Sunday\'s bias entry.' },
-            { step:'4', title:'Top-Down Analysis', time:'3 min', detail:'D1 → H4 → H1 → M15. All 4 must agree before you look for entry. If not aligned — wait.' },
-            { step:'5', title:'Psychology Check-In', time:'2 min', detail:'Am I calm? Am I trading to recover or to execute? Reduce size 50% if unsettled.' }
-          ].map(s => `
-            <div class="list-item" style="padding:14px 20px;align-items:flex-start;">
-              <div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.8rem;color:var(--gold);flex-shrink:0;">${s.step}</div>
-              <div style="flex:1;padding-left:12px;">
-                <div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">${s.title} <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${s.time}</span></div>
-                <div style="font-size:0.78rem;color:var(--text-secondary);">${s.detail}</div>
-                ${s.link ? `<a href="${s.link}" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">${s.linkText} →</a>` : ''}
-              </div>
-            </div>
-          `).join('')}
+        <div class="card-header" style="border-left:3px solid var(--yellow);">
+          <span class="card-title">🌅 Pre-Market Routine — 10 min</span>
         </div>
+        <div class="card-body" style="padding:0;" id="preMarketList"></div>
       </div>
 
       <!-- During + End of Day -->
       <div>
         <div class="card mb-16">
-          <div class="card-header" style="border-left:3px solid var(--blue);"><span class="card-title">📈 During The Trade</span></div>
-          <div class="card-body" style="padding:0;">
-            ${[
-              ['At entry',      'Set SL and TP immediately. No exceptions.'],
-              ['SL placed',     'Walk away. Do not watch it tick.'],
-              ['Trade at +1R',  'News in 30 min? Close early.'],
-              ['Trade at +2R',  'Move SL to breakeven. Non-negotiable. Maven floor protection.'],
-              ['Trade at +3R',  'Optional: partial close (50%). Lock profit, let rest run.'],
-              ['After close',   'Log in Trade Log before opening another chart.'],
-              ['After 1 loss',  '15-minute break minimum. No revenge.'],
-              ['After 2 losses','Trading day is OVER. Close the platform.']
-            ].map(([moment, rule]) => `
-              <div class="list-item" style="padding:8px 16px;">
-                <span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gold);min-width:100px;">${moment}</span>
-                <span style="font-size:0.78rem;color:var(--text-secondary);">${rule}</span>
-              </div>
-            `).join('')}
+          <div class="card-header" style="border-left:3px solid var(--blue);">
+            <span class="card-title">📈 During The Trade</span>
           </div>
+          <div class="card-body" style="padding:0;" id="duringTradeList"></div>
         </div>
 
         <div class="card">
-          <div class="card-header" style="border-left:3px solid var(--purple);"><span class="card-title">🌙 End of Day — 5 min</span></div>
-          <div class="card-body" style="padding:0;">
-            ${[
-              'All trades logged in Trade Log?',
-              'Screenshots captured for notable setups?',
-              'Any rule violations? → Log in Mistake Tracker tonight',
-              'Today\'s net P&L written down?',
-              'One sentence: what did today teach me?'
-            ].map(item => `
-              <div class="list-item" style="padding:8px 16px;gap:10px;">
-                <span style="color:var(--text-muted);">☐</span>
-                <span style="font-size:0.78rem;color:var(--text-secondary);">${item}</span>
-              </div>
-            `).join('')}
+          <div class="card-header" style="border-left:3px solid var(--purple);">
+            <span class="card-title">🌙 End of Day — 5 min</span>
           </div>
+          <div class="card-body" style="padding:0;" id="eodList"></div>
         </div>
       </div>
     </div>
 
     <!-- Sunday Routine -->
     <div class="card mb-24">
-      <div class="card-header" style="border-left:3px solid var(--green);"><span class="card-title">☀️ Sunday Routine — 30 min</span><span class="badge badge-green">EVERY WEEK</span></div>
+      <div class="card-header" style="border-left:3px solid var(--green);">
+        <span class="card-title">☀️ Sunday Routine — 30 min</span>
+        <span class="badge badge-green">EVERY WEEK</span>
+      </div>
       <div class="card-body">
-        <div class="grid-3">
-          ${[
-            { time:'10 min', task:'Review last week\'s trades', icon:'📋', link:'trade-log.html' },
-            { time:'5 min',  task:'Write Weekly Market Bias', icon:'🗺️', link:'#' },
-            { time:'5 min',  task:'Mark next week\'s news events', icon:'📅', link:'news-calendar.html' },
-            { time:'5 min',  task:'Fill in Weekly Review', icon:'📝', link:'#' },
-            { time:'3 min',  task:'Update Maven Challenge progress', icon:'🎯', link:'maven.html' },
-            { time:'2 min',  task:'Message partner for accountability', icon:'🤝', link:'analytics.html' }
-          ].map(t => `
-            <div style="background:var(--bg-surface);border-radius:var(--radius-md);padding:14px;border:1px solid var(--border);">
-              <div style="font-size:1.3rem;margin-bottom:6px;">${t.icon}</div>
-              <div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${t.task}</div>
-              <div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">${t.time}</div>
-            </div>
-          `).join('')}
-        </div>
+        <div class="grid-3" id="sundayGrid"></div>
       </div>
     </div>
 
@@ -122,17 +71,111 @@
     </div>
   </main>
 </div>
+
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const bal = OCHUGI_DATA.raymond.currentBalance;
-  document.getElementById('quickLimits').innerHTML = [
-    { label:'Max Per Trade', value:`$${(bal*0.0025).toFixed(2)}`, sub:'0.25% of balance', accent:'red' },
-    { label:'Max Daily Loss', value:`$${(bal*0.01).toFixed(2)}`, sub:'1% — stop for day', accent:'yellow' },
-    { label:'Maven Floor', value:`$${(5000*0.95).toFixed(2)}`, sub:'Never go below this', accent:'red' },
-    { label:'Best Session', value:'Asian', sub:'02:00–06:00 EAT · 57% WR', accent:'green' }
-  ].map(s=>`<div class="stat-card ${s.accent}"><div class="stat-label">${s.label}</div><div class="stat-value ${s.accent==='green'?'positive':s.accent==='red'?'negative':'gold'}" style="font-size:1.3rem;">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
+document.addEventListener('DOMContentLoaded', function() {
+  var bal = OCHUGI_DATA.raymond.currentBalance;
+
+  // --- Pre-Market Steps ---
+  var steps = [
+    { step:'1', title:'Check News Calendar', time:'2 min', detail:'Open News Calendar — any red events today? Set phone alarm for block window.', link:'news-calendar.html', linkText:'Open Calendar' },
+    { step:'2', title:'Check Account Health', time:'2 min', detail:"Login MavenTrade — balance × 99% = today's floor. Balance × 1% = max daily loss." },
+    { step:'3', title:'Weekly Bias Check', time:'1 min', detail:'What is your D1 direction on XAUUSD this week? Review Sunday bias entry.' },
+    { step:'4', title:'Top-Down Analysis', time:'3 min', detail:'D1 → H4 → H1 → M15. All 4 must agree before entry. If not aligned — wait.' },
+    { step:'5', title:'Psychology Check-In', time:'2 min', detail:'Am I calm? Am I trading to recover or to execute? Reduce size 50% if unsettled.' }
+  ];
+  var preHtml = '';
+  for (var i = 0; i < steps.length; i++) {
+    var s = steps[i];
+    preHtml += '<div class="list-item" style="padding:14px 20px;align-items:flex-start;">';
+    preHtml += '<div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:0.8rem;color:var(--gold);flex-shrink:0;">' + s.step + '</div>';
+    preHtml += '<div style="flex:1;padding-left:12px;">';
+    preHtml += '<div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">' + s.title + ' <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">' + s.time + '</span></div>';
+    preHtml += '<div style="font-size:0.78rem;color:var(--text-secondary);">' + s.detail + '</div>';
+    if (s.link) {
+      preHtml += '<a href="' + s.link + '" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">' + s.linkText + ' &rarr;</a>';
+    }
+    preHtml += '</div></div>';
+  }
+  document.getElementById('preMarketList').innerHTML = preHtml;
+
+  // --- During Trade Rules ---
+  var duringRules = [
+    ['At entry',       'Set SL and TP immediately. No exceptions.'],
+    ['SL placed',      'Walk away. Do not watch it tick by tick.'],
+    ['Trade at +1R',   'News in 30 min? Close early to protect profit.'],
+    ['Trade at +2R',   'Move SL to breakeven. Non-negotiable. Maven floor protection.'],
+    ['Trade at +3R',   'Optional: partial close 50%. Lock profit, let rest run.'],
+    ['After close',    'Log in Trade Log before opening another chart.'],
+    ['After 1 loss',   '15-minute break minimum. No revenge trades.'],
+    ['After 2 losses', 'Trading day is OVER. Close the platform.']
+  ];
+  var duringHtml = '';
+  for (var i = 0; i < duringRules.length; i++) {
+    duringHtml += '<div class="list-item" style="padding:8px 16px;">';
+    duringHtml += '<span style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gold);min-width:110px;flex-shrink:0;">' + duringRules[i][0] + '</span>';
+    duringHtml += '<span style="font-size:0.78rem;color:var(--text-secondary);">' + duringRules[i][1] + '</span>';
+    duringHtml += '</div>';
+  }
+  document.getElementById('duringTradeList').innerHTML = duringHtml;
+
+  // --- End of Day Checklist ---
+  var eodItems = [
+    'All trades logged in Trade Log?',
+    'Screenshots captured for notable setups?',
+    'Any rule violations? Log in Mistake Tracker tonight.',
+    "Today's net P&L written down?",
+    'One sentence: what did today teach me?'
+  ];
+  var eodHtml = '';
+  for (var i = 0; i < eodItems.length; i++) {
+    eodHtml += '<div class="list-item" style="padding:8px 16px;gap:10px;">';
+    eodHtml += '<span style="color:var(--text-muted);font-size:1rem;">☐</span>';
+    eodHtml += '<span style="font-size:0.78rem;color:var(--text-secondary);">' + eodItems[i] + '</span>';
+    eodHtml += '</div>';
+  }
+  document.getElementById('eodList').innerHTML = eodHtml;
+
+  // --- Sunday Grid ---
+  var sundayTasks = [
+    { time:'10 min', task:"Review last week's trades",         icon:'📋', link:'trade-log.html' },
+    { time:'5 min',  task:'Write Weekly Market Bias',          icon:'🗺️', link:'#' },
+    { time:'5 min',  task:"Mark next week's news events",      icon:'📅', link:'news-calendar.html' },
+    { time:'5 min',  task:'Fill in Weekly Review',             icon:'📝', link:'#' },
+    { time:'3 min',  task:'Update Maven Challenge progress',   icon:'🎯', link:'maven.html' },
+    { time:'2 min',  task:'Message partner for accountability', icon:'🤝', link:'analytics.html' }
+  ];
+  var sundayHtml = '';
+  for (var i = 0; i < sundayTasks.length; i++) {
+    var t = sundayTasks[i];
+    sundayHtml += '<div style="background:var(--bg-surface);border-radius:var(--radius-md);padding:14px;border:1px solid var(--border);">';
+    sundayHtml += '<div style="font-size:1.3rem;margin-bottom:6px;">' + t.icon + '</div>';
+    sundayHtml += '<div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">' + t.task + '</div>';
+    sundayHtml += '<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">' + t.time + '</div>';
+    sundayHtml += '</div>';
+  }
+  document.getElementById('sundayGrid').innerHTML = sundayHtml;
+
+  // --- Quick Limits ---
+  var limitsData = [
+    { label:'Max Per Trade', value:'$' + (bal * 0.0025).toFixed(2), sub:'0.25% of balance',      accent:'red' },
+    { label:'Max Daily Loss', value:'$' + (bal * 0.01).toFixed(2),  sub:'1% — stop trading',     accent:'yellow' },
+    { label:'Maven DD Floor', value:'$' + (5000 * 0.95).toFixed(2), sub:'Never go below this',   accent:'red' },
+    { label:'Best Session',   value:'Asian',                          sub:'02:00–06:00 EAT · 57% WR', accent:'green' }
+  ];
+  var limitsHtml = '';
+  for (var i = 0; i < limitsData.length; i++) {
+    var l = limitsData[i];
+    var valClass = l.accent === 'green' ? 'positive' : l.accent === 'red' ? 'negative' : 'gold';
+    limitsHtml += '<div class="stat-card ' + l.accent + '">';
+    limitsHtml += '<div class="stat-label">' + l.label + '</div>';
+    limitsHtml += '<div class="stat-value ' + valClass + '" style="font-size:1.3rem;">' + l.value + '</div>';
+    limitsHtml += '<div class="stat-sub">' + l.sub + '</div>';
+    limitsHtml += '</div>';
+  }
+  document.getElementById('quickLimits').innerHTML = limitsHtml;
 });
 </script>
 </body>
