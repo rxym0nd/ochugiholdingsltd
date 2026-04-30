@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { label:'Trailing DD Floor', value:'$'+(r.mavenStartBalance*0.95).toFixed(2), sub:'never go below this',              cls:'negative', accent:'red'   }
   ];
   var sh='';
-  for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+s.accent+'"><div class="stat-label">'+s.label+'</div><div class="stat-value '+s.cls+'" style="font-size:1.6rem;">'+s.value+'</div><div class="stat-sub">'+s.sub+'</div></div>';}
+  for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(s.cls)+'" style="font-size:1.6rem;">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
   document.getElementById('mavenStats').innerHTML=sh;
 
   var rules=[
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {icon:'🤝',rule:'Profit Split',detail:'80% trader / 20% Maven on funded account'}
   ];
   var rh='';
-  for(var i=0;i<rules.length;i++){var rule=rules[i];rh+='<div class="list-item" style="padding:10px 20px;"><div><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+rule.icon+' '+rule.rule+'</div><div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">'+rule.detail+'</div></div></div>';}
+  for(var i=0;i<rules.length;i++){var rule=rules[i];rh+='<div class="list-item" style="padding:10px 20px;"><div><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+escapeHTML(rule.icon)+' '+escapeHTML(rule.rule)+'</div><div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">'+escapeHTML(rule.detail)+'</div></div></div>';}
   document.getElementById('mavenRulesList').innerHTML=rh;
 
   var weeks=[
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var lc=w.status==='done'?'var(--text-muted)':w.status==='current'?'var(--gold)':'var(--text-secondary)';
     var tc=w.status==='done'?'var(--green)':w.status==='current'?'var(--gold)':'var(--text-muted)';
     var ic=w.status==='done'?'✅':w.status==='current'?'🔥':'⏳';
-    wh+='<div class="list-item" style="padding:12px 20px;"><div><div style="font-size:0.82rem;font-weight:500;color:'+lc+';">'+w.week+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">Cumulative: '+w.cumulative+'</div></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:'+tc+';">'+w.target+'</span><span>'+ic+'</span></div></div>';
+    wh+='<div class="list-item" style="padding:12px 20px;"><div><div style="font-size:0.82rem;font-weight:500;color:'+lc+';">'+escapeHTML(w.week)+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">Cumulative: '+escapeHTML(w.cumulative)+'</div></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:'+tc+';">'+escapeHTML(w.target)+'</span><span>'+ic+'</span></div></div>';
   }
   document.getElementById('weeklyPlan').innerHTML=wh;
 });

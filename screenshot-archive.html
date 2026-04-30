@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if(!shots.length){
     html='<div class="card" style="grid-column:1/-1;"><div class="card-body" style="text-align:center;padding:48px;color:var(--text-muted);">No screenshots yet. Add image URLs to OCHUGI_DATA.screenshots in js/data.js</div></div>';
   } else {
-    for(var i=0;i<shots.length;i++){var s=shots[i];html+='<div class="card"><img src="'+s.url+'" alt="'+s.label+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;"><div class="card-body"><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+s.label+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-top:4px;">'+s.date+'</div></div></div>';}
+    for(var i=0;i<shots.length;i++){var s=shots[i];html+='<div class="card"><img src="'+escapeHTML(s.url)+'" alt="'+escapeHTML(s.label)+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;"><div class="card-body"><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+escapeHTML(s.label)+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-top:4px;">'+escapeHTML(s.date)+'</div></div></div>';}
   }
   document.getElementById('screenshotGrid').innerHTML=html;
 });

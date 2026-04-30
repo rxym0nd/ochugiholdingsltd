@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {label:'Maven DD Floor',value:'$'+mavenFloor.toFixed(2),sub:'5% trailing from peak',accent:'red'},
     {label:'Buffer to Floor',value:'$'+buf.toFixed(2),sub:'Current headroom',accent:'green'}
   ];
-  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];var vc=s.accent==='green'?'positive':s.accent==='red'?'negative':'gold';sh+='<div class="stat-card '+s.accent+'"><div class="stat-label">'+s.label+'</div><div class="stat-value '+vc+'" style="font-size:1.4rem;">'+s.value+'</div><div class="stat-sub">'+s.sub+'</div></div>';}
+  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];var vc=s.accent==='green'?'positive':s.accent==='red'?'negative':'gold';sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(vc)+'" style="font-size:1.4rem;">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
   document.getElementById('riskStats').innerHTML=sh;
 
   var lims=[
@@ -89,11 +89,11 @@ document.addEventListener('DOMContentLoaded', function() {
     {label:'Maven Daily DD (3%)',value:'~$'+(bal*0.03).toFixed(2),pct:30,color:'var(--red)'},
     {label:'Maven Max DD (5%)',value:'$'+(bal*0.05).toFixed(2),pct:50,color:'var(--red)'}
   ];
-  var lh='';for(var i=0;i<lims.length;i++){var l=lims[i];lh+='<div style="padding:12px 20px;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.8rem;color:var(--text-secondary);">'+l.label+'</span><span style="font-family:var(--font-mono);font-weight:700;color:'+l.color+';">'+l.value+'</span></div><div class="progress-track" style="height:3px;"><div class="progress-fill" style="width:'+l.pct+'%;background:'+l.color+';"></div></div></div>';}
+  var lh='';for(var i=0;i<lims.length;i++){var l=lims[i];lh+='<div style="padding:12px 20px;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.8rem;color:var(--text-secondary);">'+escapeHTML(l.label)+'</span><span style="font-family:var(--font-mono);font-weight:700;color:'+escapeHTML(l.color)+';">'+escapeHTML(l.value)+'</span></div><div class="progress-track" style="height:3px;"><div class="progress-fill" style="width:'+escapeHTML(l.pct)+'%;background:'+escapeHTML(l.color)+';"></div></div></div>';}
   document.getElementById('riskLimits').innerHTML=lh;
 
   var rules=[['Rule 1','0.25% max per trade ($12.94 on current balance)'],['Rule 2','1% max daily loss — stop trading if hit'],['Rule 3','5% max weekly loss — review setup if hit'],['Rule 4','8% max monthly loss — firm review required'],['Rule 5','Move SL to breakeven at +2R. Always.'],['Rule 6','Never trade kill list: US30, USDJPY, AUDCAD, Crypto'],['Rule 7','No NY session trading — 33% WR, net negative'],['Rule 8','Check news calendar before every session'],['Rule 9','Pre-Trade Scorecard score 6 or above to enter'],['Rule 10','After 2 consecutive losses — stop for the day']];
-  var rh='';for(var i=0;i<rules.length;i++){rh+='<div class="list-item" style="padding:10px 20px;"><span class="badge badge-gold" style="flex-shrink:0;">'+rules[i][0]+'</span><span style="font-size:0.78rem;color:var(--text-secondary);margin-left:10px;">'+rules[i][1]+'</span></div>';}
+  var rh='';for(var i=0;i<rules.length;i++){rh+='<div class="list-item" style="padding:10px 20px;"><span class="badge badge-gold" style="flex-shrink:0;">'+escapeHTML(rules[i][0])+'</span><span style="font-size:0.78rem;color:var(--text-secondary);margin-left:10px;">'+escapeHTML(rules[i][1])+'</span></div>';}
   document.getElementById('riskRules').innerHTML=rh;
 
   var health=[
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {label:'Recovery Factor',value:'4.57',color:'var(--green)'},
     {label:'Calmar Ratio',value:'61.7',color:'var(--green)'}
   ];
-  var hh='';for(var i=0;i<health.length;i++){var h=health[i];hh+='<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);"><div class="stat-label">'+h.label+'</div><div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:'+h.color+';">'+h.value+'</div></div>';}
+  var hh='';for(var i=0;i<health.length;i++){var h=health[i];hh+='<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);"><div class="stat-label">'+escapeHTML(h.label)+'</div><div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:'+escapeHTML(h.color)+';">'+escapeHTML(h.value)+'</div></div>';}
   document.getElementById('accountHealth').innerHTML=hh;
 });
 </script>

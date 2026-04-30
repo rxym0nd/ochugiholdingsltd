@@ -21,7 +21,7 @@
     <div class="grid-4 mb-32 reveal" id="tradeStats"></div>
     <div class="card mb-32 reveal">
       <div class="card-header"><span class="card-title">📋 Full Trade Log</span><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">60 trades · Raymond only</span></div>
-      <div id="tradeTable"></div>
+      <div class="table-wrap" id="tradeTable" style="border:none;border-radius:0;"></div>
     </div>
   </div>
   <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
@@ -38,18 +38,18 @@ document.addEventListener('DOMContentLoaded', function() {
     {label:'Net P&L',value:'+$'+r.netPnL.toFixed(2),sub:'profit factor '+r.profitFactor,cls:'positive',accent:'green'},
     {label:'Avg Per Trade',value:'+$'+r.expectancy,sub:'expectancy',cls:'gold',accent:'gold'}
   ];
-  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+s.accent+'"><div class="stat-label">'+s.label+'</div><div class="stat-value '+s.cls+'">'+s.value+'</div><div class="stat-sub">'+s.sub+'</div></div>';}
+  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(s.cls)+'">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
   document.getElementById('tradeStats').innerHTML=sh;
   var th='<table><thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Direction</th><th>Session</th><th>P&L</th><th>R:R</th><th>Result</th></tr></thead><tbody>';
   var trades=OCHUGI_DATA.trades;
   for(var i=0;i<trades.length;i++){
     var t=trades[i];var isWin=t.pnl>0;
     th+='<tr><td class="mono" style="color:var(--text-muted);">'+(i+1)+'</td>'
-      +'<td class="mono">'+t.date+'</td><td class="primary mono">'+t.instrument+'</td>'
-      +'<td><span class="chip chip-'+(t.direction.toLowerCase())+'">'+t.direction+'</span></td>'
-      +'<td style="font-size:0.78rem;color:var(--text-secondary);">'+t.session+'</td>'
+      +'<td class="mono">'+escapeHTML(t.date)+'</td><td class="primary mono">'+escapeHTML(t.instrument)+'</td>'
+      +'<td><span class="chip chip-'+escapeHTML(t.direction.toLowerCase())+'">'+escapeHTML(t.direction)+'</span></td>'
+      +'<td style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(t.session)+'</td>'
       +'<td class="mono" style="color:'+(isWin?'var(--green)':'var(--red)')+';">'+(isWin?'+':'')+'$'+t.pnl.toFixed(2)+'</td>'
-      +'<td class="mono">'+t.rr+'</td>'
+      +'<td class="mono">'+escapeHTML(t.rr)+'</td>'
       +'<td><span class="chip chip-'+(isWin?'win':'loss')+'">'+(isWin?'WIN':'LOSS')+'</span></td></tr>';
   }
   document.getElementById('tradeTable').innerHTML=th+'</tbody></table>';

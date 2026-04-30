@@ -25,7 +25,7 @@
     </div>
     <div class="card mb-32 reveal">
       <div class="card-header"><span class="card-title">📅 Full Event Calendar</span><span class="badge badge-red">17 EVENTS</span></div>
-      <div id="calendarTable"></div>
+      <div class="table-wrap" id="calendarTable" style="border:none;border-radius:0;"></div>
     </div>
   </div>
   <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var th='<table><thead><tr><th>Date</th><th>Time (EAT)</th><th>Event</th><th>Country</th><th>Impact</th><th>No-Trade Window</th></tr></thead><tbody>';
   for(var i=0;i<events.length;i++){
     var e=events[i];var extreme=e.impact==='extreme';
-    th+='<tr style="'+(extreme?'background:rgba(255,75,92,0.04);':'')+'"><td class="mono">'+e.date+'</td><td class="mono" style="color:var(--gold);">'+e.time+'</td><td class="primary">'+e.event+'</td><td style="font-size:0.78rem;color:var(--text-secondary);">'+e.country+'</td><td><span class="badge '+(extreme?'badge-red':'badge-gold')+'">'+e.impact.toUpperCase()+'</span></td><td class="mono" style="font-size:0.68rem;color:var(--text-muted);">'+e.block+'</td></tr>';
+    th+='<tr style="'+(extreme?'background:rgba(255,75,92,0.04);':'')+'"><td class="mono">'+escapeHTML(e.date)+'</td><td class="mono" style="color:var(--gold);">'+escapeHTML(e.time)+'</td><td class="primary">'+escapeHTML(e.event)+'</td><td style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(e.country)+'</td><td><span class="badge '+(extreme?'badge-red':'badge-gold')+'">'+escapeHTML(e.impact.toUpperCase())+'</span></td><td class="mono" style="font-size:0.68rem;color:var(--text-muted);">'+escapeHTML(e.block)+'</td></tr>';
   }
   document.getElementById('calendarTable').innerHTML=th+'</tbody></table>';
 });

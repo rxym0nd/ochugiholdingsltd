@@ -267,3 +267,31 @@ function getUpcomingEvents(days = 7) {
     return d >= today && d <= future;
   });
 }
+
+// Escape HTML to prevent injection (VibeSec)
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Formatting Utilities
+function formatCurrency(num) {
+  if (num === undefined || num === null) return '';
+  return '$' + Number(num).toFixed(2);
+}
+
+function formatPNL(num) {
+  if (num === undefined || num === null) return '';
+  var n = Number(num);
+  return (n > 0 ? '+$' : (n < 0 ? '-$' : '$')) + Math.abs(n).toFixed(2);
+}
+
+function formatPercent(num) {
+  if (num === undefined || num === null) return '';
+  return Number(num).toFixed(1) + '%';
+}

@@ -89,10 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
   for(var i=0;i<steps.length;i++){
     var s=steps[i];
     ph+='<div class="list-item" style="padding:14px 20px;align-items:flex-start;">'
-      +'<div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.8rem;color:var(--gold);flex-shrink:0;">'+s.step+'</div>'
-      +'<div style="flex:1;padding-left:12px;"><div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">'+s.title+' <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+s.time+'</span></div>'
-      +'<div style="font-size:0.78rem;color:var(--text-secondary);">'+s.detail+'</div>'
-      +(s.link?'<a href="'+s.link+'" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">'+s.linkText+' →</a>':'')
+      +'<div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.8rem;color:var(--gold);flex-shrink:0;">'+escapeHTML(s.step)+'</div>'
+      +'<div style="flex:1;padding-left:12px;"><div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">'+escapeHTML(s.title)+' <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+escapeHTML(s.time)+'</span></div>'
+      +'<div style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(s.detail)+'</div>'
+      +(s.link?'<a href="'+escapeHTML(s.link)+'" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">'+escapeHTML(s.linkText)+' →</a>':'')
       +'</div></div>';
   }
   document.getElementById('preMarketList').innerHTML=ph;
@@ -110,14 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var dh='';
   for(var i=0;i<during.length;i++){
     dh+='<div class="list-item" style="padding:10px 16px;">'
-      +'<span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--gold);min-width:110px;flex-shrink:0;">'+during[i][0]+'</span>'
-      +'<span style="font-size:0.78rem;color:var(--text-secondary);">'+during[i][1]+'</span></div>';
+      +'<span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--gold);min-width:110px;flex-shrink:0;">'+escapeHTML(during[i][0])+'</span>'
+      +'<span style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(during[i][1])+'</span></div>';
   }
   document.getElementById('duringTradeList').innerHTML=dh;
 
   var eod=['All trades logged in Trade Log?','Screenshots captured for notable setups?','Any rule violations? Log in Mistake Tracker tonight.','Today\'s net P&L written down?','One sentence: what did today teach me?'];
   var eh='';
-  for(var i=0;i<eod.length;i++){eh+='<div class="list-item" style="padding:10px 16px;gap:10px;"><span style="color:var(--text-muted);">☐</span><span style="font-size:0.78rem;color:var(--text-secondary);">'+eod[i]+'</span></div>';}
+  for(var i=0;i<eod.length;i++){eh+='<div class="list-item" style="padding:10px 16px;gap:10px;"><span style="color:var(--text-muted);">☐</span><span style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(eod[i])+'</span></div>';}
   document.getElementById('eodList').innerHTML=eh;
 
   var sun=[
@@ -132,9 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
   for(var i=0;i<sun.length;i++){
     var t=sun[i];
     suh+='<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);">'
-      +'<div style="font-size:1.3rem;margin-bottom:6px;">'+t.icon+'</div>'
-      +'<div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">'+t.task+'</div>'
-      +'<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+t.time+'</div></div>';
+      +'<div style="font-size:1.3rem;margin-bottom:6px;">'+escapeHTML(t.icon)+'</div>'
+      +'<div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">'+escapeHTML(t.task)+'</div>'
+      +'<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+escapeHTML(t.time)+'</div></div>';
   }
   document.getElementById('sundayGrid').innerHTML=suh;
 
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var lh='';
   for(var i=0;i<lims.length;i++){
     var l=lims[i];var vc=l.accent==='green'?'positive':l.accent==='red'?'negative':'gold';
-    lh+='<div class="stat-card '+l.accent+'"><div class="stat-label">'+l.label+'</div><div class="stat-value '+vc+'" style="font-size:1.3rem;">'+l.value+'</div><div class="stat-sub">'+l.sub+'</div></div>';
+    lh+='<div class="stat-card '+escapeHTML(l.accent)+'"><div class="stat-label">'+escapeHTML(l.label)+'</div><div class="stat-value '+escapeHTML(vc)+'" style="font-size:1.3rem;">'+escapeHTML(l.value)+'</div><div class="stat-sub">'+escapeHTML(l.sub)+'</div></div>';
   }
   document.getElementById('quickLimits').innerHTML=lh;
 });

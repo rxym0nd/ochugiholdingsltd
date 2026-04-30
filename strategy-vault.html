@@ -63,25 +63,25 @@ document.addEventListener('DOMContentLoaded', function() {
   var html='';
   for(var i=0;i<strategies.length;i++){
     var s=strategies[i];
-    var entHtml='';for(var j=0;j<s.entry.length;j++){entHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:'+s.color+';font-weight:700;flex-shrink:0;">'+(j+1)+'.</span>'+s.entry[j]+'</div>';}
-    var filHtml='';for(var j=0;j<s.filters.length;j++){filHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:var(--green);flex-shrink:0;">✓</span>'+s.filters[j]+'</div>';}
+    var entHtml='';for(var j=0;j<s.entry.length;j++){entHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:'+escapeHTML(s.color)+';font-weight:700;flex-shrink:0;">'+(j+1)+'.</span>'+escapeHTML(s.entry[j])+'</div>';}
+    var filHtml='';for(var j=0;j<s.filters.length;j++){filHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:var(--green);flex-shrink:0;">✓</span>'+escapeHTML(s.filters[j])+'</div>';}
 
-    html+='<div class="card mb-24 reveal" style="border-left:3px solid '+s.color+';">'
-      +'<div class="card-header"><div><div class="card-title">'+s.emoji+' '+s.name+'</div><div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'+s.instrument+' · '+s.tf+' · '+s.session+'</div></div>'
+    html+='<div class="card mb-24 reveal" style="border-left:3px solid '+escapeHTML(s.color)+';">'
+      +'<div class="card-header"><div><div class="card-title">'+escapeHTML(s.emoji)+' '+escapeHTML(s.name)+'</div><div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'+escapeHTML(s.instrument)+' · '+escapeHTML(s.tf)+' · '+escapeHTML(s.session)+'</div></div>'
       +'<div style="display:flex;gap:16px;align-items:center;">'
-      +'<div style="text-align:center;"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+s.wr+'</div></div>'
-      +'<div style="text-align:center;"><div class="stat-label">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1.1rem;color:'+s.color+';">'+s.pf+'</div></div>'
-      +'<div style="text-align:center;"><div class="stat-label">EXPECT.</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+s.expectancy+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+escapeHTML(s.wr)+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1.1rem;color:'+escapeHTML(s.color)+';">'+escapeHTML(s.pf)+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">EXPECT.</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+escapeHTML(s.expectancy)+'</div></div>'
       +'</div></div>'
       +'<div class="card-body"><div class="grid-2" style="gap:24px;">'
       +'<div><div class="section-label">Entry Rules</div>'+entHtml
-      +'<div style="margin-top:16px;"><div class="section-label">Stop Loss</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+s.sl+'</div></div>'
-      +'<div style="margin-top:16px;"><div class="section-label">Take Profit</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+s.tp+'</div></div></div>'
+      +'<div style="margin-top:16px;"><div class="section-label">Stop Loss</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+escapeHTML(s.sl)+'</div></div>'
+      +'<div style="margin-top:16px;"><div class="section-label">Take Profit</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+escapeHTML(s.tp)+'</div></div></div>'
       +'<div><div class="section-label">Filters Required</div>'+filHtml
       +'<div style="margin-top:16px;"><div class="section-label">Confidence</div>'
       +'<div style="display:flex;align-items:center;gap:10px;">'
-      +'<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="width:'+(s.confidence*10)+'%;height:100%;background:'+s.color+';border-radius:3px;"></div></div>'
-      +'<span style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;color:'+s.color+';">'+s.confidence+'/10</span>'
+      +'<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="width:'+escapeHTML(s.confidence*10)+'%;height:100%;background:'+escapeHTML(s.color)+';border-radius:3px;"></div></div>'
+      +'<span style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;color:'+escapeHTML(s.color)+';">'+escapeHTML(s.confidence)+'/10</span>'
       +'</div></div></div></div></div></div>';
   }
   document.getElementById('strategyCards').innerHTML=html;

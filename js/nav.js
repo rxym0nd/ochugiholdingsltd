@@ -292,8 +292,8 @@ function buildNewsAlert() {
   container.innerHTML = '<div class="alert ' + (next.impact === 'extreme' ? 'alert-danger' : 'alert-warning') + '" style="margin-bottom:24px;">'
     + '<span class="alert-icon">⚠️</span>'
     + '<div class="alert-text">'
-    + '<span class="alert-title">' + (isToday ? 'TODAY' : 'UPCOMING') + ': ' + next.event + ' — ' + next.country + '</span>'
-    + next.date + ' at ' + next.time + ' EAT · No-trade window: ' + next.block + ' · Maven rule applies'
+    + '<span class="alert-title">' + (isToday ? 'TODAY' : 'UPCOMING') + ': ' + escapeHTML(next.event) + ' — ' + escapeHTML(next.country) + '</span>'
+    + escapeHTML(next.date) + ' at ' + escapeHTML(next.time) + ' EAT · No-trade window: ' + escapeHTML(next.block) + ' · Maven rule applies'
     + '</div>'
     + '</div>';
 }

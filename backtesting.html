@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', function() {
   for(var i=0;i<tests.length;i++){
     var t=tests[i];var approved=t.status==='approved';
     html+='<div class="card mb-24 reveal" style="border-left:3px solid '+(approved?'var(--green)':'var(--text-muted)'+';')+(approved?'':'')+';">'
-      +'<div class="card-header"><div><div class="card-title">'+t.name+'</div><div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'+t.instrument+' · '+t.period+' · '+t.trades+' trades</div></div>'
-      +'<span class="badge '+(approved?'badge-green':'badge-gray')+'">'+t.status.toUpperCase()+'</span></div>'
+      +'<div class="card-header"><div><div class="card-title">'+escapeHTML(t.name)+'</div><div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'+escapeHTML(t.instrument)+' · '+escapeHTML(t.period)+' · '+escapeHTML(t.trades)+' trades</div></div>'
+      +'<span class="badge '+(approved?'badge-green':'badge-gray')+'">'+escapeHTML(t.status.toUpperCase())+'</span></div>'
       +'<div class="card-body"><div class="grid-4" style="gap:12px;margin-bottom:16px;">'
-      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--green);">'+t.wr+'%</div></div>'
-      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">PROFIT FACTOR</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--gold);">'+t.pf+'</div></div>'
-      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">MAX DD</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--yellow);">'+t.maxDD+'%</div></div>'
-      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">NET RESULT</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--green);">'+t.result+'</div></div>'
-      +'</div><div style="font-size:0.82rem;color:var(--text-secondary);">'+t.notes+'</div></div></div>';
+      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--green);">'+escapeHTML(t.wr)+'%</div></div>'
+      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">PROFIT FACTOR</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--gold);">'+escapeHTML(t.pf)+'</div></div>'
+      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">MAX DD</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--yellow);">'+escapeHTML(t.maxDD)+'%</div></div>'
+      +'<div style="background:var(--bg-1);border-radius:8px;padding:12px;border:1px solid var(--border);"><div class="stat-label">NET RESULT</div><div style="font-family:var(--font-display);font-size:1.4rem;color:var(--green);">'+escapeHTML(t.result)+'</div></div>'
+      +'</div><div style="font-size:0.82rem;color:var(--text-secondary);">'+escapeHTML(t.notes)+'</div></div></div>';
   }
   document.getElementById('backtestCards').innerHTML=html;
 });

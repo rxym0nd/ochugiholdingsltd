@@ -43,22 +43,22 @@
 document.addEventListener('DOMContentLoaded', function() {
   var r=OCHUGI_DATA.raymond;
   var sd=[
-    {label:'Sharpe Ratio',value:r.sharpe,sub:'Higher is better',cls:'gold',accent:'gold'},
+    {label:'Sharpe Ratio',value:r.sharpeRatio,sub:'Higher is better',cls:'gold',accent:'gold'},
     {label:'Profit Factor',value:r.profitFactor,sub:'Gross profit / gross loss',cls:'positive',accent:'green'},
     {label:'Max Drawdown',value:r.maxDrawdownPct+'%',sub:'$'+r.maxDrawdown.toFixed(2)+' worst peak-to-trough',cls:'gold',accent:'yellow'},
     {label:'Expectancy',value:'+$'+r.expectancy,sub:'Per trade average outcome',cls:'positive',accent:'green'}
   ];
-  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+s.accent+'"><div class="stat-label">'+s.label+'</div><div class="stat-value '+s.cls+'">'+s.value+'</div><div class="stat-sub">'+s.sub+'</div></div>';}
+  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(s.cls)+'">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
   document.getElementById('analyticsStats').innerHTML=sh;
   document.getElementById('riskMetrics').innerHTML=
     '<div class="list-item"><div class="list-item-label">Recovery Factor</div><div class="list-item-value text-gold">4.57</div></div>'
     +'<div class="list-item"><div class="list-item-label">Calmar Ratio</div><div class="list-item-value text-gold">61.7</div></div>'
-    +'<div class="list-item"><div class="list-item-label">Avg Win</div><div class="list-item-value" style="color:var(--green);">$'+r.avgWin+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Avg Win</div><div class="list-item-value" style="color:var(--green);">$'+escapeHTML(r.avgWin)+'</div></div>'
     +'<div class="list-item"><div class="list-item-label">Avg Loss</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.avgLoss)+'</div></div>'
     +'<div class="list-item"><div class="list-item-label">Win/Loss Ratio</div><div class="list-item-value text-gold">'+(r.avgWin/Math.abs(r.avgLoss)).toFixed(2)+'</div></div>';
   document.getElementById('bestWorst').innerHTML=
-    '<div class="list-item"><div class="list-item-label">Best Trade</div><div class="list-item-value" style="color:var(--green);">+$'+r.bestTrade.amount+' · '+r.bestTrade.instrument+'</div></div>'
-    +'<div class="list-item"><div class="list-item-label">Worst Trade</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.worstTrade.amount)+' · '+r.worstTrade.instrument+'</div></div>'
+    '<div class="list-item"><div class="list-item-label">Best Trade</div><div class="list-item-value" style="color:var(--green);">+$'+r.bestTrade.amount+' · '+escapeHTML(r.bestTrade.instrument)+'</div></div>'
+    +'<div class="list-item"><div class="list-item-label">Worst Trade</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.worstTrade.amount)+' · '+escapeHTML(r.worstTrade.instrument)+'</div></div>'
     +'<div class="list-item"><div class="list-item-label">Best Session</div><div class="list-item-value" style="color:var(--green);">Asian · 57% WR · +$92.97</div></div>'
     +'<div class="list-item"><div class="list-item-label">Worst Session</div><div class="list-item-value" style="color:var(--red);">NY · 33% WR · -$17.82</div></div>'
     +'<div class="list-item"><div class="list-item-label">Best Instrument</div><div class="list-item-value" style="color:var(--green);">GBPNZD · 67% WR</div></div>';
@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
     {day:'Thursday',trades:13,wr:46,pnl:12.20},
     {day:'Friday',trades:10,wr:50,pnl:52.83}
   ];
-  var dh='<table><thead><tr><th>Day</th><th>Trades</th><th>Win Rate</th><th>P&L</th></tr></thead><tbody>';
-  for(var i=0;i<dow.length;i++){var d=dow[i];dh+='<tr><td class="primary">'+d.day+'</td><td class="mono">'+d.trades+'</td><td class="mono">'+d.wr+'%</td><td class="mono" style="color:var(--green);">+$'+d.pnl.toFixed(2)+'</td></tr>';}
-  document.getElementById('dowTable').innerHTML=dh+'</tbody></table>';
+  var dh='<div class="table-wrap" style="border:none;border-radius:0;"><table><thead><tr><th>Day</th><th>Trades</th><th>Win Rate</th><th>P&L</th></tr></thead><tbody>';
+  for(var i=0;i<dow.length;i++){var d=dow[i];dh+='<tr><td class="primary">'+escapeHTML(d.day)+'</td><td class="mono">'+escapeHTML(d.trades)+'</td><td class="mono">'+escapeHTML(d.wr)+'%</td><td class="mono" style="color:var(--green);">+$'+d.pnl.toFixed(2)+'</td></tr>';}
+  document.getElementById('dowTable').innerHTML=dh+'</tbody></table></div>';
 });
 </script>
 </body></html>
