@@ -28,7 +28,7 @@
           <h1 class="page-hero-title">MAVEN<br><em>TRACKER</em></h1>
           <p class="page-hero-sub">$5,000 starting balance · +8% target · 80/20 payout split</p>
         </div>
-        <a href="calculator.html" class="btn btn-gold" style="margin-bottom:8px;">🧮 Size Calculator</a>
+        <a href="calculator.html" class="btn btn-accent" style="margin-bottom:8px;">🧮 Size Calculator</a>
       </div>
     </div>
   </div>
@@ -36,41 +36,42 @@
   <!-- TICKER -->
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
 
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
 
-    <!-- BIG PROGRESS -->
-    <div class="card mb-32 reveal" style="border-color:var(--gold-dim);background:linear-gradient(135deg,var(--bg-2),#0e1000);">
-      <div class="card-body" style="padding:48px 32px;text-align:center;">
-        <div class="stat-label" style="text-align:center;margin-bottom:12px;">CHALLENGE PROGRESS</div>
-        <div id="bigPct" style="font-family:var(--font-display);font-size:clamp(5rem,12vw,10rem);color:var(--gold);line-height:1;letter-spacing:4px;">—</div>
-        <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);margin:12px 0 24px;">of $400 target reached</div>
-        <div style="max-width:600px;margin:0 auto;">
-          <div class="progress-track" style="height:8px;border-radius:4px;">
-            <div class="progress-fill gold" id="bigBar" style="width:0%"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;margin-top:8px;font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">
-            <span>$0</span><span>$100</span><span>$200</span><span>$300</span><span>$400 🎯</span>
+    <div class="bento-grid">
+      <!-- BIG PROGRESS -->
+      <div class="col-12 card reveal" style="border-color:var(--accent-dim);background:var(--bg-2);">
+        <div class="card-body" style="padding:48px 32px;text-align:center;">
+          <div class="stat-label" style="text-align:center;margin-bottom:12px;">CHALLENGE PROGRESS</div>
+          <div id="bigPct" style="font-family:var(--font-display);font-size:clamp(4rem,10vw,8rem);color:var(--accent);line-height:1;letter-spacing:-2px;font-weight:600;">—</div>
+          <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);margin:12px 0 24px;">of $400 target reached</div>
+          <div style="max-width:600px;margin:0 auto;">
+            <div class="progress-track" style="height:8px;border-radius:4px;">
+              <div class="progress-fill accent" id="bigBar" style="width:0%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:12px;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">
+              <span>$0</span><span>$100</span><span>$200</span><span>$300</span><span class="text-accent">$400 🎯</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="grid-4 mb-32 reveal" id="mavenStats"></div>
+      <!-- MAVEN STATS ROW -->
+      <div class="col-12 bento-grid" id="mavenStats" style="gap:20px;"></div>
 
-    <div class="grid-2 mb-32">
-      <!-- Rules -->
-      <div class="card reveal">
+      <!-- RULES AND WEEKLY PLAN -->
+      <div class="col-6 card reveal">
         <div class="card-header"><span class="card-title">📋 Maven Rules</span><span class="badge badge-red">STRICT</span></div>
         <div style="padding:0;" id="mavenRulesList"></div>
       </div>
-      <!-- Weekly plan + DD -->
-      <div>
-        <div class="card mb-16 reveal reveal-delay-1">
+      
+      <div class="col-6 flex-col gap-20">
+        <div class="card reveal reveal-delay-1">
           <div class="card-header"><span class="card-title">📅 Weekly Milestone Plan</span></div>
           <div style="padding:0;" id="weeklyPlan"></div>
         </div>
-        <div class="alert alert-danger reveal reveal-delay-2">
+        <div class="alert alert-red reveal reveal-delay-2">
           <span class="alert-icon">🚨</span>
           <div class="alert-text">
             <span class="alert-title">Trailing Drawdown — Read This</span>
@@ -78,31 +79,32 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Weekly log table -->
-    <div class="card mb-32 reveal">
-      <div class="card-header">
-        <span class="card-title">📓 Weekly Profit Log</span>
-        <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">Update weekly</span>
+      <!-- Weekly log table -->
+      <div class="col-12 card reveal mt-32">
+        <div class="card-header">
+          <span class="card-title">📓 Weekly Profit Log</span>
+          <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">Update weekly</span>
+        </div>
+        <div class="table-wrap" style="border:none;border-radius:0;">
+          <table>
+            <thead><tr><th>Week</th><th>Trades</th><th>Wins</th><th>Losses</th><th>WR</th><th>P&L</th><th>Cumulative</th><th>Maven %</th></tr></thead>
+            <tbody>
+              <tr><td class="primary">Feb 9 – Mar 7</td><td class="mono">60</td><td class="mono" style="color:var(--green);">32</td><td class="mono" style="color:var(--red);">28</td><td class="mono">53.3%</td><td class="mono" style="color:var(--green);">+$173.87</td><td class="mono text-accent">+$173.87</td><td class="mono text-accent">43.5%</td></tr>
+              <tr style="opacity:0.35;"><td>Mar 9–15</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr style="opacity:0.35;"><td>Mar 16–22</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr style="opacity:0.35;"><td>Mar 23–29</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="table-wrap" style="border:none;border-radius:0;">
-        <table>
-          <thead><tr><th>Week</th><th>Trades</th><th>Wins</th><th>Losses</th><th>WR</th><th>P&L</th><th>Cumulative</th><th>Maven %</th></tr></thead>
-          <tbody>
-            <tr><td class="primary">Feb 9 – Mar 7</td><td class="mono">60</td><td class="mono" style="color:var(--green);">32</td><td class="mono" style="color:var(--red);">28</td><td class="mono">53.3%</td><td class="mono" style="color:var(--green);">+$173.87</td><td class="mono" style="color:var(--gold);">+$173.87</td><td class="mono" style="color:var(--gold);">43.5%</td></tr>
-            <tr style="opacity:0.35;"><td>Mar 9–15</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr style="opacity:0.35;"><td>Mar 16–22</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-            <tr style="opacity:0.35;"><td>Mar 23–29</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;">
+    </div><!-- bento-grid -->
+  </div><!-- container -->
+
+  <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
     <div class="container">
-      <div class="split-title" style="opacity:0.08;">STAY<br>FUNDED</div>
+      <h2 class="split-title" style="opacity:0.08;">STAY<br>FUNDED</h2>
     </div>
   </div>
 
@@ -111,19 +113,25 @@
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('OchugiDataLoaded', function() {
   var r = OCHUGI_DATA.raymond;
   document.getElementById('bigPct').textContent = r.mavenPct.toFixed(1) + '%';
   document.getElementById('bigBar').style.width = r.mavenPct + '%';
 
   var sd = [
     { label:'Current Profit',    value:'+$'+r.mavenCurrent.toFixed(2),           sub:'earned so far',                    cls:'positive', accent:'green' },
-    { label:'Still Needed',      value:'$'+r.mavenRemaining.toFixed(2),           sub:'to reach $400 target',             cls:'gold',     accent:'gold'  },
+    { label:'Still Needed',      value:'$'+r.mavenRemaining.toFixed(2),           sub:'to reach $400 target',             cls:'accent',   accent:'accent'  },
     { label:'Account Balance',   value:'$'+r.currentBalance.toFixed(2),           sub:'started at $'+r.mavenStartBalance, cls:'neutral',  accent:'blue'  },
     { label:'Trailing DD Floor', value:'$'+(r.mavenStartBalance*0.95).toFixed(2), sub:'never go below this',              cls:'negative', accent:'red'   }
   ];
   var sh='';
-  for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(s.cls)+'" style="font-size:1.6rem;">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
+  for(var i=0;i<sd.length;i++){
+    var s=sd[i];
+    sh+='<div class="col-3 stat-card '+escapeHTML(s.accent)+'">'
+      +'<div class="stat-label">'+escapeHTML(s.label)+'</div>'
+      +'<div class="stat-value '+escapeHTML(s.cls)+'" style="font-size:1.6rem;">'+escapeHTML(s.value)+'</div>'
+      +'<div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';
+  }
   document.getElementById('mavenStats').innerHTML=sh;
 
   var rules=[
@@ -139,7 +147,12 @@ document.addEventListener('DOMContentLoaded', function() {
     {icon:'🤝',rule:'Profit Split',detail:'80% trader / 20% Maven on funded account'}
   ];
   var rh='';
-  for(var i=0;i<rules.length;i++){var rule=rules[i];rh+='<div class="list-item" style="padding:10px 20px;"><div><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+escapeHTML(rule.icon)+' '+escapeHTML(rule.rule)+'</div><div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">'+escapeHTML(rule.detail)+'</div></div></div>';}
+  for(var i=0;i<rules.length;i++){
+    var rule=rules[i];
+    rh+='<div class="list-item" style="padding:10px 20px;">'
+      +'<div><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+escapeHTML(rule.icon)+' '+escapeHTML(rule.rule)+'</div>'
+      +'<div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">'+escapeHTML(rule.detail)+'</div></div></div>';
+  }
   document.getElementById('mavenRulesList').innerHTML=rh;
 
   var weeks=[
@@ -152,13 +165,17 @@ document.addEventListener('DOMContentLoaded', function() {
   var wh='';
   for(var i=0;i<weeks.length;i++){
     var w=weeks[i];
-    var lc=w.status==='done'?'var(--text-muted)':w.status==='current'?'var(--gold)':'var(--text-secondary)';
-    var tc=w.status==='done'?'var(--green)':w.status==='current'?'var(--gold)':'var(--text-muted)';
+    var lc=w.status==='done'?'var(--text-muted)':w.status==='current'?'var(--accent)':'var(--text-secondary)';
+    var tc=w.status==='done'?'var(--green)':w.status==='current'?'var(--accent)':'var(--text-muted)';
     var ic=w.status==='done'?'✅':w.status==='current'?'🔥':'⏳';
-    wh+='<div class="list-item" style="padding:12px 20px;"><div><div style="font-size:0.82rem;font-weight:500;color:'+lc+';">'+escapeHTML(w.week)+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">Cumulative: '+escapeHTML(w.cumulative)+'</div></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:'+tc+';">'+escapeHTML(w.target)+'</span><span>'+ic+'</span></div></div>';
+    wh+='<div class="list-item" style="padding:14px 20px;">'
+      +'<div><div style="font-size:0.85rem;font-weight:500;color:'+lc+';">'+escapeHTML(w.week)+'</div>'
+      +'<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);margin-top:4px;">Cumulative: '+escapeHTML(w.cumulative)+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:12px;"><span style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:'+tc+';">'+escapeHTML(w.target)+'</span><span>'+ic+'</span></div></div>';
   }
   document.getElementById('weeklyPlan').innerHTML=wh;
 });
 </script>
 </body>
 </html>
+

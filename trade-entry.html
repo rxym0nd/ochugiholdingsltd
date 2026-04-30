@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Log Trade</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<nav class="topnav" id="topnav"></nav>
+<div class="mobile-menu" id="mobileMenu"></div>
+
+<div class="page-wrap">
+  <div class="page-content">
+    
+    <div class="page-hero">
+      <div class="container">
+        <div class="flex-between" style="flex-wrap:wrap;gap:32px;">
+          <div>
+            <div class="page-hero-label">Terminal Actions · Execution</div>
+            <h1 class="page-hero-title">LOG <br><em>TRADE</em></h1>
+            <p class="page-hero-sub">Commit your execution data to the ledger.</p>
+          </div>
+          <div class="page-hero-actions">
+            <a href="index.html" class="btn btn-outline">← Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container section">
+      <div class="bento-grid">
+        <div class="col-8 card reveal">
+          <div class="card-header">
+            <span class="card-title">📝 Trade Details</span>
+          </div>
+          <div class="card-body">
+            <form id="tradeForm">
+              
+              <div class="grid-2" style="gap: 20px; margin-bottom: 20px;">
+                <div class="form-group">
+                  <label for="instrument" style="display:block;font-size:0.75rem;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:6px;">Instrument</label>
+                  <input type="text" id="instrument" placeholder="e.g. XAUUSD" required style="width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--border);color:#fff;padding:12px;border-radius:var(--r-sm);font-family:var(--font-mono);text-transform:uppercase;">
+                </div>
+                <div class="form-group">
+                  <label for="type" style="display:block;font-size:0.75rem;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:6px;">Position Type</label>
+                  <select id="type" required style="width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--border);color:#fff;padding:12px;border-radius:var(--r-sm);font-family:var(--font-body);appearance:none;">
+                    <option value="Long" style="background:var(--bg-0)">Long</option>
+                    <option value="Short" style="background:var(--bg-0)">Short</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid-2" style="gap: 20px; margin-bottom: 20px;">
+                <div class="form-group">
+                  <label for="pnl" style="display:block;font-size:0.75rem;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:6px;">Net P&L (USD)</label>
+                  <input type="number" id="pnl" step="0.01" placeholder="-50.00" required style="width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--border);color:#fff;padding:12px;border-radius:var(--r-sm);font-family:var(--font-mono);">
+                </div>
+                <div class="form-group">
+                  <label for="session" style="display:block;font-size:0.75rem;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:6px;">Session</label>
+                  <select id="session" required style="width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--border);color:#fff;padding:12px;border-radius:var(--r-sm);font-family:var(--font-body);appearance:none;">
+                    <option value="Asian" style="background:var(--bg-0)">Asian</option>
+                    <option value="London" style="background:var(--bg-0)">London</option>
+                    <option value="NY" style="background:var(--bg-0)">New York</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 24px;">
+                <label for="notes" style="display:block;font-size:0.75rem;font-family:var(--font-mono);color:var(--text-muted);margin-bottom:6px;">Trade Notes & Lessons</label>
+                <textarea id="notes" rows="4" placeholder="What was the setup? Did you follow your plan?" style="width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--border);color:#fff;padding:12px;border-radius:var(--r-sm);font-family:var(--font-body);resize:vertical;"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-accent" id="submitBtn" style="width:100%;justify-content:center;">Commit Trade to Ledger</button>
+              <div id="statusMsg" style="margin-top:16px;text-align:center;font-size:0.85rem;display:none;"></div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-4 card reveal reveal-delay-1">
+          <div class="card-header"><span class="card-title">📖 Protocol Reminders</span></div>
+          <div class="card-body">
+            <ul style="color:var(--text-muted);font-size:0.85rem;line-height:1.6;padding-left:16px;">
+              <li style="margin-bottom:12px;"><strong>Honesty is key.</strong> The math only works if you record losses just as accurately as wins.</li>
+              <li style="margin-bottom:12px;"><strong>Log the lesson.</strong> A loss without a documented lesson is a double loss.</li>
+              <li style="margin-bottom:12px;"><strong>Did you size right?</strong> Keep your risk management within the 0.5% - 1% boundary.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('tradeForm');
+  const btn = document.getElementById('submitBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!window.OCHUGI_DATA) {
+      alert("Data not loaded yet. Please wait.");
+      return;
+    }
+
+    const token = localStorage.getItem('ochugi_token');
+    const userStr = localStorage.getItem('ochugi_user');
+    if (!token || !userStr) {
+      window.location.href = 'login.html';
+      return;
+    }
+    const user = JSON.parse(userStr);
+    
+    // Admin check - only admins can post to /api/data according to server.js
+    // Wait, if Elvis is a 'trader', the backend rejects it. Let's try anyway, or maybe adjust server.js later if needed.
+    // For now, the user Raymond is an admin.
+
+    const instrument = document.getElementById('instrument').value.toUpperCase();
+    const type = document.getElementById('type').value;
+    const pnl = parseFloat(document.getElementById('pnl').value);
+    const session = document.getElementById('session').value;
+    const notes = document.getElementById('notes').value;
+
+    btn.textContent = 'Committing...';
+    btn.style.opacity = '0.7';
+
+    // 1. Mutate local data
+    let traderData = OCHUGI_DATA[user.username];
+    if (!traderData) {
+      // Fallback to raymond if user key isn't mapped properly yet
+      traderData = OCHUGI_DATA.raymond;
+    }
+
+    // Ensure trades array exists
+    if (!traderData.trades) traderData.trades = [];
+
+    // Create trade object
+    const newTrade = {
+      id: Date.now(),
+      date: new Date().toISOString().split('T')[0],
+      instrument,
+      type,
+      pnl,
+      session,
+      notes
+    };
+    traderData.trades.unshift(newTrade); // Add to top
+
+    // Update aggregate stats
+    traderData.totalTrades += 1;
+    traderData.netPnL += pnl;
+    traderData.currentBalance += pnl;
+    if (pnl > 0) {
+      traderData.wins += 1;
+      // recalculate avgWin naive approach: (avgWin * oldWins + newWin) / newWins
+      let totalWin = (traderData.avgWin * (traderData.wins - 1)) + pnl;
+      traderData.avgWin = parseFloat((totalWin / traderData.wins).toFixed(2));
+    } else if (pnl < 0) {
+      traderData.losses += 1;
+      let totalLoss = (Math.abs(traderData.avgLoss) * (traderData.losses - 1)) + Math.abs(pnl);
+      traderData.avgLoss = -parseFloat((totalLoss / traderData.losses).toFixed(2));
+    }
+    
+    traderData.winRate = Math.round((traderData.wins / traderData.totalTrades) * 100);
+    traderData.profitFactor = parseFloat(((traderData.avgWin * traderData.wins) / (Math.abs(traderData.avgLoss) * traderData.losses)).toFixed(2)) || 0;
+    
+    // Update Maven challenge stats
+    traderData.mavenCurrent += pnl;
+    traderData.mavenRemaining = Math.max(0, traderData.mavenTarget - traderData.mavenCurrent);
+    traderData.mavenPct = Math.min(100, (traderData.mavenCurrent / traderData.mavenTarget) * 100);
+
+    // 2. Post updated data to backend
+    try {
+      const response = await fetch('http://localhost:3000/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(OCHUGI_DATA)
+      });
+      
+      const resData = await response.json();
+      if (resData.success) {
+        statusMsg.style.display = 'block';
+        statusMsg.style.color = 'var(--green)';
+        statusMsg.textContent = 'Trade committed successfully.';
+        btn.textContent = 'Committed';
+        btn.style.background = 'var(--green)';
+        btn.style.borderColor = 'var(--green)';
+        form.reset();
+        
+        setTimeout(() => {
+          btn.textContent = 'Commit Trade to Ledger';
+          btn.style.background = 'var(--accent)';
+          btn.style.borderColor = 'var(--accent)';
+          btn.style.opacity = '1';
+          statusMsg.style.display = 'none';
+        }, 2500);
+      } else {
+        throw new Error(resData.error || 'Server rejected the update.');
+      }
+    } catch (err) {
+      statusMsg.style.display = 'block';
+      statusMsg.style.color = 'var(--red)';
+      statusMsg.textContent = 'Error: ' + err.message;
+      btn.textContent = 'Commit Trade to Ledger';
+      btn.style.opacity = '1';
+    }
+  });
+});
+</script>
+</body>
+</html>

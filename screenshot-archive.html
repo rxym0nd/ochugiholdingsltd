@@ -16,13 +16,13 @@
     <p class="page-hero-sub">Best setups · Mistake captures · Weekly review screenshots</p>
   </div></div>
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
-    <div class="alert alert-info reveal" style="margin-top:8px;margin-bottom:32px;">
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
+    <div class="alert alert-accent reveal mb-32">
       <span class="alert-icon">📸</span>
       <div class="alert-text"><span class="alert-title">Screenshot archive is visual-only</span>Upload trade screenshots to your Google Drive and paste share links below. Add them to js/data.js screenshots array.</div>
     </div>
-    <div class="grid-3 reveal" id="screenshotGrid"></div>
+    <div class="bento-grid reveal" id="screenshotGrid" style="gap:20px;"></div>
   </div>
   <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:40px;">
     <div class="container"><div class="split-title" style="opacity:0.08;">CAPTURE<br>LEARN</div></div>
@@ -30,15 +30,19 @@
 </div></div>
 <script src="js/data.js"></script><script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('OchugiDataLoaded', function() {
   var shots=OCHUGI_DATA.screenshots||[];
   var html='';
   if(!shots.length){
-    html='<div class="card" style="grid-column:1/-1;"><div class="card-body" style="text-align:center;padding:48px;color:var(--text-muted);">No screenshots yet. Add image URLs to OCHUGI_DATA.screenshots in js/data.js</div></div>';
+    html='<div class="col-12 card"><div class="card-body" style="text-align:center;padding:60px;color:var(--text-muted);">No screenshots yet. Add image URLs to OCHUGI_DATA.screenshots in js/data.js</div></div>';
   } else {
-    for(var i=0;i<shots.length;i++){var s=shots[i];html+='<div class="card"><img src="'+escapeHTML(s.url)+'" alt="'+escapeHTML(s.label)+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;"><div class="card-body"><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+escapeHTML(s.label)+'</div><div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);margin-top:4px;">'+escapeHTML(s.date)+'</div></div></div>';}
+    for(var i=0;i<shots.length;i++){
+      var s=shots[i];
+      html+='<div class="col-4 card"><img src="'+escapeHTML(s.url)+'" alt="'+escapeHTML(s.label)+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px 12px 0 0;"><div class="card-body" style="padding:16px;"><div style="font-size:0.9rem;font-weight:600;color:var(--text-primary);">'+escapeHTML(s.label)+'</div><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-top:6px;">'+escapeHTML(s.date)+'</div></div></div>';
+    }
   }
   document.getElementById('screenshotGrid').innerHTML=html;
 });
 </script>
 </body></html>
+

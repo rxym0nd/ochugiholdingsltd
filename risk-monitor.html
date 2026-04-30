@@ -30,10 +30,10 @@
 
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
 
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
 
-    <div class="alert alert-danger mb-32 reveal" style="margin-top:8px;">
+    <div class="alert alert-red mb-32 reveal">
       <span class="alert-icon">🚨</span>
       <div class="alert-text">
         <span class="alert-title">Maven Trailing Drawdown — Real-time risk</span>
@@ -41,22 +41,23 @@
       </div>
     </div>
 
-    <div class="grid-4 mb-32 reveal" id="riskStats"></div>
+    <div class="bento-grid">
+      <div class="col-12 bento-grid" id="riskStats" style="gap:20px;"></div>
 
-    <div class="grid-2 mb-32">
-      <div class="card reveal">
-        <div class="card-header"><span class="card-title">📊 Risk Limits — Raymond</span></div>
-        <div id="riskLimits"></div>
+      <div class="col-6 card reveal mt-16">
+        <div class="card-header"><span class="card-title" id="riskLimitsTitle">📊 Risk Limits</span></div>
+        <div id="riskLimits" style="padding:0;"></div>
       </div>
-      <div class="card reveal reveal-delay-1">
+      
+      <div class="col-6 card reveal reveal-delay-1 mt-16">
         <div class="card-header"><span class="card-title">📋 The Ochugi Code — 10 Rules</span></div>
         <div id="riskRules" style="padding:0;"></div>
       </div>
-    </div>
 
-    <div class="card mb-32 reveal">
-      <div class="card-header"><span class="card-title">📈 Account Health — Feb–Mar 2026</span></div>
-      <div class="card-body"><div class="grid-3" id="accountHealth"></div></div>
+      <div class="col-12 card reveal mt-32">
+        <div class="card-header"><span class="card-title">📈 Account Health — Feb–Mar 2026</span></div>
+        <div class="card-body"><div class="bento-grid" id="accountHealth" style="gap:16px;"></div></div>
+      </div>
     </div>
   </div>
 
@@ -69,8 +70,15 @@
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var r=OCHUGI_DATA.raymond;var bal=r.currentBalance;var mavenFloor=r.mavenStartBalance*0.95;var buf=bal-mavenFloor;
+document.addEventListener('OchugiDataLoaded', function() {
+  var userStr = localStorage.getItem('ochugi_user');
+  var user = userStr ? JSON.parse(userStr) : {username: 'raymond'};
+  var r = OCHUGI_DATA[user.username] || OCHUGI_DATA.raymond;
+  var bal = r.currentBalance;
+  var mavenFloor = r.mavenStartBalance * 0.95;
+  var buf = bal - mavenFloor;
+  
+  document.getElementById('riskLimitsTitle').textContent = '📊 Risk Limits — ' + user.username.toUpperCase();
 
   var sd=[
     {label:'Max Per Trade',value:'$'+(bal*0.0025).toFixed(2),sub:'0.25% of balance',accent:'red'},
@@ -78,35 +86,61 @@ document.addEventListener('DOMContentLoaded', function() {
     {label:'Maven DD Floor',value:'$'+mavenFloor.toFixed(2),sub:'5% trailing from peak',accent:'red'},
     {label:'Buffer to Floor',value:'$'+buf.toFixed(2),sub:'Current headroom',accent:'green'}
   ];
-  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];var vc=s.accent==='green'?'positive':s.accent==='red'?'negative':'gold';sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(vc)+'" style="font-size:1.4rem;">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
+  var sh='';for(var i=0;i<sd.length;i++){
+    var s=sd[i];var vc=s.accent==='green'?'positive':s.accent==='red'?'negative':'accent';
+    sh+='<div class="col-3 stat-card '+escapeHTML(s.accent)+'">'
+      +'<div class="stat-label">'+escapeHTML(s.label)+'</div>'
+      +'<div class="stat-value '+escapeHTML(vc)+'" style="font-size:1.6rem;">'+escapeHTML(s.value)+'</div>'
+      +'<div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';
+  }
   document.getElementById('riskStats').innerHTML=sh;
 
   var lims=[
     {label:'Per Trade (0.25%)',value:'$'+(bal*0.0025).toFixed(2),pct:2.5,color:'var(--red)'},
     {label:'Daily Max (1%)',value:'$'+(bal*0.01).toFixed(2),pct:10,color:'var(--yellow)'},
-    {label:'Weekly Max (5%)',value:'$'+(bal*0.05).toFixed(2),pct:50,color:'var(--orange)'},
+    {label:'Weekly Max (5%)',value:'$'+(bal*0.05).toFixed(2),pct:50,color:'var(--accent)'},
     {label:'Monthly Max (8%)',value:'$'+(bal*0.08).toFixed(2),pct:80,color:'var(--purple)'},
     {label:'Maven Daily DD (3%)',value:'~$'+(bal*0.03).toFixed(2),pct:30,color:'var(--red)'},
     {label:'Maven Max DD (5%)',value:'$'+(bal*0.05).toFixed(2),pct:50,color:'var(--red)'}
   ];
-  var lh='';for(var i=0;i<lims.length;i++){var l=lims[i];lh+='<div style="padding:12px 20px;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:0.8rem;color:var(--text-secondary);">'+escapeHTML(l.label)+'</span><span style="font-family:var(--font-mono);font-weight:700;color:'+escapeHTML(l.color)+';">'+escapeHTML(l.value)+'</span></div><div class="progress-track" style="height:3px;"><div class="progress-fill" style="width:'+escapeHTML(l.pct)+'%;background:'+escapeHTML(l.color)+';"></div></div></div>';}
+  var lh='';for(var i=0;i<lims.length;i++){
+    var l=lims[i];
+    lh+='<div style="padding:14px 20px;border-bottom:1px solid var(--border);">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:8px;">'
+      +'<span style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(l.label)+'</span>'
+      +'<span style="font-family:var(--font-mono);font-weight:600;color:'+escapeHTML(l.color)+';">'+escapeHTML(l.value)+'</span></div>'
+      +'<div class="progress-track" style="height:4px;"><div class="progress-fill" style="width:'+escapeHTML(l.pct)+'%;background:'+escapeHTML(l.color)+';"></div></div></div>';
+  }
   document.getElementById('riskLimits').innerHTML=lh;
 
   var rules=[['Rule 1','0.25% max per trade ($12.94 on current balance)'],['Rule 2','1% max daily loss — stop trading if hit'],['Rule 3','5% max weekly loss — review setup if hit'],['Rule 4','8% max monthly loss — firm review required'],['Rule 5','Move SL to breakeven at +2R. Always.'],['Rule 6','Never trade kill list: US30, USDJPY, AUDCAD, Crypto'],['Rule 7','No NY session trading — 33% WR, net negative'],['Rule 8','Check news calendar before every session'],['Rule 9','Pre-Trade Scorecard score 6 or above to enter'],['Rule 10','After 2 consecutive losses — stop for the day']];
-  var rh='';for(var i=0;i<rules.length;i++){rh+='<div class="list-item" style="padding:10px 20px;"><span class="badge badge-gold" style="flex-shrink:0;">'+escapeHTML(rules[i][0])+'</span><span style="font-size:0.78rem;color:var(--text-secondary);margin-left:10px;">'+escapeHTML(rules[i][1])+'</span></div>';}
+  var rh='';for(var i=0;i<rules.length;i++){
+    rh+='<div class="list-item" style="padding:12px 20px;">'
+      +'<span class="badge badge-accent" style="flex-shrink:0;">'+escapeHTML(rules[i][0])+'</span>'
+      +'<span style="font-size:0.8rem;color:var(--text-secondary);margin-left:14px;">'+escapeHTML(rules[i][1])+'</span></div>';
+  }
   document.getElementById('riskRules').innerHTML=rh;
 
+  var netGainPct = ((bal - r.startingBalance) / r.startingBalance) * 100;
+  var isGain = netGainPct >= 0;
+  
   var health=[
-    {label:'Starting Balance',value:'$5,000.00',color:'var(--text-primary)'},
-    {label:'Current Balance',value:'$5,173.87',color:'var(--green)'},
-    {label:'Net Gain',value:'+$173.87 (+3.48%)',color:'var(--green)'},
-    {label:'Max Drawdown',value:'$38.08 (0.74%)',color:'var(--yellow)'},
-    {label:'Recovery Factor',value:'4.57',color:'var(--green)'},
-    {label:'Calmar Ratio',value:'61.7',color:'var(--green)'}
+    {label:'Starting Balance',value:'$'+r.startingBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),color:'var(--text-primary)'},
+    {label:'Current Balance',value:'$'+bal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),color:(bal>=r.startingBalance?'var(--green)':'var(--red)')},
+    {label:'Net Gain',value:(r.netPnL>=0?'+':'')+'$'+r.netPnL.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})+' ('+(isGain?'+':'')+netGainPct.toFixed(2)+'%)',color:(isGain?'var(--green)':'var(--red)')},
+    {label:'Max Drawdown',value:'$'+Math.abs(r.maxDrawdown).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),color:'var(--yellow)'},
+    {label:'Profit Factor',value:r.profitFactor.toFixed(2),color:(r.profitFactor>=2?'var(--green)':'var(--yellow)')},
+    {label:'Win Rate',value:r.winRate+'%',color:(r.winRate>=50?'var(--green)':'var(--red)')}
   ];
-  var hh='';for(var i=0;i<health.length;i++){var h=health[i];hh+='<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);"><div class="stat-label">'+escapeHTML(h.label)+'</div><div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:'+escapeHTML(h.color)+';">'+escapeHTML(h.value)+'</div></div>';}
+  var hh='';for(var i=0;i<health.length;i++){
+    var h=health[i];
+    hh+='<div class="col-4" style="background:var(--bg-1);border-radius:8px;padding:20px;border:1px solid var(--border);">'
+      +'<div class="stat-label">'+escapeHTML(h.label)+'</div>'
+      +'<div style="font-family:var(--font-display);font-size:1.4rem;font-weight:600;color:'+escapeHTML(h.color)+';">'+escapeHTML(h.value)+'</div></div>';
+  }
   document.getElementById('accountHealth').innerHTML=hh;
 });
 </script>
 </body>
 </html>
+

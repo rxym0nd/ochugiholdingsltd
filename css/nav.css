@@ -1,6 +1,6 @@
 /* ============================================================
-   OCHUGI HOLDINGS LTD — TOP NAVIGATION
-   Transparent on load → solid on scroll (LN style)
+   OCHUGI HOLDINGS LTD — TOP NAVIGATION v3
+   Swiss Financial Bento Aesthetic
    ============================================================ */
 
 /* ─── NAV BAR ────────────────────────────────────────────────── */
@@ -19,9 +19,9 @@
 }
 
 .topnav.scrolled {
-  background: rgba(4, 6, 11, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(3, 7, 18, 0.85); /* Deep Obsidian with opacity */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom-color: var(--border);
 }
 
@@ -29,107 +29,113 @@
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
   text-decoration: none;
 }
 
 .nav-logo-img {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
 }
 
 .nav-logo-fallback {
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, var(--gold-dim), var(--gold));
-  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: var(--r-sm);
   display: none;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 15px;
-  color: var(--bg-0);
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
   flex-shrink: 0;
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .nav-brand {
   display: flex;
   flex-direction: column;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .nav-brand-name {
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 2px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
   text-transform: uppercase;
   color: var(--text-primary);
 }
 
 .nav-brand-sub {
   font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 2px;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 /* ─── NAV LINKS ──────────────────────────────────────────────── */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   margin: 0 auto;
 }
 
 .nav-link {
   position: relative;
-  padding: 6px 14px;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
   border-radius: var(--r-sm);
 }
 
 .nav-link:hover {
   color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .nav-link.active {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
-  left: 14px;
-  right: 14px;
-  height: 1px;
-  background: var(--gold);
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 -2px 8px var(--accent-glow);
+  border-radius: 2px 2px 0 0;
 }
 
 .nav-link .nav-badge {
   display: inline-flex;
-  margin-left: 5px;
-  font-size: 0.5rem;
-  padding: 1px 5px;
-  border-radius: 10px;
-  font-weight: 700;
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-weight: 600;
   vertical-align: middle;
 }
 
-.nav-badge-green { background: var(--green-bg); color: var(--green); }
-.nav-badge-gold  { background: var(--gold-bg);  color: var(--gold); }
-.nav-badge-blue  { background: var(--blue-bg);  color: var(--blue); }
+.nav-badge-green  { background: var(--green-dim); color: var(--green); }
+.nav-badge-accent { background: var(--accent-dim);  color: var(--accent); }
+.nav-badge-blue   { background: rgba(59, 130, 246, 0.15);  color: #3b82f6; }
 
 /* ─── NAV RIGHT SIDE ─────────────────────────────────────────── */
 .nav-right {
@@ -143,47 +149,48 @@
 .nav-maven-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  background: var(--gold-bg);
-  border: 1px solid var(--gold-dim);
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 24px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(14, 165, 233, 0.2);
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .nav-maven-pill:hover {
-  background: rgba(201,168,76,0.14);
+  background: rgba(14, 165, 233, 0.25);
+  border-color: rgba(14, 165, 233, 0.4);
 }
 
 .nav-maven-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .nav-maven-pct {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .nav-maven-bar {
   width: 48px;
-  height: 3px;
-  background: var(--border-2);
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .nav-maven-fill {
   height: 100%;
-  background: var(--gold);
+  background: var(--accent);
   border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 /* ─── NAV DROPDOWN (sections) ───────────────────────────────── */
@@ -194,32 +201,45 @@
 .nav-group-trigger {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
 }
 
 .nav-group-trigger::after {
   content: '▾';
-  font-size: 0.5rem;
-  color: var(--text-muted);
+  font-size: 0.6rem;
+  opacity: 0.5;
 }
 
 .nav-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(7, 12, 20, 0.96);
+  background: var(--glass-bg);
   border: 1px solid var(--border-2);
   border-radius: var(--r-md);
-  padding: 6px;
-  min-width: 160px;
+  padding: 8px;
+  min-width: 180px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.2s, transform 0.2s;
-  transform: translateX(-50%) translateY(-6px);
-  backdrop-filter: blur(20px);
+  transform: translateX(-50%) translateY(-10px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Invisible bridge to prevent hover loss when moving cursor to dropdown */
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
 }
 
 .nav-group:hover .nav-dropdown {
@@ -232,29 +252,28 @@
 .nav-dropdown-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 12px;
+  gap: 10px;
+  padding: 10px 14px;
   border-radius: var(--r-sm);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  transition: background 0.1s, color 0.1s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .nav-dropdown-item:hover {
-  background: var(--bg-hover);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
 }
 
 .nav-dropdown-item.active {
-  color: var(--gold);
+  color: var(--accent);
+  background: var(--accent-dim);
 }
 
 .nav-dropdown-icon {
-  font-size: 12px;
-  width: 16px;
+  font-size: 1.1rem;
+  width: 20px;
   text-align: center;
 }
 
@@ -262,24 +281,25 @@
 .nav-hamburger {
   display: none;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   background: none;
   border: none;
 }
 
 .nav-hamburger span {
   display: block;
-  width: 22px;
-  height: 1px;
-  background: var(--text-secondary);
-  transition: all 0.25s ease;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 1px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; }
-.nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+.nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
 
 /* ─── MOBILE MENU ────────────────────────────────────────────── */
 .mobile-menu {
@@ -288,14 +308,14 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(4, 6, 11, 0.97);
+  background: var(--bg-0);
   z-index: 490;
   display: flex;
   flex-direction: column;
-  padding: 32px 24px;
-  gap: 4px;
+  padding: 40px 24px;
+  gap: 8px;
   transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-y: auto;
 }
 
@@ -306,52 +326,50 @@
 .mobile-menu-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 0;
+  gap: 16px;
+  padding: 16px 0;
   border-bottom: 1px solid var(--border);
   font-family: var(--font-display);
-  font-size: 2rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -0.5px;
   color: var(--text-secondary);
   transition: color 0.2s;
 }
 
 .mobile-menu-link:hover, .mobile-menu-link.active {
-  color: var(--gold);
+  color: var(--accent);
 }
 
-.mobile-menu-link .mobile-icon { font-size: 1.2rem; }
+.mobile-menu-link .mobile-icon { font-size: 1.5rem; opacity: 0.8; }
 
 /* Stats in mobile menu */
 .mobile-menu-stats {
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 16px;
 }
 
 .mobile-stat {
-  background: var(--bg-2);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  padding: 12px;
+  padding: 16px;
 }
 
 .mobile-stat-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .mobile-stat-value {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  letter-spacing: 1px;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 /* ─── RESPONSIVE ─────────────────────────────────────────────── */

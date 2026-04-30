@@ -1,5 +1,5 @@
 /* ============================================================
-   OCHUGI HOLDINGS LTD — NAVIGATION & INTERACTIONS v2
+   OCHUGI HOLDINGS LTD — NAVIGATION & INTERACTIONS v3
    Custom cursor · Top nav · Scroll reveal · Loading screen
    ============================================================ */
 
@@ -8,9 +8,10 @@ var NAV_STRUCTURE = [
     label: 'Daily',
     items: [
       { icon: '⚡', label: 'Command Center', href: 'index.html' },
-      { icon: '🎯', label: 'Maven Tracker',  href: 'maven.html', badge: { text: 'LIVE', cls: 'nav-badge-gold' } },
+      { icon: '🎯', label: 'Maven Tracker',  href: 'maven.html', badge: { text: 'LIVE', cls: 'nav-badge-accent' } },
       { icon: '📅', label: 'News Calendar',  href: 'news-calendar.html' },
-      { icon: '⏰', label: 'Daily Routine',  href: 'routine.html' }
+      { icon: '⏰', label: 'Daily Routine',  href: 'routine.html' },
+      { icon: '✍️', label: 'Log Trade',     href: 'trade-entry.html', badge: { text: 'NEW', cls: 'nav-badge-accent' } }
     ]
   },
   {
@@ -58,17 +59,17 @@ function buildNav() {
     var hasActive = group.items.some(function(i) { return i.href === activePage; });
 
     groupsHtml += '<div class="nav-group">';
-    groupsHtml += '<span class="nav-link nav-group-trigger' + (hasActive ? ' active' : '') + '">' + group.label + '</span>';
+    groupsHtml += '<span class="nav-link nav-group-trigger' + (hasActive ? ' active' : '') + '">' + escapeHTML(group.label) + '</span>';
     groupsHtml += '<div class="nav-dropdown">';
     for (var i = 0; i < group.items.length; i++) {
       var item = group.items[i];
       var isActive = item.href === activePage;
       var badgeHtml = item.badge
-        ? '<span class="nav-badge ' + item.badge.cls + '">' + item.badge.text + '</span>'
+        ? '<span class="nav-badge ' + escapeHTML(item.badge.cls) + '">' + escapeHTML(item.badge.text) + '</span>'
         : '';
-      groupsHtml += '<a href="' + item.href + '" class="nav-dropdown-item' + (isActive ? ' active' : '') + '">';
-      groupsHtml += '<span class="nav-dropdown-icon">' + item.icon + '</span>';
-      groupsHtml += item.label + badgeHtml;
+      groupsHtml += '<a href="' + escapeHTML(item.href) + '" class="nav-dropdown-item' + (isActive ? ' active' : '') + '">';
+      groupsHtml += '<span class="nav-dropdown-icon">' + escapeHTML(item.icon) + '</span>';
+      groupsHtml += escapeHTML(item.label) + badgeHtml;
       groupsHtml += '</a>';
     }
     groupsHtml += '</div></div>';
@@ -88,17 +89,29 @@ function buildNav() {
     // Nav links
     + '<div class="nav-links">' + groupsHtml + '</div>'
 
-    // Right: Maven pill
+    // Right: Maven pill & Logout
     + '<div class="nav-right">'
     + '<a href="maven.html" class="nav-maven-pill">'
     + '<span class="nav-maven-label">Maven</span>'
-    + '<div class="nav-maven-bar"><div class="nav-maven-fill" style="width:' + r.mavenPct + '%"></div></div>'
-    + '<span class="nav-maven-pct">' + r.mavenPct.toFixed(1) + '%</span>'
+    + '<div class="nav-maven-bar"><div class="nav-maven-fill" style="width:' + escapeHTML(r.mavenPct) + '%"></div></div>'
+    + '<span class="nav-maven-pct">' + escapeHTML(r.mavenPct.toFixed(1)) + '%</span>'
     + '</a>'
+    + '<button class="nav-link" id="navLogout" style="background:transparent;border:none;cursor:pointer;color:var(--text-muted);font-size:0.85rem;margin-left:16px;">Logout</button>'
     + '<button class="nav-hamburger" id="navHamburger" aria-label="Menu">'
     + '<span></span><span></span><span></span>'
     + '</button>'
     + '</div>';
+    
+  setTimeout(function() {
+    var logoutBtn = document.getElementById('navLogout');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('ochugi_token');
+        localStorage.removeItem('ochugi_user');
+        window.location.href = 'login.html';
+      });
+    }
+  }, 0);
 }
 
 /* ─── MOBILE MENU ────────────────────────────────────────────── */
@@ -115,8 +128,8 @@ function buildMobileMenu() {
   for (var i = 0; i < allItems.length; i++) {
     var item = allItems[i];
     var isActive = item.href === activePage;
-    linksHtml += '<a href="' + item.href + '" class="mobile-menu-link' + (isActive ? ' active' : '') + '">';
-    linksHtml += '<span class="mobile-icon">' + item.icon + '</span>' + item.label;
+    linksHtml += '<a href="' + escapeHTML(item.href) + '" class="mobile-menu-link' + (isActive ? ' active' : '') + '">';
+    linksHtml += '<span class="mobile-icon">' + escapeHTML(item.icon) + '</span>' + escapeHTML(item.label);
     linksHtml += '</a>';
   }
 
@@ -124,11 +137,11 @@ function buildMobileMenu() {
     + '<div class="mobile-menu-stats">'
     + '<div class="mobile-stat">'
     + '<div class="mobile-stat-label">Balance</div>'
-    + '<div class="mobile-stat-value text-gold">$' + r.currentBalance.toLocaleString('en-US', {minimumFractionDigits:2}) + '</div>'
+    + '<div class="mobile-stat-value text-accent">$' + escapeHTML(r.currentBalance.toLocaleString('en-US', {minimumFractionDigits:2})) + '</div>'
     + '</div>'
     + '<div class="mobile-stat">'
     + '<div class="mobile-stat-label">Win Rate</div>'
-    + '<div class="mobile-stat-value text-gold">' + r.winRate + '%</div>'
+    + '<div class="mobile-stat-value text-accent">' + escapeHTML(r.winRate) + '%</div>'
     + '</div>'
     + '</div>';
 }
@@ -259,9 +272,9 @@ function buildTicker() {
   var oneSet = '';
   for (var i = 0; i < items.length; i++) {
     oneSet += '<div class="ticker-item">';
-    oneSet += '<span>' + items[i].label + '</span>';
+    oneSet += '<span>' + escapeHTML(items[i].label) + '</span>';
     oneSet += '<span class="ticker-sep">◆</span>';
-    oneSet += '<span class="ticker-val">' + items[i].val + '</span>';
+    oneSet += '<span class="ticker-val">' + escapeHTML(items[i].val) + '</span>';
     if (i < items.length - 1) {
       oneSet += '<span class="ticker-sep">—</span>';
     }
@@ -289,7 +302,7 @@ function buildNewsAlert() {
   var next = upcoming[0];
   var isToday = next.date === new Date().toISOString().split('T')[0];
 
-  container.innerHTML = '<div class="alert ' + (next.impact === 'extreme' ? 'alert-danger' : 'alert-warning') + '" style="margin-bottom:24px;">'
+  container.innerHTML = '<div class="alert ' + (next.impact === 'extreme' ? 'alert-red' : 'alert-accent') + '" style="margin-bottom:24px;">'
     + '<span class="alert-icon">⚠️</span>'
     + '<div class="alert-text">'
     + '<span class="alert-title">' + (isToday ? 'TODAY' : 'UPCOMING') + ': ' + escapeHTML(next.event) + ' — ' + escapeHTML(next.country) + '</span>'
@@ -320,7 +333,7 @@ function initLoadingScreen() {
 }
 
 /* ─── INIT ALL ───────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('OchugiDataLoaded', function() {
   buildNav();
   buildMobileMenu();
   initNavScroll();
@@ -331,3 +344,4 @@ document.addEventListener('DOMContentLoaded', function() {
   buildNewsAlert();
   initLoadingScreen();
 });
+

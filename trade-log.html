@@ -11,48 +11,74 @@
 <nav class="topnav" id="topnav"></nav><div class="mobile-menu" id="mobileMenu"></div>
 <div class="page-wrap"><div class="page-content">
   <div class="page-hero"><div class="container">
-    <div class="page-hero-label">Trade History · Feb 9 – Mar 7, 2026</div>
+    <div class="page-hero-label" id="heroLabel">Trade History · Dynamic</div>
     <h1 class="page-hero-title">TRADE<br><em>LOG</em></h1>
-    <p class="page-hero-sub">60 total trades · 32 wins · 28 losses · +$173.87 net P&L</p>
+    <p class="page-hero-sub" id="heroSub">Loading metrics...</p>
   </div></div>
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
-    <div class="grid-4 mb-32 reveal" id="tradeStats"></div>
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
+    <div class="bento-grid mb-32 reveal" id="tradeStats" style="gap:20px;"></div>
     <div class="card mb-32 reveal">
-      <div class="card-header"><span class="card-title">📋 Full Trade Log</span><span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">60 trades · Raymond only</span></div>
+      <div class="card-header"><span class="card-title">📋 Full Trade Log</span><span id="tableTitle" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);">Loading...</span></div>
       <div class="table-wrap" id="tradeTable" style="border:none;border-radius:0;"></div>
     </div>
   </div>
   <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
-    <div class="container"><div class="split-title" style="opacity:0.08;">60<br>TRADES</div></div>
+    <div class="container"><div class="split-title" id="footerBig" style="opacity:0.08;">...<br>TRADES</div></div>
   </div>
 </div></div>
 <script src="js/data.js"></script><script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var r=OCHUGI_DATA.raymond;
+document.addEventListener('OchugiDataLoaded', function() {
+  var userStr = localStorage.getItem('ochugi_user');
+  var user = userStr ? JSON.parse(userStr) : {username: 'raymond'};
+  var r = OCHUGI_DATA[user.username] || OCHUGI_DATA.raymond;
+
+  // Update Headers
+  document.getElementById('heroLabel').textContent = 'Trade History · ' + user.username.toUpperCase();
+  document.getElementById('heroSub').textContent = r.totalTrades + ' total trades · ' + r.wins + ' wins · ' + r.losses + ' losses · ' + (r.netPnL >= 0 ? '+$' : '-$') + Math.abs(r.netPnL).toFixed(2) + ' net P&L';
+  document.getElementById('tableTitle').textContent = r.totalTrades + ' trades · ' + user.username + ' only';
+  document.getElementById('footerBig').innerHTML = r.totalTrades + '<br>TRADES';
+
   var sd=[
-    {label:'Total Trades',value:r.totalTrades,sub:'Feb 9 – Mar 7, 2026',cls:'neutral',accent:'blue'},
+    {label:'Total Trades',value:r.totalTrades,sub:'Current active log',cls:'neutral',accent:'blue'},
     {label:'Win Rate',value:r.winRate+'%',sub:r.wins+'W · '+r.losses+'L',cls:'neutral',accent:'green'},
-    {label:'Net P&L',value:'+$'+r.netPnL.toFixed(2),sub:'profit factor '+r.profitFactor,cls:'positive',accent:'green'},
-    {label:'Avg Per Trade',value:'+$'+r.expectancy,sub:'expectancy',cls:'gold',accent:'gold'}
+    {label:'Net P&L',value:(r.netPnL >= 0 ? '+$' : '-$')+Math.abs(r.netPnL).toFixed(2),sub:'profit factor '+r.profitFactor,cls:r.netPnL>=0?'positive':'negative',accent:r.netPnL>=0?'green':'red'},
+    {label:'Avg Per Trade',value:'$'+Math.abs(r.expectancy).toFixed(2),sub:'expectancy',cls:'accent',accent:'accent'}
   ];
-  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(s.cls)+'">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
+  var sh='';for(var i=0;i<sd.length;i++){
+    var s=sd[i];
+    sh+='<div class="col-3 stat-card '+escapeHTML(s.accent)+'">'
+      +'<div class="stat-label">'+escapeHTML(s.label)+'</div>'
+      +'<div class="stat-value '+escapeHTML(s.cls)+'" style="font-size:1.6rem;">'+escapeHTML(s.value)+'</div>'
+      +'<div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';
+  }
   document.getElementById('tradeStats').innerHTML=sh;
-  var th='<table><thead><tr><th>#</th><th>Date</th><th>Instrument</th><th>Direction</th><th>Session</th><th>P&L</th><th>R:R</th><th>Result</th></tr></thead><tbody>';
-  var trades=OCHUGI_DATA.trades;
+  
+  var trades = r.trades || [];
+  if (trades.length === 0) {
+    document.getElementById('tradeTable').innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">No trades logged yet. <a href="trade-entry.html" style="color: var(--accent); text-decoration: none;">Log your first trade</a>.</div>';
+    return;
+  }
+
+  var th='<table><thead><tr><th>Date</th><th>Instrument</th><th>Direction</th><th>Session</th><th>P&L</th><th>Notes</th><th>Result</th></tr></thead><tbody>';
   for(var i=0;i<trades.length;i++){
-    var t=trades[i];var isWin=t.pnl>0;
-    th+='<tr><td class="mono" style="color:var(--text-muted);">'+(i+1)+'</td>'
-      +'<td class="mono">'+escapeHTML(t.date)+'</td><td class="primary mono">'+escapeHTML(t.instrument)+'</td>'
-      +'<td><span class="chip chip-'+escapeHTML(t.direction.toLowerCase())+'">'+escapeHTML(t.direction)+'</span></td>'
-      +'<td style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(t.session)+'</td>'
+    var t=trades[i];
+    var isWin=t.pnl>0;
+    var safeType = t.type ? t.type : (t.direction || 'Unknown');
+    var badgeClass = safeType.toLowerCase() === 'long' ? 'green' : (safeType.toLowerCase() === 'short' ? 'red' : 'blue');
+    
+    th+='<tr>'
+      +'<td class="mono">'+escapeHTML(t.date || '')+'</td><td class="primary mono">'+escapeHTML(t.instrument || '')+'</td>'
+      +'<td><span class="badge badge-'+badgeClass+'">'+escapeHTML(safeType)+'</span></td>'
+      +'<td style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(t.session || '')+'</td>'
       +'<td class="mono" style="color:'+(isWin?'var(--green)':'var(--red)')+';">'+(isWin?'+':'')+'$'+t.pnl.toFixed(2)+'</td>'
-      +'<td class="mono">'+escapeHTML(t.rr)+'</td>'
-      +'<td><span class="chip chip-'+(isWin?'win':'loss')+'">'+(isWin?'WIN':'LOSS')+'</span></td></tr>';
+      +'<td style="font-size:0.8rem; color:var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+escapeHTML(t.notes || '')+'</td>'
+      +'<td><span class="badge badge-'+(isWin?'green':'red')+'">'+(isWin?'WIN':'LOSS')+'</span></td></tr>';
   }
   document.getElementById('tradeTable').innerHTML=th+'</tbody></table>';
 });
 </script>
 </body></html>
+

@@ -30,20 +30,20 @@
 
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
 
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
 
-    <div class="grid-2 mb-32" style="margin-top:8px;">
-      <div class="card reveal">
+    <div class="bento-grid mb-32">
+      <div class="col-6 card reveal">
         <div class="card-header" style="border-left:3px solid var(--yellow);"><span class="card-title">🌅 Pre-Market Routine — 10 min</span></div>
         <div style="padding:0;" id="preMarketList"></div>
       </div>
-      <div>
-        <div class="card mb-16 reveal reveal-delay-1">
+      <div class="col-6 bento-grid" style="gap:20px;">
+        <div class="col-12 card reveal reveal-delay-1">
           <div class="card-header" style="border-left:3px solid var(--blue);"><span class="card-title">📈 During The Trade</span></div>
           <div style="padding:0;" id="duringTradeList"></div>
         </div>
-        <div class="card reveal reveal-delay-2">
+        <div class="col-12 card reveal reveal-delay-2">
           <div class="card-header" style="border-left:3px solid var(--purple);"><span class="card-title">🌙 End of Day — 5 min</span></div>
           <div style="padding:0;" id="eodList"></div>
         </div>
@@ -56,13 +56,13 @@
         <span class="badge badge-green">EVERY WEEK</span>
       </div>
       <div class="card-body">
-        <div class="grid-3" id="sundayGrid"></div>
+        <div class="bento-grid" id="sundayGrid" style="gap:20px;"></div>
       </div>
     </div>
 
     <div class="card mb-32 reveal">
       <div class="card-header"><span class="card-title">⚡ Quick Reference — Daily Limits</span></div>
-      <div class="card-body"><div class="grid-4" id="quickLimits"></div></div>
+      <div class="card-body"><div class="bento-grid" id="quickLimits" style="gap:20px;"></div></div>
     </div>
   </div>
 
@@ -75,8 +75,11 @@
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var bal = OCHUGI_DATA.raymond.currentBalance;
+document.addEventListener('OchugiDataLoaded', function() {
+  var userStr = localStorage.getItem('ochugi_user');
+  var user = userStr ? JSON.parse(userStr) : {username: 'raymond'};
+  var r = OCHUGI_DATA[user.username] || OCHUGI_DATA.raymond;
+  var bal = r.currentBalance;
 
   var steps = [
     {step:'1',title:'Check News Calendar',time:'2 min',detail:'Any red events today? Set phone alarm for block window.',link:'news-calendar.html',linkText:'Open Calendar'},
@@ -88,11 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var ph='';
   for(var i=0;i<steps.length;i++){
     var s=steps[i];
-    ph+='<div class="list-item" style="padding:14px 20px;align-items:flex-start;">'
-      +'<div style="width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.8rem;color:var(--gold);flex-shrink:0;">'+escapeHTML(s.step)+'</div>'
-      +'<div style="flex:1;padding-left:12px;"><div style="font-weight:600;color:var(--text-primary);margin-bottom:3px;">'+escapeHTML(s.title)+' <span style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+escapeHTML(s.time)+'</span></div>'
-      +'<div style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(s.detail)+'</div>'
-      +(s.link?'<a href="'+escapeHTML(s.link)+'" class="btn btn-ghost btn-sm" style="margin-top:6px;padding:3px 8px;">'+escapeHTML(s.linkText)+' →</a>':'')
+    ph+='<div class="list-item" style="padding:16px 20px;align-items:flex-start;">'
+      +'<div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:0.9rem;color:var(--text-primary);flex-shrink:0;">'+escapeHTML(s.step)+'</div>'
+      +'<div style="flex:1;padding-left:14px;"><div style="font-weight:600;color:var(--text-primary);margin-bottom:4px;">'+escapeHTML(s.title)+' <span style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);">'+escapeHTML(s.time)+'</span></div>'
+      +'<div style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(s.detail)+'</div>'
+      +(s.link?'<a href="'+escapeHTML(s.link)+'" class="btn btn-ghost btn-sm" style="margin-top:8px;">'+escapeHTML(s.linkText)+' →</a>':'')
       +'</div></div>';
   }
   document.getElementById('preMarketList').innerHTML=ph;
@@ -109,15 +112,15 @@ document.addEventListener('DOMContentLoaded', function() {
   ];
   var dh='';
   for(var i=0;i<during.length;i++){
-    dh+='<div class="list-item" style="padding:10px 16px;">'
-      +'<span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--gold);min-width:110px;flex-shrink:0;">'+escapeHTML(during[i][0])+'</span>'
-      +'<span style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(during[i][1])+'</span></div>';
+    dh+='<div class="list-item" style="padding:12px 20px;">'
+      +'<span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);min-width:130px;flex-shrink:0;">'+escapeHTML(during[i][0])+'</span>'
+      +'<span style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(during[i][1])+'</span></div>';
   }
   document.getElementById('duringTradeList').innerHTML=dh;
 
   var eod=['All trades logged in Trade Log?','Screenshots captured for notable setups?','Any rule violations? Log in Mistake Tracker tonight.','Today\'s net P&L written down?','One sentence: what did today teach me?'];
   var eh='';
-  for(var i=0;i<eod.length;i++){eh+='<div class="list-item" style="padding:10px 16px;gap:10px;"><span style="color:var(--text-muted);">☐</span><span style="font-size:0.78rem;color:var(--text-secondary);">'+escapeHTML(eod[i])+'</span></div>';}
+  for(var i=0;i<eod.length;i++){eh+='<div class="list-item" style="padding:14px 20px;gap:12px;"><span style="color:var(--text-muted);">☐</span><span style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(eod[i])+'</span></div>';}
   document.getElementById('eodList').innerHTML=eh;
 
   var sun=[
@@ -131,26 +134,27 @@ document.addEventListener('DOMContentLoaded', function() {
   var suh='';
   for(var i=0;i<sun.length;i++){
     var t=sun[i];
-    suh+='<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);">'
-      +'<div style="font-size:1.3rem;margin-bottom:6px;">'+escapeHTML(t.icon)+'</div>'
-      +'<div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">'+escapeHTML(t.task)+'</div>'
-      +'<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);">'+escapeHTML(t.time)+'</div></div>';
+    suh+='<div class="col-4" style="background:var(--bg-1);border-radius:8px;padding:20px;border:1px solid var(--border);">'
+      +'<div style="font-size:1.6rem;margin-bottom:8px;">'+escapeHTML(t.icon)+'</div>'
+      +'<div style="font-size:0.9rem;font-weight:500;color:var(--text-primary);margin-bottom:6px;">'+escapeHTML(t.task)+'</div>'
+      +'<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);">'+escapeHTML(t.time)+'</div></div>';
   }
   document.getElementById('sundayGrid').innerHTML=suh;
 
   var lims=[
     {label:'Max Per Trade',value:'$'+(bal*0.0025).toFixed(2),sub:'0.25% of balance',accent:'red'},
     {label:'Max Daily Loss',value:'$'+(bal*0.01).toFixed(2),sub:'1% — stop trading',accent:'yellow'},
-    {label:'Maven DD Floor',value:'$'+(5000*0.95).toFixed(2),sub:'Never go below',accent:'red'},
+    {label:'Maven DD Floor',value:'$'+(r.mavenStartBalance*0.95).toFixed(2),sub:'Never go below',accent:'red'},
     {label:'Best Session',value:'Asian',sub:'02:00–06:00 EAT · 57% WR',accent:'green'}
   ];
   var lh='';
   for(var i=0;i<lims.length;i++){
-    var l=lims[i];var vc=l.accent==='green'?'positive':l.accent==='red'?'negative':'gold';
-    lh+='<div class="stat-card '+escapeHTML(l.accent)+'"><div class="stat-label">'+escapeHTML(l.label)+'</div><div class="stat-value '+escapeHTML(vc)+'" style="font-size:1.3rem;">'+escapeHTML(l.value)+'</div><div class="stat-sub">'+escapeHTML(l.sub)+'</div></div>';
+    var l=lims[i];var vc=l.accent==='green'?'positive':l.accent==='red'?'negative':'accent';
+    lh+='<div class="col-3 stat-card '+escapeHTML(l.accent)+'"><div class="stat-label">'+escapeHTML(l.label)+'</div><div class="stat-value '+escapeHTML(vc)+'" style="font-size:1.6rem;">'+escapeHTML(l.value)+'</div><div class="stat-sub">'+escapeHTML(l.sub)+'</div></div>';
   }
   document.getElementById('quickLimits').innerHTML=lh;
 });
 </script>
 </body>
 </html>
+

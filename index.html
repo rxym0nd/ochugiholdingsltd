@@ -10,13 +10,10 @@
 </head>
 <body>
 
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
 <div id="loadingScreen">
   <div class="loading-logo">OCHUGI<span>.</span></div>
   <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
-  <div class="loading-label">Initialising Trading System</div>
+  <div class="loading-label">Initialising Terminal</div>
 </div>
 
 <nav class="topnav" id="topnav"></nav>
@@ -26,21 +23,48 @@
   <div class="page-content">
 
     <!-- HERO -->
-    <div class="page-hero" style="padding:80px 0 60px;">
+    <div class="page-hero">
       <div class="container">
-        <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:32px;">
+        <div class="flex-between" style="flex-wrap:wrap;gap:32px;">
           <div>
             <div class="page-hero-label">Command Center · Live Dashboard</div>
-            <h1 class="page-hero-title">OCHUGI<br><em>HOLDINGS</em></h1>
-            <p class="page-hero-sub">MavenTrade · Account 10212887 · Feb 9 – Mar 7, 2026</p>
+            <h1 class="page-hero-title">OCHUGI <em>HOLDINGS</em></h1>
+            <p class="page-hero-sub">MavenTrade · Account 10212887 · Risk Management Terminal</p>
           </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;padding-bottom:8px;">
-            <a href="maven.html" class="btn btn-gold">🎯 Maven Tracker</a>
+          <div class="page-hero-actions">
+            <a href="maven.html" class="btn btn-accent">🎯 Maven Tracker</a>
             <a href="calculator.html" class="btn btn-outline">🧮 Calculator</a>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- TRADINGVIEW TICKER TAPE -->
+    <div class="tradingview-widget-container" id="tv-ticker-container" style="border-bottom:1px solid var(--border);">
+      <div class="tradingview-widget-container__widget"></div>
+    </div>
+    <script>
+      (function() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+        script.async = true;
+        script.innerHTML = JSON.stringify({
+          "symbols": [
+            { "proName": "OANDA:XAUUSD", "title": "Gold" },
+            { "proName": "FX:GBPUSD", "title": "GBP/USD" },
+            { "proName": "OANDA:DE30EUR", "title": "GER30" },
+            { "proName": "BINANCE:BTCUSDT", "title": "Bitcoin" }
+          ],
+          "showSymbolLogo": true,
+          "isTransparent": true,
+          "displayMode": "adaptive",
+          "colorTheme": "dark",
+          "locale": "en"
+        });
+        document.getElementById('tv-ticker-container').appendChild(script);
+      })();
+    </script>
 
     <!-- TICKER -->
     <div class="ticker-wrap">
@@ -49,43 +73,49 @@
       </div>
     </div>
 
-    <div class="container">
-      <div id="newsAlertBar" style="padding-top:40px;"></div>
+    <div class="container section">
+      <div id="newsAlertBar" class="mb-32"></div>
 
-      <!-- TOP STATS -->
-      <div class="grid-4 mb-32 reveal" id="topStats"></div>
+      <!-- BENTO GRID -->
+      <div class="bento-grid">
+        
+        <!-- TOP STATS (Row 1) -->
+        <div class="col-12 bento-grid" id="topStats" style="gap: 20px;">
+           <!-- Injected via JS -->
+        </div>
 
-      <!-- MAVEN + SESSIONS -->
-      <div class="grid-2 mb-32">
-        <div class="card reveal reveal-delay-1">
+        <!-- MAVEN CHALLENGE (Row 2, Left 8) -->
+        <div class="col-8 card reveal reveal-delay-1">
           <div class="card-header">
             <span class="card-title">🎯 Maven Challenge</span>
-            <span class="badge badge-gold">ACTIVE</span>
+            <span class="badge badge-accent">ACTIVE</span>
           </div>
-          <div class="card-body" id="mavenCard"></div>
+          <div class="card-body flex-col gap-16" id="mavenCard"></div>
           <div class="card-footer">No time limit · 5% trailing DD · 80/20 payout split</div>
         </div>
-        <div class="card reveal reveal-delay-2">
-          <div class="card-header"><span class="card-title">⏱️ Session Performance</span></div>
+
+        <!-- SESSION PERFORMANCE (Row 2, Right 4) -->
+        <div class="col-4 card reveal reveal-delay-2">
+          <div class="card-header"><span class="card-title">⏱️ Sessions</span></div>
           <div class="card-body" style="padding:0;" id="sessionCard"></div>
         </div>
-      </div>
 
-      <!-- INSTRUMENTS + KILL LIST -->
-      <div class="grid-2 mb-32">
-        <div class="card reveal">
+        <!-- INSTRUMENTS (Row 3, Left 8) -->
+        <div class="col-8 card reveal reveal-delay-1">
           <div class="card-header">
             <span class="card-title">🔍 Instruments</span>
             <a href="trade-log.html" class="btn btn-ghost btn-sm">All trades →</a>
           </div>
           <div id="instrTable"></div>
         </div>
-        <div>
-          <div class="card mb-16 reveal reveal-delay-1">
+
+        <!-- ASSET CLASSES & KILL LIST (Row 3, Right 4) -->
+        <div class="col-4 flex-col gap-20">
+          <div class="card reveal reveal-delay-2">
             <div class="card-header"><span class="card-title">📦 Asset Classes</span></div>
             <div class="card-body" style="padding:0;" id="assetCard"></div>
           </div>
-          <div class="card reveal reveal-delay-2">
+          <div class="card reveal reveal-delay-3">
             <div class="card-header">
               <span class="card-title">❌ Kill List</span>
               <span class="badge badge-red">4 BANNED</span>
@@ -93,39 +123,39 @@
             <div class="card-body" id="killCard"></div>
           </div>
         </div>
-      </div>
 
-      <!-- BIG SPLIT TITLE -->
-      <div class="section reveal" style="text-align:center;">
-        <div class="split-title"><div><em>RECENT</em></div><div class="accent">MISTAKES</div></div>
-        <p style="color:var(--text-muted);font-family:var(--font-mono);font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;margin-top:16px;">Log every error · Learn · Never repeat</p>
-      </div>
+        <!-- SECTION TITLE FOR MISTAKES (Row 4) -->
+        <div class="col-12 mt-32 mb-16 reveal" style="border-top:1px solid var(--border); padding-top:32px;">
+          <h2 class="split-title" style="margin-bottom:8px;">RISK <span class="accent">ANALYSIS</span></h2>
+          <p class="text-muted text-mono" style="font-size:0.75rem;">Log every error · Learn · Never repeat</p>
+        </div>
 
-      <!-- MISTAKES + UPCOMING NEWS -->
-      <div class="grid-2 mb-32">
-        <div class="card reveal">
+        <!-- MISTAKES (Row 5, Left 6) -->
+        <div class="col-6 card reveal">
           <div class="card-header">
             <span class="card-title">⚠️ Mistake Log</span>
             <span class="badge badge-red">5 LOGGED</span>
           </div>
           <div class="card-body" style="padding:0;" id="mistakesCard"></div>
         </div>
-        <div class="card reveal reveal-delay-1">
+
+        <!-- UPCOMING NEWS (Row 5, Right 6) -->
+        <div class="col-6 card reveal reveal-delay-1">
           <div class="card-header">
             <span class="card-title">📅 High-Impact Events</span>
             <a href="news-calendar.html" class="btn btn-ghost btn-sm">Full calendar →</a>
           </div>
           <div class="card-body" style="padding:0;" id="newsCard"></div>
         </div>
-      </div>
 
+      </div><!-- /bento-grid -->
     </div><!-- /container -->
 
     <!-- FOOTER STRIP -->
-    <div style="border-top:1px solid var(--border);padding:80px 0;background:var(--bg-1);text-align:center;margin-top:40px;">
+    <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
       <div class="container">
-        <div class="split-title" style="opacity:0.08;">ALWAYS<br>PUSHING</div>
-        <p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-top:24px;">Ochugi Holdings Ltd · Proprietary Trading Firm · 2026</p>
+        <h2 class="split-title" style="opacity:0.2;">ALWAYS <span class="accent">PUSHING</span></h2>
+        <p class="text-mono text-muted" style="font-size:0.75rem; letter-spacing:2px; margin-top:16px;">Ochugi Holdings Ltd · Proprietary Trading Firm · 2026</p>
       </div>
     </div>
 
@@ -135,75 +165,103 @@
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// XSS Safety Helper
+function eHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+document.addEventListener('OchugiDataLoaded', function() {
   var r = OCHUGI_DATA.raymond;
 
-  // Top stats
+  // Populate Custom Ticker
+  var tickerHtml = '';
+  var tickerItems = [
+    { label: 'ACCOUNT', value: r.accountId },
+    { label: 'STATUS', value: 'ACTIVE', cls: 'text-green' },
+    { label: 'BALANCE', value: '$' + r.currentBalance.toFixed(2), cls: r.currentBalance > r.startingBalance ? 'text-green' : 'text-red' },
+    { label: 'NET P&L', value: (r.netPnL >= 0 ? '+$' : '-$') + Math.abs(r.netPnL).toFixed(2), cls: r.netPnL >= 0 ? 'text-green' : 'text-red' },
+    { label: 'WIN RATE', value: r.winRate + '%', cls: r.winRate >= 50 ? 'text-green' : 'text-red' },
+    { label: 'PROFIT FACTOR', value: r.profitFactor, cls: 'text-accent' }
+  ];
+  for (var i = 0; i < tickerItems.length; i++) {
+    tickerHtml += '<div class="ticker-item"><span class="ticker-label">' + eHTML(tickerItems[i].label) + '</span><span class="' + (tickerItems[i].cls || '') + '">' + eHTML(tickerItems[i].value) + '</span></div>';
+  }
+  // Duplicate for seamless scroll
+  document.getElementById('statTicker').innerHTML = tickerHtml + tickerHtml;
+
+  // Top stats - rendered as bento columns
   var statsData = [
-    { label:'Net P&L',        value:'+$'+r.netPnL.toFixed(2),          sub:r.totalTrades+' trades · Feb–Mar 2026', cls:'positive', accent:'green' },
-    { label:'Win Rate',       value:r.winRate+'%',                      sub:r.wins+'W / '+r.losses+'L',            cls:'neutral',  accent:'blue'  },
-    { label:'Profit Factor',  value:r.profitFactor,                     sub:'Avg win $'+r.avgWin+' · Loss $'+Math.abs(r.avgLoss), cls:'gold', accent:'gold' },
-    { label:'Maven Progress', value:r.mavenPct.toFixed(1)+'%',          sub:'$'+r.mavenRemaining.toFixed(2)+' to funded', cls:'gold', accent:'gold' }
+    { label:'Net P&L',        value:'+$'+r.netPnL.toFixed(2),          sub:r.totalTrades+' trades', cls:'positive', accent:'green' },
+    { label:'Win Rate',       value:r.winRate+'%',                      sub:r.wins+'W / '+r.losses+'L', cls:'neutral', accent:'blue' },
+    { label:'Profit Factor',  value:r.profitFactor,                     sub:'Avg win $'+r.avgWin, cls:'accent', accent:'accent' },
+    { label:'Maven Target',   value:r.mavenPct.toFixed(1)+'%',          sub:'$'+r.mavenRemaining.toFixed(2)+' to go', cls:'accent', accent:'accent' }
   ];
   var sh = '';
   for (var i=0;i<statsData.length;i++) {
     var s=statsData[i];
-    sh += '<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div>'
-      +'<div class="stat-value '+escapeHTML(s.cls)+'">'+escapeHTML(s.value)+'</div>'
-      +'<div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';
+    sh += '<div class="col-3 stat-card '+eHTML(s.accent)+'">'
+        + '<div class="stat-label">'+eHTML(s.label)+'</div>'
+        + '<div class="stat-value '+eHTML(s.cls)+'">'+eHTML(s.value)+'</div>'
+        + '<div class="stat-sub">'+eHTML(s.sub)+'</div></div>';
   }
   document.getElementById('topStats').innerHTML = sh;
 
   // Maven
   document.getElementById('mavenCard').innerHTML =
-    '<div style="margin-bottom:20px;">'
-    +'<div class="progress-header"><span class="progress-label">Progress to +8% target ($400)</span>'
-    +'<span class="progress-value text-gold">'+r.mavenPct.toFixed(1)+'%</span></div>'
-    +'<div class="progress-track"><div class="progress-fill gold" style="width:'+r.mavenPct+'%"></div></div>'
+    '<div>'
+    +'<div class="progress-header"><span class="progress-label">Progress to target</span>'
+    +'<span class="progress-value text-accent">'+r.mavenPct.toFixed(1)+'%</span></div>'
+    +'<div class="progress-track"><div class="progress-fill accent" style="width:'+r.mavenPct+'%"></div></div>'
     +'</div>'
-    +'<div class="grid-2" style="gap:12px;margin-bottom:16px;">'
-    +'<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);">'
+    +'<div class="grid-2" style="gap:12px;">'
+    +'<div style="background:rgba(255,255,255,0.02);border-radius:var(--r-sm);padding:14px;border:1px solid var(--border);">'
     +'<div class="stat-label">EARNED</div>'
-    +'<div style="font-family:var(--font-display);font-size:2rem;color:var(--green);">+$'+r.mavenCurrent.toFixed(2)+'</div></div>'
-    +'<div style="background:var(--bg-1);border-radius:8px;padding:14px;border:1px solid var(--border);">'
-    +'<div class="stat-label">STILL NEEDED</div>'
-    +'<div style="font-family:var(--font-display);font-size:2rem;color:var(--yellow);">$'+r.mavenRemaining.toFixed(2)+'</div></div></div>'
-    +'<div class="alert alert-gold" style="font-size:0.78rem;"><span class="alert-icon">⚡</span>'
-    +'<div class="alert-text">At +$2.90/trade expectancy, ~78 more clean trades to funded. Focus: XAUUSD Asian session.</div></div>';
+    +'<div style="font-family:var(--font-mono);font-size:1.8rem;color:var(--green);font-weight:600;">+$'+r.mavenCurrent.toFixed(2)+'</div></div>'
+    +'<div style="background:rgba(255,255,255,0.02);border-radius:var(--r-sm);padding:14px;border:1px solid var(--border);">'
+    +'<div class="stat-label">NEEDED</div>'
+    +'<div style="font-family:var(--font-mono);font-size:1.8rem;color:var(--yellow);font-weight:600;">$'+r.mavenRemaining.toFixed(2)+'</div></div></div>'
+    +'<div class="alert alert-info"><span class="alert-icon">⚡</span>'
+    +'<div class="alert-text">At +$2.90/trade expectancy, ~78 more clean trades to funded.</div></div>';
 
   // Sessions
   var sesHtml = '';
   for (var i=0;i<r.sessions.length;i++) {
     var s=r.sessions[i];
-    sesHtml += '<div class="list-item" style="padding:12px 20px;">'
-      +'<div class="list-item-label"><span style="width:7px;height:7px;border-radius:50%;background:'+escapeHTML(s.color)+';display:inline-block;flex-shrink:0;"></span>'
-      +escapeHTML(s.name)+' <span class="badge '+(s.pnl>0?'badge-green':'badge-red')+'">'+escapeHTML(s.wr)+'% WR</span></div>'
+    sesHtml += '<div class="list-item" style="padding:14px 20px;">'
+      +'<div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:'+eHTML(s.color)+';display:inline-block;flex-shrink:0;"></span>'
+      +eHTML(s.name)+' <span class="badge '+(s.pnl>0?'badge-green':'badge-red')+'">'+eHTML(s.wr)+'% WR</span></div>'
       +'<div class="list-item-value" style="color:'+(s.pnl>0?'var(--green)':'var(--red)')+';">'+(s.pnl>0?'+':'')+'$'+s.pnl.toFixed(2)+'</div></div>';
   }
   document.getElementById('sessionCard').innerHTML = sesHtml;
 
   // Instruments table
-  var ih = '<table><thead><tr><th>Symbol</th><th>P&L</th><th>WR</th><th>Trades</th><th>Status</th></tr></thead><tbody>';
+  var ih = '<div class="table-wrap"><table><thead><tr><th>Symbol</th><th>P&L</th><th>WR</th><th>Trades</th><th>Status</th></tr></thead><tbody>';
   for (var i=0;i<r.instruments.length;i++) {
     var ins=r.instruments[i];
     ih += '<tr>'
-      +'<td class="primary mono">'+escapeHTML(ins.symbol)+'</td>'
+      +'<td class="primary mono">'+eHTML(ins.symbol)+'</td>'
       +'<td class="mono" style="color:'+(ins.pnl>=0?'var(--green)':'var(--red)')+';">'+(ins.pnl>=0?'+':'')+'$'+ins.pnl.toFixed(2)+'</td>'
-      +'<td class="mono">'+escapeHTML(ins.wr)+'%</td>'
-      +'<td class="mono">'+escapeHTML(ins.trades)+'</td>'
-      +'<td><span class="badge '+(ins.status==='green'?'badge-green':ins.status==='kill'?'badge-red':'badge-gold')+'">'
+      +'<td class="mono">'+eHTML(ins.wr)+'%</td>'
+      +'<td class="mono">'+eHTML(ins.trades)+'</td>'
+      +'<td><span class="badge '+(ins.status==='green'?'badge-green':ins.status==='kill'?'badge-red':'badge-accent')+'">'
       +(ins.status==='green'?'ACTIVE':ins.status==='kill'?'BANNED':'WATCH')+'</span></td></tr>';
   }
-  ih += '</tbody></table>';
+  ih += '</tbody></table></div>';
   document.getElementById('instrTable').innerHTML = ih;
 
   // Assets
   var ah = '';
   for (var i=0;i<r.assets.length;i++) {
     var a=r.assets[i];
-    ah += '<div class="list-item" style="padding:11px 20px;">'
-      +'<div class="list-item-label"><span style="width:7px;height:7px;border-radius:50%;background:'+escapeHTML(a.color)+';display:inline-block;"></span>'
-      +escapeHTML(a.name)+' <span style="font-family:var(--font-mono);font-size:0.58rem;color:var(--text-muted);">'+escapeHTML(a.trades)+'t</span></div>'
+    ah += '<div class="list-item" style="padding:12px 20px;">'
+      +'<div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:'+eHTML(a.color)+';display:inline-block;"></span>'
+      +eHTML(a.name)+' <span class="text-mono text-muted" style="font-size:0.7rem;">'+eHTML(a.trades)+'t</span></div>'
       +'<div class="list-item-value" style="color:'+(a.pnl>=0?'var(--green)':'var(--red)')+';">'+(a.pnl>=0?'+':'')+'$'+a.pnl.toFixed(2)+'</div></div>';
   }
   document.getElementById('assetCard').innerHTML = ah;
@@ -212,9 +270,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var kh = '';
   var kl=OCHUGI_DATA.killList;
   for (var i=0;i<kl.length;i++) {
-    kh += '<div class="kill-item" style="margin-bottom:6px;">'
-      +'<span style="font-weight:700;">'+escapeHTML(kl[i].symbol)+'</span>'
-      +'<span style="flex:1;font-size:0.68rem;margin-left:6px;color:var(--red-dim);">'+escapeHTML(kl[i].reason)+'</span>'
+    kh += '<div class="kill-item" style="margin-bottom:8px;">'
+      +'<span style="font-weight:700;">'+eHTML(kl[i].symbol)+'</span>'
+      +'<span style="flex:1;font-size:0.75rem;margin-left:6px;opacity:0.8;">'+eHTML(kl[i].reason)+'</span>'
       +'-$'+Math.abs(kl[i].totalLoss).toFixed(2)+'</div>';
   }
   document.getElementById('killCard').innerHTML = kh;
@@ -223,9 +281,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var mh = '';
   var mk=OCHUGI_DATA.mistakes;
   for (var i=0;i<mk.length;i++) {
-    mh += '<div class="list-item" style="padding:12px 20px;">'
-      +'<div><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:2px;">'+escapeHTML(mk[i].type)+'</div>'
-      +'<div style="font-size:0.7rem;color:var(--text-muted);">'+escapeHTML(mk[i].date)+' · '+escapeHTML(mk[i].detail)+'</div></div>'
+    mh += '<div class="list-item" style="padding:14px 20px;">'
+      +'<div><div style="font-size:0.9rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">'+eHTML(mk[i].type)+'</div>'
+      +'<div style="font-size:0.8rem;color:var(--text-muted);">'+eHTML(mk[i].date)+' · '+eHTML(mk[i].detail)+'</div></div>'
       +'<div class="list-item-value" style="color:var(--red);">-$'+Math.abs(mk[i].impact).toFixed(2)+'</div></div>';
   }
   document.getElementById('mistakesCard').innerHTML = mh;
@@ -235,15 +293,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var nh = '';
   for (var i=0;i<upcoming.length;i++) {
     var ev=upcoming[i];
-    nh += '<div class="list-item" style="padding:12px 20px;">'
-      +'<div><div style="font-size:0.82rem;font-weight:500;color:var(--text-primary);">'+escapeHTML(ev.event)
-      +' <span style="font-family:var(--font-mono);font-size:0.58rem;color:var(--text-muted);">'+escapeHTML(ev.country)+'</span></div>'
-      +'<div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);">'+escapeHTML(ev.date)+' · '+escapeHTML(ev.time)+' EAT</div></div>'
-      +'<span class="badge '+(ev.impact==='extreme'?'badge-red':'badge-gold')+'">'+escapeHTML(ev.impact.toUpperCase())+'</span></div>';
+    nh += '<div class="list-item" style="padding:14px 20px;">'
+      +'<div><div style="font-size:0.9rem;font-weight:500;color:var(--text-primary);">'+eHTML(ev.event)
+      +' <span class="text-mono text-muted" style="font-size:0.7rem; margin-left:6px;">'+eHTML(ev.country)+'</span></div>'
+      +'<div class="text-mono text-muted" style="font-size:0.75rem; margin-top:4px;">'+eHTML(ev.date)+' · '+eHTML(ev.time)+' EAT</div></div>'
+      +'<span class="badge '+(ev.impact==='extreme'?'badge-red':'badge-accent')+'">'+eHTML(ev.impact.toUpperCase())+'</span></div>';
   }
-  if (!nh) nh = '<div style="padding:16px;color:var(--text-muted);font-size:0.82rem;">No events in next 30 days</div>';
+  if (!nh) nh = '<div style="padding:20px;color:var(--text-muted);font-size:0.9rem;">No events in next 30 days</div>';
   document.getElementById('newsCard').innerHTML = nh;
 });
 </script>
 </body>
 </html>
+

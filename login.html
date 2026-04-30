@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ochugi Holdings — Secure Terminal Login</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: var(--bg-1);
+    }
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      padding: 2rem;
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .login-logo img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+    .login-logo h1 {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+    .login-logo p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .login-card {
+      padding: 2.5rem 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .form-group input {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      border-radius: var(--r-sm);
+      font-family: var(--font-display);
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.05);
+    }
+    .btn-login {
+      width: 100%;
+      justify-content: center;
+      margin-top: 1rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .login-error {
+      color: var(--red);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container reveal">
+    <div class="login-logo">
+      <img src="assets/logo.png" alt="Ochugi Logo" onerror="this.style.display='none'">
+      <h1 class="split-title">OCHUGI <span class="accent">HOLDINGS</span></h1>
+      <p>Secure Trading Terminal</p>
+    </div>
+
+    <div class="card login-card">
+      <div class="login-error" id="loginError">Invalid credentials</div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-accent btn-login" id="loginBtn">Authenticate →</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Reveal animation
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelector('.login-container').classList.add('visible');
+      }, 100);
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('loginError');
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      
+      btn.textContent = 'Authenticating...';
+      btn.style.opacity = '0.7';
+      err.style.display = 'none';
+
+      fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem('ochugi_token', data.token);
+          localStorage.setItem('ochugi_user', JSON.stringify(data.user));
+          btn.textContent = 'Success. Redirecting...';
+          btn.style.background = 'var(--green)';
+          btn.style.borderColor = 'var(--green)';
+          setTimeout(() => { window.location.href = 'index.html'; }, 800);
+        } else {
+          throw new Error(data.message || 'Authentication failed');
+        }
+      })
+      .catch(error => {
+        err.textContent = error.message || 'Connection error';
+        err.style.display = 'block';
+        btn.textContent = 'Authenticate →';
+        btn.style.opacity = '1';
+      });
+    });
+  </script>
+</body>
+</html>

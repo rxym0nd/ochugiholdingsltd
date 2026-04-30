@@ -16,22 +16,25 @@
     <p class="page-hero-sub">Co-founder · MavenTrade 10212887 · Feb 9 – Mar 7, 2026 · 60 trades</p>
   </div></div>
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
-    <div class="grid-4 mb-32 reveal" id="rayStats"></div>
-    <div class="grid-2 mb-32">
-      <div class="card reveal">
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
+    <div class="bento-grid">
+      <div class="col-12 bento-grid" id="rayStats" style="gap:20px;"></div>
+      
+      <div class="col-6 card reveal mt-16">
         <div class="card-header"><span class="card-title">📊 Performance Summary</span></div>
-        <div class="card-body" id="raySummary"></div>
+        <div class="card-body" id="raySummary" style="padding:0;"></div>
       </div>
-      <div class="card reveal reveal-delay-1">
+      
+      <div class="col-6 card reveal reveal-delay-1 mt-16">
         <div class="card-header"><span class="card-title">⏱️ Session Breakdown</span></div>
         <div style="padding:0;" id="raySessions"></div>
       </div>
-    </div>
-    <div class="card mb-32 reveal">
-      <div class="card-header"><span class="card-title">🔍 Instrument Performance</span><a href="trade-log.html" class="btn btn-ghost btn-sm">All trades →</a></div>
-      <div id="rayInstr"></div>
+      
+      <div class="col-12 card reveal mt-32">
+        <div class="card-header"><span class="card-title">🔍 Instrument Performance</span><a href="trade-log.html" class="btn btn-ghost btn-sm">All trades →</a></div>
+        <div id="rayInstr"></div>
+      </div>
     </div>
   </div>
   <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:20px;">
@@ -40,27 +43,45 @@
 </div></div>
 <script src="js/data.js"></script><script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('OchugiDataLoaded', function() {
   var r=OCHUGI_DATA.raymond;
   var sd=[
     {label:'Net P&L',value:'+$'+r.netPnL.toFixed(2),sub:r.totalTrades+' total trades',cls:'positive',accent:'green'},
     {label:'Win Rate',value:r.winRate+'%',sub:r.wins+'W / '+r.losses+'L',cls:'neutral',accent:'blue'},
-    {label:'Expectancy',value:'+$'+r.expectancy,sub:'per trade average',cls:'gold',accent:'gold'},
-    {label:'Maven Progress',value:r.mavenPct.toFixed(1)+'%',sub:'$'+r.mavenRemaining.toFixed(2)+' to funded',cls:'gold',accent:'gold'}
+    {label:'Expectancy',value:'+$'+r.expectancy,sub:'per trade average',cls:'accent',accent:'accent'},
+    {label:'Maven Progress',value:r.mavenPct.toFixed(1)+'%',sub:'$'+r.mavenRemaining.toFixed(2)+' to funded',cls:'accent',accent:'accent'}
   ];
-  var sh='';for(var i=0;i<sd.length;i++){var s=sd[i];sh+='<div class="stat-card '+escapeHTML(s.accent)+'"><div class="stat-label">'+escapeHTML(s.label)+'</div><div class="stat-value '+escapeHTML(s.cls)+'">'+escapeHTML(s.value)+'</div><div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';}
+  var sh='';for(var i=0;i<sd.length;i++){
+    var s=sd[i];
+    sh+='<div class="col-3 stat-card '+escapeHTML(s.accent)+'">'
+      +'<div class="stat-label">'+escapeHTML(s.label)+'</div>'
+      +'<div class="stat-value '+escapeHTML(s.cls)+'">'+escapeHTML(s.value)+'</div>'
+      +'<div class="stat-sub">'+escapeHTML(s.sub)+'</div></div>';
+  }
   document.getElementById('rayStats').innerHTML=sh;
+  
   document.getElementById('raySummary').innerHTML=
-    '<div class="list-item"><div class="list-item-label">Profit Factor</div><div class="list-item-value text-gold">'+escapeHTML(r.profitFactor)+'</div></div>'
-    +'<div class="list-item"><div class="list-item-label">Sharpe Ratio</div><div class="list-item-value">'+escapeHTML(r.sharpeRatio)+'</div></div>'
-    +'<div class="list-item"><div class="list-item-label">Max Drawdown</div><div class="list-item-value text-gold">$'+r.maxDrawdown.toFixed(2)+' ('+escapeHTML(r.maxDrawdownPct)+'%)</div></div>'
-    +'<div class="list-item"><div class="list-item-label">Best Trade</div><div class="list-item-value" style="color:var(--green);">+$'+r.bestTrade.amount+' · '+escapeHTML(r.bestTrade.instrument)+'</div></div>'
-    +'<div class="list-item"><div class="list-item-label">Worst Trade</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.worstTrade.amount)+' · '+escapeHTML(r.worstTrade.instrument)+'</div></div>';
-  var sesh='';for(var i=0;i<r.sessions.length;i++){var s=r.sessions[i];sesh+='<div class="list-item" style="padding:12px 20px;"><div class="list-item-label"><span style="width:7px;height:7px;border-radius:50%;background:'+escapeHTML(s.color)+';display:inline-block;"></span>'+escapeHTML(s.name)+' <span class="badge '+(s.pnl>0?'badge-green':'badge-red')+'">'+escapeHTML(s.wr)+'% WR</span></div><div class="list-item-value" style="color:'+(s.pnl>0?'var(--green)':'var(--red)')+';">'+(s.pnl>0?'+':'')+'$'+s.pnl.toFixed(2)+'</div></div>';}
+    '<div class="list-item" style="padding:14px 20px;"><div class="list-item-label">Profit Factor</div><div class="list-item-value text-accent">'+escapeHTML(r.profitFactor)+'</div></div>'
+    +'<div class="list-item" style="padding:14px 20px;"><div class="list-item-label">Sharpe Ratio</div><div class="list-item-value">'+escapeHTML(r.sharpeRatio)+'</div></div>'
+    +'<div class="list-item" style="padding:14px 20px;"><div class="list-item-label">Max Drawdown</div><div class="list-item-value text-accent">$'+escapeHTML(r.maxDrawdown.toFixed(2))+' ('+escapeHTML(r.maxDrawdownPct)+'%)</div></div>'
+    +'<div class="list-item" style="padding:14px 20px;"><div class="list-item-label">Best Trade</div><div class="list-item-value" style="color:var(--green);">+$'+escapeHTML(r.bestTrade.amount)+' · '+escapeHTML(r.bestTrade.instrument)+'</div></div>'
+    +'<div class="list-item" style="padding:14px 20px;"><div class="list-item-label">Worst Trade</div><div class="list-item-value" style="color:var(--red);">-$'+Math.abs(r.worstTrade.amount)+' · '+escapeHTML(r.worstTrade.instrument)+'</div></div>';
+  
+  var sesh='';for(var i=0;i<r.sessions.length;i++){
+    var s=r.sessions[i];
+    sesh+='<div class="list-item" style="padding:14px 20px;">'
+      +'<div class="list-item-label"><span style="width:8px;height:8px;border-radius:50%;background:'+escapeHTML(s.color)+';display:inline-block;"></span>'+escapeHTML(s.name)+' <span class="badge '+(s.pnl>0?'badge-green':'badge-red')+'">'+escapeHTML(s.wr)+'% WR</span></div>'
+      +'<div class="list-item-value" style="color:'+(s.pnl>0?'var(--green)':'var(--red)')+';">'+(s.pnl>0?'+':'')+'$'+s.pnl.toFixed(2)+'</div></div>';
+  }
   document.getElementById('raySessions').innerHTML=sesh;
-  var ih='<table><thead><tr><th>Symbol</th><th>P&L</th><th>WR</th><th>Trades</th><th>Avg Win</th><th>Status</th></tr></thead><tbody>';
-  for(var i=0;i<r.instruments.length;i++){var ins=r.instruments[i];ih+='<tr><td class="primary mono">'+escapeHTML(ins.symbol)+'</td><td class="mono" style="color:'+(ins.pnl>=0?'var(--green)':'var(--red)')+';">'+(ins.pnl>=0?'+':'')+'$'+ins.pnl.toFixed(2)+'</td><td class="mono">'+escapeHTML(ins.wr)+'%</td><td class="mono">'+escapeHTML(ins.trades)+'</td><td class="mono" style="color:var(--green);">$'+escapeHTML(ins.avgWin)+'</td><td><span class="badge '+(ins.status==='green'?'badge-green':ins.status==='kill'?'badge-red':'badge-gold')+'">'+(ins.status==='green'?'ACTIVE':ins.status==='kill'?'BANNED':'WATCH')+'</span></td></tr>';}
-  document.getElementById('rayInstr').innerHTML=ih+'</tbody></table>';
+  
+  var ih='<div class="table-wrap" style="border:none;border-radius:0;"><table><thead><tr><th>Symbol</th><th>P&L</th><th>WR</th><th>Trades</th><th>Avg Win</th><th>Status</th></tr></thead><tbody>';
+  for(var i=0;i<r.instruments.length;i++){
+    var ins=r.instruments[i];
+    ih+='<tr><td class="primary mono">'+escapeHTML(ins.symbol)+'</td><td class="mono" style="color:'+(ins.pnl>=0?'var(--green)':'var(--red)')+';">'+(ins.pnl>=0?'+':'')+'$'+ins.pnl.toFixed(2)+'</td><td class="mono">'+escapeHTML(ins.wr)+'%</td><td class="mono">'+escapeHTML(ins.trades)+'</td><td class="mono" style="color:var(--green);">$'+escapeHTML(ins.avgWin)+'</td><td><span class="badge '+(ins.status==='green'?'badge-green':ins.status==='kill'?'badge-red':'badge-accent')+'">'+(ins.status==='green'?'ACTIVE':ins.status==='kill'?'BANNED':'WATCH')+'</span></td></tr>';
+  }
+  document.getElementById('rayInstr').innerHTML=ih+'</tbody></table></div>';
 });
 </script>
 </body></html>
+

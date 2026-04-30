@@ -30,9 +30,9 @@
 
   <div class="ticker-wrap"><div class="ticker-track" id="statTicker"><div class="ticker-item"><span>Loading…</span></div></div></div>
 
-  <div class="container">
-    <div id="newsAlertBar" style="padding-top:40px;"></div>
-    <div id="strategyCards" style="margin-top:8px;"></div>
+  <div class="container section">
+    <div id="newsAlertBar" class="mb-32"></div>
+    <div id="strategyCards"></div>
   </div>
 
   <div style="border-top:1px solid var(--border);padding:60px 0;background:var(--bg-1);text-align:center;margin-top:40px;">
@@ -44,9 +44,9 @@
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('OchugiDataLoaded', function() {
   var strategies = [
-    {name:'XAUUSD Asian Session Pullback',emoji:'🥇',wr:'57.1%',pf:'2.08',expectancy:'+$3.47',confidence:8,session:'Asian (02:00–06:00 EAT)',tf:'M15',instrument:'XAUUSD',color:'var(--gold)',
+    {name:'XAUUSD Asian Session Pullback',emoji:'🥇',wr:'57.1%',pf:'2.08',expectancy:'+$3.47',confidence:8,session:'Asian (02:00–06:00 EAT)',tf:'M15',instrument:'XAUUSD',color:'var(--accent)',
      entry:['D1 must be in uptrend (higher highs, higher lows)','Price pulls back to H4 demand zone','M15 bullish engulfing or pin bar signal at zone','Min 1:2 R:R confirmed before entry'],
      sl:'Below M15 signal candle low or order block. Max 15 points.',tp:'Next H4 resistance level. Min 1:2 R:R.',
      filters:['Asian session only (02:00–06:00 EAT)','No red news events in next 60 min','Pre-Trade Scorecard score 6 or above','D1 uptrend structure intact']},
@@ -60,32 +60,34 @@ document.addEventListener('DOMContentLoaded', function() {
      filters:['GER30 only — US30 is kill list','No major US data release within 90 min','Scorecard score 7 or above required','London/NY overlap session only']}
   ];
 
-  var html='';
+  var html='<div class="bento-grid" style="gap:24px;">';
   for(var i=0;i<strategies.length;i++){
     var s=strategies[i];
-    var entHtml='';for(var j=0;j<s.entry.length;j++){entHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:'+escapeHTML(s.color)+';font-weight:700;flex-shrink:0;">'+(j+1)+'.</span>'+escapeHTML(s.entry[j])+'</div>';}
-    var filHtml='';for(var j=0;j<s.filters.length;j++){filHtml+='<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;color:var(--text-secondary);"><span style="color:var(--green);flex-shrink:0;">✓</span>'+escapeHTML(s.filters[j])+'</div>';}
+    var entHtml='';for(var j=0;j<s.entry.length;j++){entHtml+='<div style="display:flex;gap:12px;margin-bottom:12px;font-size:0.85rem;color:var(--text-secondary);"><span style="color:'+escapeHTML(s.color)+';font-weight:700;flex-shrink:0;">'+(j+1)+'.</span>'+escapeHTML(s.entry[j])+'</div>';}
+    var filHtml='';for(var j=0;j<s.filters.length;j++){filHtml+='<div style="display:flex;gap:12px;margin-bottom:12px;font-size:0.85rem;color:var(--text-secondary);"><span style="color:var(--green);flex-shrink:0;">✓</span>'+escapeHTML(s.filters[j])+'</div>';}
 
-    html+='<div class="card mb-24 reveal" style="border-left:3px solid '+escapeHTML(s.color)+';">'
-      +'<div class="card-header"><div><div class="card-title">'+escapeHTML(s.emoji)+' '+escapeHTML(s.name)+'</div><div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'+escapeHTML(s.instrument)+' · '+escapeHTML(s.tf)+' · '+escapeHTML(s.session)+'</div></div>'
-      +'<div style="display:flex;gap:16px;align-items:center;">'
-      +'<div style="text-align:center;"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+escapeHTML(s.wr)+'</div></div>'
-      +'<div style="text-align:center;"><div class="stat-label">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1.1rem;color:'+escapeHTML(s.color)+';">'+escapeHTML(s.pf)+'</div></div>'
-      +'<div style="text-align:center;"><div class="stat-label">EXPECT.</div><div style="font-family:var(--font-display);font-size:1.1rem;color:var(--green);">'+escapeHTML(s.expectancy)+'</div></div>'
+    html+='<div class="col-12 card reveal" style="border-left:3px solid '+escapeHTML(s.color)+';">'
+      +'<div class="card-header"><div><div class="card-title">'+escapeHTML(s.emoji)+' '+escapeHTML(s.name)+'</div><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);margin-top:4px;">'+escapeHTML(s.instrument)+' · '+escapeHTML(s.tf)+' · '+escapeHTML(s.session)+'</div></div>'
+      +'<div style="display:flex;gap:24px;align-items:center;">'
+      +'<div style="text-align:center;"><div class="stat-label">WIN RATE</div><div style="font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--green);">'+escapeHTML(s.wr)+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">P.FACTOR</div><div style="font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:'+escapeHTML(s.color)+';">'+escapeHTML(s.pf)+'</div></div>'
+      +'<div style="text-align:center;"><div class="stat-label">EXPECT.</div><div style="font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--green);">'+escapeHTML(s.expectancy)+'</div></div>'
       +'</div></div>'
-      +'<div class="card-body"><div class="grid-2" style="gap:24px;">'
-      +'<div><div class="section-label">Entry Rules</div>'+entHtml
-      +'<div style="margin-top:16px;"><div class="section-label">Stop Loss</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+escapeHTML(s.sl)+'</div></div>'
-      +'<div style="margin-top:16px;"><div class="section-label">Take Profit</div><div style="font-size:0.8rem;color:var(--text-secondary);">'+escapeHTML(s.tp)+'</div></div></div>'
-      +'<div><div class="section-label">Filters Required</div>'+filHtml
-      +'<div style="margin-top:16px;"><div class="section-label">Confidence</div>'
-      +'<div style="display:flex;align-items:center;gap:10px;">'
-      +'<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="width:'+escapeHTML(s.confidence*10)+'%;height:100%;background:'+escapeHTML(s.color)+';border-radius:3px;"></div></div>'
-      +'<span style="font-family:var(--font-mono);font-size:0.7rem;font-weight:700;color:'+escapeHTML(s.color)+';">'+escapeHTML(s.confidence)+'/10</span>'
+      +'<div class="card-body"><div class="bento-grid" style="gap:32px;">'
+      +'<div class="col-6"><div class="section-title">Entry Rules</div>'+entHtml
+      +'<div style="margin-top:24px;"><div class="section-title">Stop Loss</div><div style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(s.sl)+'</div></div>'
+      +'<div style="margin-top:24px;"><div class="section-title">Take Profit</div><div style="font-size:0.85rem;color:var(--text-secondary);">'+escapeHTML(s.tp)+'</div></div></div>'
+      +'<div class="col-6"><div class="section-title">Filters Required</div>'+filHtml
+      +'<div style="margin-top:24px;"><div class="section-title">Confidence</div>'
+      +'<div style="display:flex;align-items:center;gap:12px;">'
+      +'<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="width:'+escapeHTML(s.confidence*10)+'%;height:100%;background:'+escapeHTML(s.color)+';border-radius:3px;"></div></div>'
+      +'<span style="font-family:var(--font-mono);font-size:0.8rem;font-weight:700;color:'+escapeHTML(s.color)+';">'+escapeHTML(s.confidence)+'/10</span>'
       +'</div></div></div></div></div></div>';
   }
+  html += '</div>';
   document.getElementById('strategyCards').innerHTML=html;
 });
 </script>
 </body>
 </html>
+
