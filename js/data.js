@@ -74,7 +74,7 @@ const token = localStorage.getItem('ochugi_token');
 if (!token) {
   window.location.href = 'login.html';
 } else {
-  fetch('http://localhost:3000/api/data', {
+  fetch(`${CONFIG.API_URL}/api/data`, {
     headers: {
       'Authorization': 'Bearer ' + token
     }

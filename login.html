@@ -113,6 +113,7 @@
     </div>
   </div>
 
+  <script src="js/config.js"></script>
   <script>
     // Reveal animation
     document.addEventListener('DOMContentLoaded', () => {
@@ -132,7 +133,7 @@
       btn.style.opacity = '0.7';
       err.style.display = 'none';
 
-      fetch('http://localhost:3000/api/login', {
+      fetch(`${CONFIG.API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: u, password: p })

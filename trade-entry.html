@@ -95,6 +95,7 @@
   </div>
 </div>
 
+<script src="js/config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/nav.js"></script>
 <script>
@@ -178,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Post updated data to backend
     try {
-      const response = await fetch('http://localhost:3000/api/data', {
+      const response = await fetch(`${CONFIG.API_URL}/api/data`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

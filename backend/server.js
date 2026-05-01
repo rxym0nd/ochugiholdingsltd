@@ -4,10 +4,11 @@ const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 const SECRET_KEY = 'ochugi_secret_key_2026_luxury_firm';
 
-app.use(cors());
+// Render allows wildcard CORS for APIs if needed, but specific is better if you know your Github Pages domain.
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const db = new sqlite3.Database('./database.sqlite');
@@ -68,6 +69,6 @@ app.post('/api/data', authenticateToken, (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Backend running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Backend running at http://localhost:${PORT}`);
 });
